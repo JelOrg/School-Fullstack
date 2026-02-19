@@ -2,5 +2,4 @@
 .env
 
 #node_modules
-backend/modules/node_modules
 node_modules
