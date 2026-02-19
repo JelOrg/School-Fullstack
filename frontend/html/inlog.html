@@ -1,46 +1,57 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
+  <head>
     <title>Business</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/inlog.css">
-</head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../css/inlog.css" />
+  </head>
 
-<body>
-  <main class="login-page">
-    <img class="logo" src="/img/images.jif" alt="Logo" >
+  <body>
+    <main class="login-page">
+      <img class="logo" src="/img/images.jif" alt="Logo" />
 
-    <h1 class="h1">Medsupply Manager RKZ</h1>
-    <p class="p1">Voorraadbeheer voor medische supplies</p>
+      <h1 class="h1">Medsupply Manager RKZ</h1>
+      <p class="p1">Voorraadbeheer voor medische supplies</p>
 
-    <div class="login-box">
+      <div class="login-box">
         <form action="/login" method="post">
-            <label for="role">Rol
-                <select class="area" name="rol" required>
-                    <option value="verpleegkundige">Verpleegkundige</option>
-                    <option value="spoedarts">Spoedarts</option>
-                    <option value="arts">Arts</option>
-                    <option value="specialist">Specialist</option>
-                    <option value="logistieke afdeling">Logistieke afdeling</option>
-                    <option value="interne apotheek">Interne apotheek</option>
-                    <option value="ziekenhuismanagement">Ziekenhuismanagement</option>
-                    <option value="directie">Directie</option>
-                    <option value="inkoopafdeling">Inkoopafdeling</option>
-                    <option value="magazijn">Magazijn</option>
-                </select>
-            </label>
+          <label for="role"
+            >Rol
+            <select class="area" name="rol" required>
+              <option value="verpleegkundige">Verpleegkundige</option>
+              <option value="spoedarts">Spoedarts</option>
+              <option value="arts">Arts</option>
+              <option value="specialist">Specialist</option>
+              <option value="logistieke afdeling">Logistieke afdeling</option>
+              <option value="interne apotheek">Interne apotheek</option>
+              <option value="ziekenhuismanagement">Ziekenhuismanagement</option>
+              <option value="directie">Directie</option>
+              <option value="inkoopafdeling">Inkoopafdeling</option>
+              <option value="magazijn">Magazijn</option>
+            </select>
+          </label>
 
-            <label for="email">Email</label>
-            <input class="area" type="email" id="email" name="email"required>
+          <label for="email">Email</label>
+          <input class="area" type="email" id="email" name="email" required />
 
-            <label for="wachtwoord">Wachtwoord</label>
-            <input class="area" type="password" id="wachtwoord" name="wachtwoord"required>
+          <label for="wachtwoord">Wachtwoord</label>
+          <input
+            class="area"
+            type="password"
+            id="wachtwoord"
+            name="wachtwoord"
+            required
+          />
 
-            <button id="btn"  class="area" type="submit">Inloggen</button>
+          <button id="btn" class="area" type="submit">Inloggen</button>
 
-            <h2 class="h2">Let op: Alleen medewerkers met een geldig ziekenhuis e-mailadres kunnen inloggen.</h2>
+          <h2 class="h2">
+            Let op: Alleen medewerkers met een geldig ziekenhuis e-mailadres
+            kunnen inloggen.
+          </h2>
         </form>
-    </div>
-
-  </main>
+      </div>
+    </main>
+  </body>
+</html>
