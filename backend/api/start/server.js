@@ -14,8 +14,13 @@ server.use(express.json());
 // ROUTES ALIAS
 // ============================================
 
-//alias for login screen
+//alias for page routes
 const loginPage = require("../routes/login");
+const dashboardPage = require("../routes/dashboard");
+const aanvragenPage = require("../routes/aanvragen");
+const totaleVoorraadPage = require("../routes/totale-voorraad");
+const statistiekenPage = require("../routes/statistieken");
+const geschiedenisPage = require("../routes/geschiedenis");
 
 // ============================================
 // ROUTES
@@ -23,6 +28,21 @@ const loginPage = require("../routes/login");
 
 // route for the login page
 server.use("/api/login", loginPage);
+
+// route for the dashbaord
+server.use("/api/dashboard", dashboardPage);
+
+// route for the aanvragen page
+server.use("/api/aanvragen", aanvragenPage);
+
+// route for the voorraad
+server.use("/api/totale-voorraad", totaleVoorraadPage);
+
+// route for the statistics
+server.use("/api/statestieken", statistiekenPage);
+
+// route for the history
+server.use("/api/geschiedenis", geschiedenisPage);
 
 // ============================================
 // ERROR HANDLING
