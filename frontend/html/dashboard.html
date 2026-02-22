@@ -51,50 +51,86 @@
     <main class="">
       <h1 class="main-dashboard text-center">Dashboard</h1>
       <section class="main-dashboard-body">
-        <div class="spoed-aanvraag">
-          <h3>Spoed Aanvraag</h3>
-          <div class="spoed-aanvraag-body">
-            <div>
-              <label for="spoed-aanvraag-input"
-                >Zoek en/of selecteer supplies:</label
-              >
-              <input
-                class="form-control"
-                type="text"
-                id="spoed-aanvraag-input"
-                placeholder="Voer aanvraagcode in"
-              />
-            </div>
-            <div>
-              <label for="afdelings-aanvraag-input">Afdeling:</label>
-              <input
-                class="form-control"
-                type="text"
-                id="afdelings-aanvraag-input"
-                placeholder="Voer afdelingsnaam in"
-              />
-            </div>
-            <div>
-              <label for="noodsituatie">Noodsituatie:</label>
-              <input
-                class="form-control"
-                type="text"
-                id="noodsituatie-input"
-                placeholder="Voer noodsituatie in"
-              />
-            </div>
-            <div>
-              <button class="btn btn-primary mt-3" id="spoed-aanvraag-btn">
-                Aanvraag Indienen
-              </button>
+        <div class="card">
+          <div class="spoed-aanvraag">
+            <h3>Spoed Aanvraag</h3>
+            <div class="spoed-aanvraag-body">
+              <div>
+                <label for="spoed-aanvraag-input"
+                  >Zoek en/of selecteer supplies:</label
+                >
+                <input
+                  class="form-control"
+                  type="text"
+                  id="spoed-aanvraag-input"
+                  placeholder="Voer aanvraagcode in"
+                />
+              </div>
+              <div>
+                <label for="afdelings-aanvraag-input">Afdeling:</label>
+                <input
+                  class="form-control"
+                  type="text"
+                  id="afdelings-aanvraag-input"
+                  placeholder="Voer afdelingsnaam in"
+                />
+              </div>
+              <div>
+                <label for="noodsituatie">Noodsituatie:</label>
+                <input
+                  class="form-control"
+                  type="text"
+                  id="noodsituatie-input"
+                  placeholder="Voer noodsituatie in"
+                />
+              </div>
+              <div>
+                <button class="btn btn-primary mt-3" id="spoed-aanvraag-btn">
+                  Aanvraag Indienen
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </section>
       <section class="kritieke-voorraad-overzicht">
         <h3>Kritieke Voorraad Overzicht</h3>
-        <div class="kritieke-voorraad-overzicht-body">
-          <p>Hier komt een overzicht van kritieke voorraden.</p>
+        <div class="card">
+          <div class="kritieke-overzicht-body">
+            <!-- Need to find a fitting boostrapclass -->
+            <div class="">
+              <!-- Have to implement dynamic number fetching for the total amount of 'kritieke' en 'laag' voorraad-->
+              <input type="text" value="kritiek-alert" readonly />
+              <input type="text" value="laag-alert" readonly />
+              <!----------------------------------------------------------------------------------------->
+            </div>
+            <!-- Need to find a fitting boostrapclass -->
+            <div class="">
+              <search>
+                <input
+                  class="form-control"
+                  type="text"
+                  id="kritieke-voorraad-search"
+                  placeholder="Zoek in kritieke voorraad"
+                />
+              </search>
+            </div>
+            <!-- Need to find a fitting boostrapclass -->
+            <div class="">
+              <select class="form-select" id="kritieke-voorraadneveau-filter">
+                <option value="" selected>Alle voorraadniveaus</option>
+                <option value=""></option>
+                <option value=""></option>
+                <option value=""></option>
+              </select>
+              <select class="form-select" id="alle-categorie-filter">
+                <option value="" selected>Alle categorieën</option>
+                <option value=""></option>
+                <option value=""></option>
+                <option value=""></option>
+              </select>
+            </div>
+          </div>
         </div>
       </section>
       <section class="meldingen-grid"></section>
