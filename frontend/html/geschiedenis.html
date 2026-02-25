@@ -1,32 +1,109 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="nl">
-<head>
-  <title>Geschiedenis | Medsupply Manager RKZ</title>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <head>
+    <title>Geschiedenis | Medsupply Manager RKZ</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <link rel="stylesheet" href="/frontend/css/bootstrap.css" />
-  <link rel="stylesheet" href="../css/inlog.css" />
+  <link rel="stylesheet" href="../css/bootstrap.css" />
+  <link rel="stylesheet" href="../css/main.css" />
   <link rel="stylesheet" href="../css/geschiedenis.css" />
 </head>
 
 <body class="bg-rkz-blue">
+  <!-- Navbar -->
+  <header id="nav-header" class="navbar navbar-expand-lg sticky-top">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="../html/dashboard.html">
+        <img
+          src="../img/rkz-logo.jif"
+          alt="Logo"
+          width="30"
+          height="30"
+          class="d-inline-block align-top"
+        />
+      </a>
+
+      <nav class="nav-bar collapse navbar-collapse" id="navbarNav">
+        <div class="navbar-nav me-auto mb-2 mb-lg-0 nav-links">
+          <a class="nav-link" href="../html/dashboard.html">Dashboard</a>
+          <a class="nav-link" href="../html/aanvraag.html">Aanvraag</a>
+          <a class="nav-link" href="../html/totale-voorraad.html">Totale Voorraad</a>
+          <a class="nav-link" href="../html/statistieken.html">Statistieken</a>
+          <a class="nav-link active" href="../html/geschiedenis.html">Geschiedenis</a>
+        </div>
+
+        <div class="navbar-nav nav-utils">
+          <a class="nav-link" href="../html/profile.html">Profiel</a>
+          <a class="nav-link" href="../html/settings.html">Instellingen</a>
+          <a class="nav-link text-danger" href="../html/inlog.html">Log Out</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
   <main class="container-fluid p-0">
     <section class="history-minimal">
-      <div class="history-bar">
-        <div class="history-header">
-          <svg class="history-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"
-              d="M8.25 2.25v3m7.5-3v3M3.75 9.75h16.5M5.25 21h13.5a1.5 1.5 0 001.5-1.5V6.75a1.5 1.5 0 00-1.5-1.5H5.25a1.5 1.5 0 00-1.5 1.5V19.5a1.5 1.5 0 001.5 1.5z" />
-          </svg>
-          <h1 class="history-title">Geschiedenis</h1>
-        </div>
+
+      <!-- Neutrale titel zonder blauwe balk -->
+      <div class="history-title-wrap px-3 px-md-4 pt-4">
+        <h1 class="history-page-title mb-0">Geschiedenis Overzicht</h1>
       </div>
 
       <div class="history-content px-3 px-md-4 py-4">
-        <p class="history-subtitle mb-0">
+        <p class="history-subtitle">
           Overzicht van alle activiteiten van de afgelopen maand
         </p>
+
+        <!-- Filter option -->
+        <div class="card history-card border-0 shadow-sm mb-4">
+          <div class="card-body p-3 p-md-4">
+            <div class="row g-3">
+              <div class="col-12 col-md-6">
+                <label for="periodeFilter" class="filter-label">Periode</label>
+                <select id="periodeFilter" class="form-select custom-select">
+                  <option value="24u">Laatste 24 uur</option>
+                  <option value="7d" selected>Laatste 7 dagen</option>
+                  <option value="30d">Laatste 30 dagen</option>
+                </select>
+              </div>
+
+              <div class="col-12 col-md-6">
+                <label for="typeFilter" class="filter-label">Type activiteit</label>
+                <select id="typeFilter" class="form-select custom-select">
+                  <option value="all" selected>Alle types</option>
+                  <option value="emergency">Spoedaanvragen</option>
+                  <option value="normal">Normale aanvragen</option>
+                  <option value="warning">Waarschuwingen</option>
+                  <option value="stock">Voorraad updates</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Results for history data -->
+        <div class="card history-card border-0 shadow-sm">
+          <div class="card-body p-0">
+            <div class="table-responsive">
+              <table class="table history-table mb-0">
+                <thead>
+                  <tr>
+                    <th>To be continued</th>
+                    <th></th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
       </div>
     </section>
   </main>

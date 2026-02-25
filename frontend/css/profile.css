@@ -1,6 +1,9 @@
 :root {
-  --page-bg: #f1f2f4;
-  --card-bg: #f1f2f4;
+  /* changes blocks the changes of the background color */
+  /* --page-bg: #f1f2f4;
+  --card-bg: #f1f2f4; */
+
+  /* **************8 */
   --header-blue: #1f5be3;
   --text-main: #1f2d3d;
   --text-muted: #7f8a9d;
@@ -14,12 +17,6 @@
   --stat-green-text: #0a9b4a;
 }
 
-body.bg-rkz-blue {
-  background-color: var(--page-bg) !important;
-  color: var(--text-main);
-  font-family: sans-serif;
-}
-
 .profile-card {
   background-color: var(--card-bg);
   border-radius: 0;
@@ -28,8 +25,9 @@ body.bg-rkz-blue {
   overflow: hidden;
 }
 
+/* Give the color to the top bar or header of the page */
 .bg-rkz-header {
-  background-color: #1771D0;
+  background-color: #1771d0;
   color: #fff;
   gap: 3.25rem;
   min-height: 5rem;
@@ -49,6 +47,8 @@ body.bg-rkz-blue {
   font-family: sans-serif;
 }
 
+/* ******************************************** */
+
 .avatar-circle {
   width: 56px;
   height: 56px;
@@ -64,7 +64,7 @@ body.bg-rkz-blue {
 .avatar-circle .avatar-icon {
   width: 32px;
   height: 32px;
-  color: #1771D0;
+  color: #1771d0;
 }
 
 .form-label {
@@ -165,4 +165,35 @@ body.bg-rkz-blue {
 
 .btn-light {
   border: none;
+}
+
+/* Back to dashboard button */
+.profile-actions {
+  margin-top: 1.5rem;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.btn-dashboard-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.65rem 1.1rem;
+  border-radius: 10px;
+  background-color: #1771D0;
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: 800; /* bold */
+  font-family: sans-serif;
+  transition: background-color 0.2s ease, transform 0.15s ease;
+}
+
+.btn-dashboard-back:hover {
+  background-color: #125aa5;
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.btn-dashboard-back:active {
+  transform: translateY(0);
 }
