@@ -12,7 +12,9 @@ model categories {
   categoryName String
   description  String   @db.Text
   createdAt    DateTime @default(now())
-  updatedAt    DateTime
+  // Use @default(now()) and @db.Timestamp
+  updatedAt    DateTime @default(now()) @updatedAt @db.Timestamp
+
   items        items[]
 }
 
@@ -20,20 +22,21 @@ model department {
   departmentId   Int      @id @default(autoincrement())
   departmentName String   @db.VarChar(100)
   createdAt      DateTime @default(now())
-  updatedAt      DateTime
+  updatedAt      DateTime @default(now()) @updatedAt @db.Timestamp
+
   users          users[]
 }
 
 model items {
-  itemId          Int         @id @default(autoincrement())
+  itemId          Int      @id @default(autoincrement())
   itemName        String
-  description     String      @db.MediumText
+  description     String   @db.MediumText
   remainingAmount Int
-  dateModified    DateTime
   categoryId      Int
-  createdAt       DateTime    @default(now())
-  updatedAt       DateTime
-  categories      categories  @relation(fields: [categoryId], references: [categoryId], map: "Items_categoryId_fkey")
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @default(now()) @updatedAt @db.Timestamp
+
+  categories      categories @relation(fields: [categoryId], references: [categoryId], map: "Items_categoryId_fkey")
   request         request[]
   shipments       shipments[]
 
@@ -43,12 +46,13 @@ model items {
 model request {
   requestId       Int      @id @default(autoincrement())
   requestBatchId  Int
+  itemId          Int
   requestedAmount Int
   requestedDate   DateTime @default(now())
   userId          Int
-  itemId          Int
   createdAt       DateTime @default(now())
-  updatedAt       DateTime
+  updatedAt       DateTime @default(now()) @updatedAt @db.Timestamp
+
   items           items    @relation(fields: [itemId], references: [itemId], map: "Request_itemId_fkey")
   users           users    @relation(fields: [userId], references: [userId], map: "Request_userId_fkey")
 
@@ -56,23 +60,18 @@ model request {
   @@index([userId], map: "Request_userId_idx")
 }
 
-model role {
-  roleId   Int     @id @default(autoincrement())
-  roleName String
-  users    users[]
-}
-
 model shipments {
   shipmentId      Int       @id @default(autoincrement())
-  GTIN            Int       @default(0)
-  deliveryDate    DateTime  @default(now())
   shipmentBatchId Int
+  itemId          Int
+  GTIN            Int       @default(0)
+  supplierId      Int
+  deliveryDate    DateTime  @default(now())
   experationDate  DateTime
   cost            Int
   createdAt       DateTime  @default(now())
-  itemId          Int
-  supplierId      Int
-  updatedAt       DateTime
+  updatedAt       DateTime  @default(now()) @updatedAt @db.Timestamp
+
   items           items     @relation(fields: [itemId], references: [itemId], map: "Shipments_itemId_fkey")
   suppliers       suppliers @relation(fields: [supplierId], references: [supplierId], map: "Shipments_supplierId_fkey")
 
@@ -81,30 +80,39 @@ model shipments {
 }
 
 model suppliers {
-  supplierId   Int         @id @default(autoincrement())
-  supplierName String      @unique(map: "Suppliers_supplierName_key")
+  supplierId   Int       @id @default(autoincrement())
+  supplierName String    @unique(map: "Suppliers_supplierName_key")
   Address      String
-  Description  String      @db.MediumText
+  Description  String    @db.MediumText
   contact      String
-  createdAt    DateTime    @default(now())
-  updatedAt    DateTime
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @default(now()) @updatedAt @db.Timestamp
+
   shipments    shipments[]
 }
 
 model users {
   userId       Int        @id @default(autoincrement())
   firstName    String     @db.VarChar(50)
+  lastName     String     @db.VarChar(50)
   email        String     @unique(map: "Users_email_key") @db.VarChar(255)
   password     String     @db.Text
-  departmentId Int
   roleId       Int
+  departmentId Int
   createdAt    DateTime   @default(now())
-  lastName     String     @db.VarChar(50)
-  updatedAt    DateTime
+  updatedAt    DateTime   @default(now()) @updatedAt @db.Timestamp
+
   request      request[]
   department   department @relation(fields: [departmentId], references: [departmentId], map: "Users_departmentId_fkey")
   role         role       @relation(fields: [roleId], references: [roleId], map: "Users_roleId_fkey")
 
   @@index([departmentId], map: "Users_departmentId_idx")
   @@index([roleId], map: "Users_roleId_idx")
+}
+
+// Added role back since it was missing fields in your snippet
+model role {
+  roleId   Int     @id @default(autoincrement())
+  roleName String
+  users    users[]
 }

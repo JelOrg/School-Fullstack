@@ -21,7 +21,7 @@ AFTER INSERT ON shipments -- Fixed table name from 'shipment' to 'shipments'
 FOR EACH ROW
 BEGIN
     UPDATE items
-    SET remainingAmount =  + 1
+    SET remainingAmount = remainingAmount + 1
     WHERE itemId = NEW.itemId; -- Added NEW. prefix
 END; //
 
