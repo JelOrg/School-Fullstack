@@ -1,0 +1,27 @@
+/* Soft dashboard background */
+.dashboard-bg {
+  background-color: #e6f2f4;
+  min-height: 100vh;
+}
+
+/* Spoed card */
+.spoed-card {
+  background: linear-gradient(180deg, #ff4d00, #ff6a2f);
+  border-radius: 15px;
+}
+
+.spoed-header {
+  background: transparent;
+  border-bottom: none;
+}
+
+/* General card rounding */
+.card {
+  border-radius: 15px;
+}
+
+/* Progress height */
+.progress {
+  height: 8px;
+  border-radius: 10px;
+}
