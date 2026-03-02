@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client"
   output   = "../generated/prisma"
@@ -13,67 +7,112 @@ datasource db {
   provider = "mysql"
 }
 
-model Category {
+model categories {
   categoryId   Int      @id @default(autoincrement())
-  categoryName String   @db.VarChar(100)
-  description  String?  @db.Text
-  items        Item[]
+  categoryName String
+  description  String   @db.Text
+  createdAt    DateTime @default(now())
+  // Use @default(now()) and @db.Timestamp
+  updatedAt    DateTime @default(now()) @updatedAt @db.Timestamp
 
-  @@index([categoryId])
+  items        items[]
 }
 
-model Department {
+model department {
   departmentId   Int      @id @default(autoincrement())
   departmentName String   @db.VarChar(100)
-  users          User[]
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @default(now()) @updatedAt @db.Timestamp
 
-  @@index([departmentId])
+  users          users[]
 }
 
-model Item {
-  itemId          Int       @id @default(autoincrement())
-  itemName        String    @db.VarChar(100)
-  remainingAmount Int       @default(0)
+model items {
+  itemId          Int      @id @default(autoincrement())
+  itemName        String
+  description     String   @db.MediumText
+  remainingAmount Int
   categoryId      Int
-  category        Category  @relation(fields: [categoryId], references: [categoryId])
-  requests        Request[]
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @default(now()) @updatedAt @db.Timestamp
 
-  @@index([categoryId])
+  categories      categories @relation(fields: [categoryId], references: [categoryId], map: "Items_categoryId_fkey")
+  request         request[]
+  shipments       shipments[]
+
+  @@index([categoryId], map: "Items_categoryId_idx")
 }
 
-model Request {
-  requestIndex    Int      @id @default(autoincrement())
-  requestId       Int
-  userId          Int
+model request {
+  requestId       Int      @id @default(autoincrement())
+  requestBatchId  Int
   itemId          Int
-  amountRequested Int
-  requestDate     DateTime @db.DateTime(0)
-  user            User     @relation(fields: [userId], references: [userId])
-  item            Item     @relation(fields: [itemId], references: [itemId])
+  requestedAmount Int
+  requestedDate   DateTime @default(now())
+  userId          Int
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @default(now()) @updatedAt @db.Timestamp
 
-  @@index([userId])
-  @@index([itemId])
+  items           items    @relation(fields: [itemId], references: [itemId], map: "Request_itemId_fkey")
+  users           users    @relation(fields: [userId], references: [userId], map: "Request_userId_fkey")
+
+  @@index([itemId], map: "Request_itemId_idx")
+  @@index([userId], map: "Request_userId_idx")
 }
 
-model Role {
-  roleId Int    @id @default(autoincrement())
-  users  User[]
+model shipments {
+  shipmentId      Int       @id @default(autoincrement())
+  shipmentBatchId Int
+  itemId          Int
+  GTIN            Int       @default(0)
+  supplierId      Int
+  deliveryDate    DateTime  @default(now())
+  experationDate  DateTime
+  cost            Int
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @default(now()) @updatedAt @db.Timestamp
 
-  @@index([roleId])
+  items           items     @relation(fields: [itemId], references: [itemId], map: "Shipments_itemId_fkey")
+  suppliers       suppliers @relation(fields: [supplierId], references: [supplierId], map: "Shipments_supplierId_fkey")
+
+  @@index([itemId], map: "Shipments_itemId_idx")
+  @@index([supplierId], map: "Shipments_supplierId_idx")
 }
 
-model User {
-  userId       Int         @id @default(autoincrement())
-  firstName    String      @db.VarChar(100)
-  lastName     String      @db.VarChar(100)
-  email        String      @unique @db.VarChar(100)
-  pswd         String      @db.VarChar(100)
+model suppliers {
+  supplierId   Int       @id @default(autoincrement())
+  supplierName String    @unique(map: "Suppliers_supplierName_key")
+  Address      String
+  Description  String    @db.MediumText
+  contact      String
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @default(now()) @updatedAt @db.Timestamp
+
+  shipments    shipments[]
+}
+
+model users {
+  userId       Int        @id @default(autoincrement())
+  firstName    String     @db.VarChar(50)
+  lastName     String     @db.VarChar(50)
+  email        String     @unique(map: "Users_email_key") @db.VarChar(255)
+  password     String     @db.Text
   roleId       Int
   departmentId Int
-  requests     Request[]
-  role         Role        @relation(fields: [roleId], references: [roleId])
-  department   Department  @relation(fields: [departmentId], references: [departmentId])
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @default(now()) @updatedAt @db.Timestamp
 
-  @@index([roleId])
-  @@index([departmentId])
+  request      request[]
+  department   department @relation(fields: [departmentId], references: [departmentId], map: "Users_departmentId_fkey")
+  role         role       @relation(fields: [roleId], references: [roleId], map: "Users_roleId_fkey")
+
+  @@index([departmentId], map: "Users_departmentId_idx")
+  @@index([roleId], map: "Users_roleId_idx")
+}
+
+// Added role back since it was missing fields in your snippet
+model role {
+  roleId   Int     @id @default(autoincrement())
+  roleName String
+  users    users[]
 }
