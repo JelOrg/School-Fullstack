@@ -1,0 +1,30 @@
+/* Soft dashboard background */
+.dashboard-bg {
+  background: linear-gradient(45deg, #22678b, #6ba9ca);
+  min-height: 100vh;
+}
+
+/* Spoed card */
+.spoed-card {
+  background: linear-gradient(180deg, #e44907, #ff6a2f);
+  border-radius: 15px;
+}
+
+.spoed-header {
+  background: transparent;
+  border-bottom: none;
+}
+
+/* General card rounding */
+/* Update your existing .card rule */
+.card {
+  border-radius: 15px;
+  overflow: hidden; /* This ensures the header background doesn't overlap the rounded corners */
+  border: none;     /* Optional: matching the 'border-0' style of your other pages */
+}
+
+/* Progress height */
+.progress {
+  height: 8px;
+  border-radius: 10px;
+}
