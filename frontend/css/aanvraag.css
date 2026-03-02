@@ -1,0 +1,11 @@
+/* Update this in dashboard.css */
+.card {
+  border-radius: 15px !important;
+  overflow: hidden; /* This is crucial for rounded corners to show */
+  border: none;
+}
+
+/* Optional: round the input boxes too */
+.form-control, .form-select {
+  border-radius: 10px;
+}

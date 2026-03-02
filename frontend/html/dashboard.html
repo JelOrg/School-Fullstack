@@ -4,6 +4,7 @@
     <title>Dashboard</title>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <link rel="stylesheet" href="../css/bootstrap.css" />
     <link rel="stylesheet" href="../css/main.css" />
     <link rel="stylesheet" href="../css/dashboard.css" />
@@ -11,283 +12,208 @@
 
   <!-- Navbar -->
   <body>
-    <header id="nav-header" class="navbar navbar-expand-lg sticky-top">
+    <header class="navbar navbar-expand-lg navbar-light bg-light sticky-top shadow-sm">
       <div class="container-fluid">
-        <a class="navbar-brand" href="../html/dashboard.html">
-          <img
-            src="../img/rkz-logo.jif"
-            alt="Logo"
-            width="30"
+
+        <!-- Logo -->
+        <a class="navbar-brand d-flex align-items-center" href="../html/dashboard.html">
+          <img 
+            src="../img/rkz-logo.jif" 
+            alt="Logo" 
+            width="30" 
             height="30"
-            class="d-inline-block align-top"
-          />
+            class="me-2"
+          >
+          <span class="fw-bold">RKZ Voorraad</span>
         </a>
 
-        <nav class="nav-bar collapse navbar-collapse" id="navbarNav">
-          <div class="navbar-nav me-auto mb-2 mb-lg-0 nav-links">
-            <a class="nav-link" href="../html/dashboard.html">Dashboard</a>
-            <a class="nav-link" href="../html/aanvraag.html">Aanvraag</a>
-            <a class="nav-link" href="../html/totale-voorraad.html"
-              >Totale Voorraad</a
-            >
-            <a class="nav-link" href="../html/statistieken.html"
-              >Statistieken</a
-            >
-            <a class="nav-link" href="../html/geschiedenis.html"
-              >Geschiedenis</a
-            >
-          </div>
+        <!-- Hamburger button (VERY IMPORTANT) -->
+        <button 
+          class="navbar-toggler" 
+          type="button" 
+          data-bs-toggle="collapse" 
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
 
-          <div class="navbar-nav nav-utils">
-            <a class="nav-link" href="../html/profile.html">Profiel</a>
-            <a class="nav-link" href="../html/settings.html">Instellingen</a>
-            <a class="nav-link text-danger" href="../html/inlog.html"
-              >Log Out</a
-            >
-          </div>
-        </nav>
+        <!-- Collapsible content -->
+        <div class="collapse navbar-collapse" id="navbarNav">
+
+          <!-- Left side links -->
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link active" href="../html/dashboard.html">Dashboard</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="../html/aanvraag.html">Aanvraag</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="../html/totale-voorraad.html">Totale Voorraad</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="../html/statistieken.html">Statistieken</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="../html/geschiedenis.html">Geschiedenis</a>
+            </li>
+          </ul>
+
+          <!-- Right side utilities -->
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="../html/profile.html">Profiel</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="../html/settings.html">Instellingen</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-danger" href="../html/inlog.html">Log Out</a>
+            </li>
+          </ul>
+
+        </div>
       </div>
     </header>
 
     <!-- Main Dashboard interface -->
-    <main class="py-4 container">
-      <!-- Header of page -->
-      <h1 class="text-center">Dashboard</h1>
+    <main class="py-4 px-1 container-fluid dashboard-bg">
+    
+      <div class="container-fluid px-4">
 
-      <div class="d-flex row-cols-3 gap-4">
-        <!-- Spoedaanvraag formulier -->
-        <section class="card stat-card bg-danger">
-          <h3 class="card-header mb-2">Spoed Aanvraag</h3>
-          <div class="card-body">
-            <div class="mb-2">
-              <!-- Need to implement dynamic fetching for searchup -->
-              <label class="form-label" for="spoed-aanvraag-input"
-                >Zoek en/of selecteer supplies:</label
-              >
-              <input
-                class="form-control"
-                type="text"
-                id="spoed-aanvraag-input"
-                placeholder="Voer aanvraagcode in"
-              />
-            </div>
-            <div class="mb-2">
-              <!-- Need to implement dynamic fetching for searchup -->
-              <label class="form-label" for="afdelings-aanvraag-input"
-                >Afdeling:</label
-              >
-              <input
-                class="form-control"
-                type="text"
-                id="afdelings-aanvraag-input"
-                placeholder="Voer afdelingsnaam in"
-              />
-            </div>
-            <div class="mb-4">
-              <!-- Need to make it so it autosizes to the size of the 'Noodsituatie section/div' -->
-              <label class="form-label" for="nood-situatie-info"
-                >Noodsituatie:</label
-              >
-              <textarea
-                class="form-control"
-                name="nood-situatie-info"
-                id="nood-situatie-info"
-              ></textarea>
-            </div>
-            <div class="gap-2">
-              <!-- Need to make the button functional to submit a req -->
-              <button class="btn btn-warning" id="spoed-aanvraag-btn">
-                Aanvraag Indienen
-              </button>
-              <button class="btn border btn-danger" id="wissen">Wissen</button>
-            </div>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="mb-0">Dashboard</h2>
+        </div>
+
+      
+        <div class="row g-4">
+
+          <!-- LEFT: Spoedaanvraag -->
+          <div class="col-lg-3">
+            <section class="card shadow-lg border-0 spoed-card h-100">
+              <div class="card-header spoed-header text-white">
+                <h5 class="mb-0">Spoedaanvraag</h5>
+                <small>Hoogste prioriteit</small>
+              </div>
+
+              <div class="card-body">
+                <label class="form-label">Zoek supplies</label>
+                <input class="form-control mb-3" placeholder="Zoek op naam of categorie">
+
+                <label class="form-label">Afdeling</label>
+                <input class="form-control mb-3" placeholder="Bijv. SEH, Cardiologie">
+
+                <label class="form-label">Noodsituatie</label>
+                <textarea class="form-control mb-3" rows="4"
+                  placeholder="Beschrijf kort de noodsituatie"></textarea>
+
+                <button class="btn btn-light w-100 fw-bold">
+                  Spoedaanvraag versturen
+                </button>
+              </div>
+            </section>
           </div>
-        </section>
 
-        <!-- Kritieke-voorraad-overzicht -->
-        <section class="card stat-card">
-          <!-- Header of kritieke voorraad overzicht -->
-          <h3 class="card-header">Kritieke Voorraad Overzicht</h3>
-
-          <div class="card-body">
-            <!--  Gives back the total amount of kritiek and laag alerts -->
-            <div
-              class="d-flex justify-content-center form-control bg-warning mb-4"
-            >
-              <!-- Have to implement dynamic number fetching for the total amount of 'kritieke' en 'laag' voorraad-->
-              <input
-                class="d-flex form-control"
-                type="text"
-                value="kritiek-alert"
-                readonly
-              />
-              <input
-                class="d-flex form-control"
-                type="text"
-                value="laag-alert"
-                readonly
-              />
-            </div>
-
-            <!-- Filters for kritieke voorraad :| -->
-            <div class="mb-2">
-              <search>
-                <!-- Need to implement dynamic fetching for searchup -->
-                <input
-                  class="form-control mb-2"
-                  type="text"
-                  id="kritieke-voorraad-search"
-                  placeholder="Zoek in kritieke voorraad"
-                />
-              </search>
-              <!-- Need to implement dynamic fetching for searchup -->
-
-              <select
-                class="form-select mb-2"
-                id="kritieke-voorraadneveau-filter"
-              >
-                <option value="" selected>Alle voorraadniveaus</option>
-                <option value=""></option>
-                <option value=""></option>
-                <option value=""></option>
-              </select>
-              <!-- Need to implement dynamic fetching for searchup -->
-              <select class="form-select mb-4" id="alle-categorie-filter">
-                <option value="" selected>Alle categorieën</option>
-                <option value=""></option>
-                <option value=""></option>
-                <option value=""></option>
-              </select>
-            </div>
-
-            <!-- List of all critical or umm... laag? ...voorraad. -->
-            <div class="list-group list-group-flush card">
-              <!-- Need to implement dynamic fetching of kritieke voorraad items -->
-              <h5 class="card-header">Kritieke Voorraad</h5>
-              <div class="list-group-item list-group-item-danger card">
-                <h4 class="fw-bold">Item 1</h4>
-                <p class="small">critical</p>
+          <!-- MIDDLE: Kritieke voorraad -->
+          <div class="col-lg-6">
+            <section class="card shadow border-0 h-100">
+              <div class="card-header bg-white">
+                <h5 class="mb-0">Kritiek Voorraadoverzicht</h5>
               </div>
-              <div class="list-group-item list-group-item-danger card">
-                <h4 class="fw-bold">Item 1</h4>
-                <p class="small">critical</p>
-              </div>
-              <div class="list-group-item list-group-item-warning card">
-                <h4 class="fw-bold">Item 1</h4>
-                <p class="small">critical</p>
-              </div>
-              <!-- ------------------------------ -->
-            </div>
-          </div>
-        </section>
 
-        <!-- Medingen overzicht -->
-        <section class="card stat-card">
-          <h3 class="card-header">Meldingen</h3>
+              <div class="card-body">
 
-          <div class="card-body">
-            <div class="mb-2">
-              <!-- Have to implement dynamic number fetching for the total amount of 'kritieke' en 'laag' voorraad-->
-              <input
-                class="d-flex form-control bg-warning mb-2"
-                type="text"
-                value="Spoemeldingen (number#67)"
-                readonly
-              />
-
-              <!-- Filter options for meldingen -->
-              <label class="label" for="alle-meldingen-filter"
-                >melding type(spoed of ?):</label
-              >
-
-              <!-- Need to implement dynamic fetching for searchup -->
-              <select class="form-select mb-2" id="alle-meldingen-filter">
-                <option value="" selected>Alle meldingen</option>
-                <option value=""></option>
-                <option value=""></option>
-                <option value=""></option>
-              </select>
-
-              <label class="label" for="alle-time-filter"
-                >Meldingen time?(Latest of 24u?):</label
-              >
-
-              <!-- Need to implement dynamic fetching for searchup -->
-              <select class="form-select mb-4" id="meldingen-time-filter">
-                <option value="" selected>Latest</option>
-                <option value=""></option>
-                <option value=""></option>
-                <option value=""></option>
-              </select>
-            </div>
-
-            <div class="md-4 card stat-card">
-              <!-- Need to implement dynamic fetching to see if there are alerts -->
-              <h5 class="card-header">Kritieke Meldingen</h5>
-
-              <!-- Meldingen list -->
-              <div class="list-group">
-                <!-- -------------------------------------- -->
-                <section class="card list-group-item mb-4">
-                  <!-- Maybe label doesn't have to used here -->
-                  <label class="border form-control bg-danger">Spoed</label>
-                  <h4 class="fw-bold">Test</h4>
-                  <p class="small">
-                    3 zuurstofbommen direct nodig voor spoedgevallen Afdeling:
-                    SEH 23-2-2026, 10:45:59
-                  </p>
-
-                  <div>
-                    <!-- Need to make the buttons function ('Annuleren' en 'Bevestigen') -->
-                    <button
-                      class="btn btn-primary mt-3 btn-danger"
-                      id="spoed-aanvraag-btn"
-                    >
-                      Annuleren
-                    </button>
-                    <button
-                      class="btn btn-primary mt-3"
-                      id="spoed-aanvraag-btn"
-                    >
-                      Bevestigen
-                    </button>
+                <div class="row mb-3">
+                  <div class="col">
+                    <select class="form-select">
+                      <option>Alle voorraadniveaus</option>
+                    </select>
                   </div>
-                </section>
-                <!-- ----------------------------- -->
-
-                <!-- ----------------------------- -->
-                <section class="card list-group-item mb-4">
-                  <!-- Maybe label doesn't have to used here -->
-                  <label class="border form-control bg-warning"
-                    >Critical?</label
-                  >
-                  <h4 class="fw-bold">Test</h4>
-                  <p class="small">
-                    3 zuurstofbommen direct nodig voor spoedgevallen Afdeling:
-                    SEH 23-2-2026, 10:45:59
-                  </p>
-
-                  <div>
-                    <!-- Need to make the buttons function ('Annuleren' en 'Bevestigen') -->
-                    <button
-                      class="btn btn-primary mt-3 btn-danger"
-                      id="spoed-aanvraag-btn"
-                    >
-                      Annuleren
-                    </button>
-                    <button
-                      class="btn btn-primary mt-3"
-                      id="spoed-aanvraag-btn"
-                    >
-                      Bevestigen
-                    </button>
+                  <div class="col">
+                    <select class="form-select">
+                      <option>Alle categorieën</option>
+                    </select>
                   </div>
-                </section>
-                <!-- ----------------------------- -->
+                </div>
+
+                <!-- Example voorraad item -->
+                <div class="card mb-3 border-0 shadow-sm">
+                  <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                      <h6 class="fw-bold">Steriele handschoenen M</h6>
+                      <span class="badge bg-danger">Kritiek</span>
+                    </div>
+                    <small class="text-muted">15 dozen • Min: 50</small>
+
+                    <div class="progress mt-2">
+                      <div class="progress-bar bg-danger" style="width:30%"></div>
+                    </div>
+
+                    <small class="text-danger">
+                      ⚠ Direct aanvullen vereist
+                    </small>
+                  </div>
+                </div>
+
               </div>
-            </div>
+            </section>
           </div>
-        </section>
+
+          <!-- RIGHT: Meldingen -->
+          <div class="col-lg-3">
+            <section class="card shadow border-0 h-100">
+              <div class="card-header bg-white d-flex justify-content-between">
+                <h5 class="mb-0">Meldingen</h5>
+                <span class="badge bg-danger">4</span>
+              </div>
+
+              <div class="card-body">
+
+                <div class="card-body">
+
+                  <!-- Filters -->
+                  <div class="mb-3">
+                    <label class="form-label small">Type melding</label>
+                    <select class="form-select form-select-sm mb-2">
+                      <option>Alle meldingen</option>
+                      <option>Spoed</option>
+                      <option>Kritieke voorraad</option>
+                    </select>
+
+                    <label class="form-label small">Sorteren</label>
+                    <select class="form-select form-select-sm">
+                      <option>Nieuwste eerst</option>
+                      <option>Oudste eerst</option>
+                    </select>
+                  </div>
+
+                  <hr>
+
+                  <!-- Example melding -->
+                  <div class="card mb-3 border-danger">
+                    <div class="card-body">
+                      <span class="badge bg-danger mb-2">SPOED</span>
+                      <p class="small mb-2">
+                        Zuurstof nodig op SEH. 3 zuurstofbommen direct nodig.
+                      </p>
+
+                      <div class="d-flex gap-2">
+                        <button class="btn btn-sm btn-danger w-100">Annuleer</button>
+                        <button class="btn btn-sm btn-success w-100">Bevestig</button>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+            </section>
+          </div>
+
+        </div>
       </div>
     </main>
 
@@ -295,5 +221,7 @@
     <footer class="text-center">
       <p>&copy; 2024 RKZ Voorraadbeheer. Alle rechten voorbehouden.</p>
     </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   </body>
+  
 </html>
