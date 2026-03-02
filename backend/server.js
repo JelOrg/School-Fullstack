@@ -26,8 +26,9 @@ import { view } from "#utils/viewHelper";
 // *=============================================
 //Get the root file where this file is
 const root = process.cwd();
-
 const server = express();
+
+const PORT = process.env.SERVER_PORT || 3000;
 // =============================================
 
 // ? ============================================
@@ -80,8 +81,8 @@ server.use((err, req, res, next) => {
 // START SERVER
 // ============================================
 
-server.listen(process.env.SERVER_PORT, () => {
-  console.log(`Server running on http://localhost:${process.env.SERVER_PORT}`);
+server.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
   console.log(
     `API available at http://localhost:${process.env.DATABASE_PORT}/api`,
   );
