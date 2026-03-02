@@ -1,7 +1,8 @@
 // ============================================
 // ============================================
-// find a way to get this to work
-require("dotenv").config();
+// TODO: make this actually functional
+const path = require("path");
+require("dotenv").config({ path: path.resolve("..") });
 // ============================================
 // ============================================
 // ============================================

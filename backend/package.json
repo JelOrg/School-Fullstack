@@ -2,6 +2,7 @@
   "name": "backend",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -12,11 +13,20 @@
   "dependencies": {
     "@prisma/adapter-mariadb": "^7.4.2",
     "@prisma/client": "^7.4.2",
+    "bcrypt": "^6.0.0",
     "dotenv": "^17.3.1",
-    "express": "^5.2.1"
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3"
   },
   "devDependencies": {
     "@types/node": "^25.3.3",
     "prisma": "^7.4.2"
+  },
+  "imports": {
+    "#utils/*": "./api/utils/*.js",
+    "#middleware/*": "./api/middlewares/*.js",
+    "#controller/*": "./api/controller/*.js",
+    "#routes/*": "./api/routes/*.js",
+    "#services/*": "./api/services/*.js"
   }
 }
