@@ -45,6 +45,7 @@ server.use(express.json());
 // ============================================
 //Proccess the file to only make the name(without .html) visible to the frontend
 // --- PAGE ROUTES (The HTML) ---
+// TODO NEED TO FIX CSS NOT SHOWING
 server.get("/", view("inlog"));
 server.get("/login", view("inlog"));
 server.get("/dashboard", view("dashboard"));
