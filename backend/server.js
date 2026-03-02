@@ -12,12 +12,12 @@ import express from "express";
 import path from "path";
 
 //imports and alias for page routes
-import loginPage from "#routes/login.js";
-import dashboardPage from "#routes/dashboard.js";
-import aanvragenPage from "#routes/aanvragen.js";
-import totaleVoorraadPage from "#routes/totale-voorraad.js";
-import statistiekenPage from "#routes/statistieken.js";
-import geschiedenisPage from "#routes/geschiedenis.js";
+import loginPage from "#routes/login";
+import dashboardPage from "#routes/dashboard";
+import aanvragenPage from "#routes/aanvragen";
+import totaleVoorraadPage from "#routes/totale-voorraad";
+import statistiekenPage from "#routes/statistieken";
+import geschiedenisPage from "#routes/geschiedenis";
 
 //middleware
 import { view } from "#utils/viewHelper.js";

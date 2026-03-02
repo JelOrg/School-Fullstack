@@ -23,10 +23,15 @@
     "prisma": "^7.4.2"
   },
   "imports": {
-    "#utils/*.js": "./api/utils/*.js",
-    "#middleware/*.js": "./api/middlewares/*.js",
-    "#controller/*.js": "./api/controller/*.js",
-    "#routes/*.js": "./api/routes/*.js",
-    "#services/*.js": "./api/services/*.js"
+    "#utils/*": "./api/utils/*.js",
+    "#middleware/*": "./api/middlewares/*.js",
+    "#controller/*": "./api/controller/*.js",
+    "#routes/*": "./api/routes/*.js",
+    "#services/*": "./api/services/*.js"
+  },
+  "compilerOptions": {
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true
   }
 }
