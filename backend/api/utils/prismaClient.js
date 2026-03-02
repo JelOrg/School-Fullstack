@@ -1,3 +1,4 @@
+//Gets all the things needed for the database from the .env folder
 import "#utils/absoluteEnvPath";
 import { PrismaMariaDb } from "@prisma/adapter-mariadb";
 import { PrismaClient } from "../../generated/prisma/index.js";
