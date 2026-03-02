@@ -24,33 +24,21 @@ server.use(express.json());
 // ============================================
 
 // ! imports and alias for page routes
-import loginPage from "../routes/login.js";
-import dashboardPage from "../routes/dashboard.js";
-import aanvragenPage from "../routes/aanvragen.js";
-import totaleVoorraadPage from "../routes/totale-voorraad.js";
-import statistiekenPage from "../routes/statistieken.js";
-import geschiedenisPage from "../routes/geschiedenis.js";
+import loginPage from "#routes/login.js";
+import dashboardPage from "#routes/dashboard.js";
+import aanvragenPage from "#routes/aanvragen.js";
+import totaleVoorraadPage from "#routes/totale-voorraad.js";
+import statistiekenPage from "#routes/statistieken.js";
+import geschiedenisPage from "#routes/geschiedenis.js";
 
 // ============================================
-// ROUTES
+// * API ROUTES
 // ============================================
-
-// route for the login page
 server.use("/api/login", loginPage);
-
-// route for the dashbaord
 server.use("/api/dashboard", dashboardPage);
-
-// route for the aanvragen page
 server.use("/api/aanvragen", aanvragenPage);
-
-// route for the voorraad
 server.use("/api/totale-voorraad", totaleVoorraadPage);
-
-// route for the statistics
 server.use("/api/statestieken", statistiekenPage);
-
-// route for the history
 server.use("/api/geschiedenis", geschiedenisPage);
 
 // ? ============================================
