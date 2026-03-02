@@ -1,12 +1,12 @@
 /* Soft dashboard background */
 .dashboard-bg {
-  background-color: #bdbaba;
+  background: linear-gradient(45deg, #22678b, #6ba9ca);
   min-height: 100vh;
 }
 
 /* Spoed card */
 .spoed-card {
-  background: linear-gradient(180deg, #ff4d00, #ff6a2f);
+  background: linear-gradient(180deg, #e44907, #ff6a2f);
   border-radius: 15px;
 }
 

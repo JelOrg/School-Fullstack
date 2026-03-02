@@ -10,7 +10,9 @@
 }
 
 body {
-  background-color: #bdbaba;
+  /* background-color: #6ba9ca; */
+  background: linear-gradient(45deg, #22678b, #6ba9ca);
+  
 }
 
 /* Cards styling for all pages*/
@@ -36,5 +38,9 @@ body {
 .table td {
   vertical-align: middle;
 } 
+
+.mb-0{
+  color: white;
+}
  
 
