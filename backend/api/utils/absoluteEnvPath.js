@@ -1,3 +1,4 @@
+//Give the absolute path of env so you can import it into other paths, if env is inide the backend folder, not the api
 import path from "path";
 import { fileURLToPath } from "url";
 import dotenv from "dotenv";
