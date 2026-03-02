@@ -1,8 +1,9 @@
+import path from "path";
+
 export const view = (fileName) => (req, res) => {
-  // This goes UP out of backend and DOWN into frontend/html
+  // This points to: School Opdracht/frontend/html/filename.html
   const filePath = path.join(
-    root,
-    "..",
+    process.cwd(),
     "..",
     "frontend",
     "html",
@@ -10,5 +11,3 @@ export const view = (fileName) => (req, res) => {
   );
   res.sendFile(filePath);
 };
-
-export default view;

@@ -3,7 +3,6 @@
  */
 
 // ! Imports
-import { sendToken } from "#utils/tokenHandler.js"; // remember the .js!
 import express from "express";
 
 const router = express.Router(); // Creates mini Express app

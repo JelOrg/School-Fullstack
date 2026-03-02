@@ -23,7 +23,7 @@
     "prisma": "^7.4.2"
   },
   "imports": {
-    "#utils/*.js": "./api/Utils/*.js",
+    "#utils/*.js": "./api/utils/*.js",
     "#middleware/*.js": "./api/middlewares/*.js",
     "#controller/*.js": "./api/controller/*.js",
     "#routes/*.js": "./api/routes/*.js",

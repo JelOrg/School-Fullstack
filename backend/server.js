@@ -20,37 +20,41 @@ import statistiekenPage from "#routes/statistieken.js";
 import geschiedenisPage from "#routes/geschiedenis.js";
 
 //middleware
-import view from "#middleware/view.js";
-// !=============================================
+import { view } from "#utils/viewHelper.js";
+// =============================================
 
 // *=============================================
-// 1. Manually create __dirname for ES Modules
+//Get the root file where this file is
 const root = process.cwd();
-const htmlFolder = path.join(root, "..", "frontend", "html");
 
 const server = express();
 const PORT = process.env.PORT || 443;
-// *=============================================
+// =============================================
 
 // ? ============================================
 // MIDDLEWARE
 // ============================================
 
-//Proccess the file to only make the name visible to the frontend
-view();
 // The server searches for the defined html, css, or css files
 server.use(express.static(path.join(root, "..", "frontend")));
 // Parse JSON request bodies
 server.use(express.json());
 
+// * ============================================
+//  PAGE EXPLORER
 // ============================================
-// * PAGE EXPLORER
-// ============================================
-server.get("/login", view("login"));
-server.get("/dashboard", view("dashboard")); // You can add 'protect' here later!
-server.get("/aanvragen", view("aanvragen"));
-// ============================================
-// * API ROUTES
+//Proccess the file to only make the name(without .html) visible to the frontend
+// --- PAGE ROUTES (The HTML) ---
+server.get("/", view("inlog"));
+server.get("/login", view("inlog"));
+server.get("/dashboard", view("dashboard"));
+server.get("/aanvragen", view("aanvraag"));
+server.get("/totale-voorraad", view("totale-voorraad"));
+server.get("/statistieken", view("statistieken"));
+server.get("/geschiedenis", view("geschiedenis"));
+
+// * ============================================
+//  API ROUTES
 // ============================================
 server.use("/api/login", loginPage);
 server.use("/api/dashboard", dashboardPage);
