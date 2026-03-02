@@ -12,87 +12,90 @@
 
   <body class="bg-rkz-blue">
     <!-- Navbar -->
-    <header class="navbar navbar-expand-lg navbar-light bg-light sticky-top shadow-sm">
-        <div class="container-fluid">
+    <header
+      class="navbar navbar-expand-lg navbar-light bg-light sticky-top shadow-sm"
+    >
+      <div class="container-fluid">
+        <!-- Logo -->
+        <a class="navbar-brand d-flex align-items-center" href="/dashboard">
+          <img
+            src="../img/rkz-logo.jif"
+            alt="Logo"
+            width="30"
+            height="30"
+            class="me-2"
+          />
+          <span class="fw-bold">RKZ Voorraad</span>
+        </a>
 
-          <!-- Logo -->
-          <a class="navbar-brand d-flex align-items-center" href="../html/dashboard.html">
-            <img 
-              src="../img/rkz-logo.jif" 
-              alt="Logo" 
-              width="30" 
-              height="30"
-              class="me-2"
-            >
-            <span class="fw-bold">RKZ Voorraad</span>
-          </a>
+        <!-- Hamburger button (VERY IMPORTANT) -->
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
 
-          <!-- Hamburger button (VERY IMPORTANT) -->
-          <button 
-            class="navbar-toggler" 
-            type="button" 
-            data-bs-toggle="collapse" 
-            data-bs-target="#navbarNav"
-            aria-controls="navbarNav"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <span class="navbar-toggler-icon"></span>
-          </button>
+        <!-- Collapsible content -->
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <!-- Left side links -->
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link active" href="dashboard">Dashboard</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="aanvragen">Aanvraag</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="totale-voorraad">Totale Voorraad</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="statistieken">Statistieken</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="geschiedenis">Geschiedenis</a>
+            </li>
+          </ul>
 
-          <!-- Collapsible content -->
-          <div class="collapse navbar-collapse" id="navbarNav">
-
-            <!-- Left side links -->
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-              <li class="nav-item">
-                <a class="nav-link active" href="../html/dashboard.html">Dashboard</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="../html/aanvraag.html">Aanvraag</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="../html/totale-voorraad.html">Totale Voorraad</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="../html/statistieken.html">Statistieken</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="../html/geschiedenis.html">Geschiedenis</a>
-              </li>
-            </ul>
-
-            <!-- Right side utilities -->
-            <ul class="navbar-nav ms-auto">
-              <li class="nav-item">
-                <a class="nav-link" href="../html/profile.html">Profiel</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="../html/settings.html">Instellingen</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link text-danger" href="../html/inlog.html">Log Out</a>
-              </li>
-            </ul>
-
-          </div>
+          <!-- NOT FUNCTIONAL -->
+          <!-- Right side utilities -->
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="../html/profile.html">Profiel</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="../html/settings.html">Instellingen</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-danger" href="../html/inlog.html"
+                >Log Out</a
+              >
+            </li>
+          </ul>
+          <!-- NOT FUNCTIONAL -->
         </div>
+      </div>
     </header>
 
     <main class="container-fluid px-4 py-4">
-
       <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="mb-0">Geschiedenis Overzicht</h2>
       </div>
 
       <section class="history-minimal">
         <div class="history-content py-0">
-
           <div class="card history-card border-0 shadow-sm mb-4">
             <div class="card-body p-3 p-md-4">
               <div class="row g-3">
                 <div class="col-12 col-md-6">
-                  <label for="periodeFilter" class="filter-label">Periode</label>
+                  <label for="periodeFilter" class="filter-label"
+                    >Periode</label
+                  >
                   <select id="periodeFilter" class="form-select custom-select">
                     <option value="24u">Laatste 24 uur</option>
                     <option value="7d" selected>Laatste 7 dagen</option>
@@ -101,7 +104,9 @@
                 </div>
 
                 <div class="col-12 col-md-6">
-                  <label for="typeFilter" class="filter-label">Type activiteit</label>
+                  <label for="typeFilter" class="filter-label"
+                    >Type activiteit</label
+                  >
                   <select id="typeFilter" class="form-select custom-select">
                     <option value="all" selected>Alle types</option>
                     <option value="emergency">Spoedaanvragen</option>
@@ -147,7 +152,7 @@
         </div>
       </section>
     </main>
-    
+
     <footer class="text-center">
       <p>&copy; 2024 RKZ Voorraadbeheer. Alle rechten voorbehouden.</p>
     </footer>
