@@ -96,7 +96,8 @@ model users {
   firstName    String     @db.VarChar(50)
   lastName     String     @db.VarChar(50)
   email        String     @unique(map: "Users_email_key") @db.VarChar(255)
-  password     String     @db.Text
+  saltedPassword     String     @db.Text
+  salt String @db.VarChar(100)
   roleId       Int
   departmentId Int
   createdAt    DateTime   @default(now())
