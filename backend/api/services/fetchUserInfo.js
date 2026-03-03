@@ -37,14 +37,24 @@ async function exampleFunction(userId) {
  * uses @param - userEmail, providedPassword  to get the user password info, and also validates if the login password is correct
  * @returns an object?
  */
-export async function validateUserLogin(userEmail, providedPassword) {
-  const user = await prisma.users.findUnique({
-    where: { email: userEmail },
+export const validateUserLogin = async (
+  userRole,
+  userEmail,
+  providedPassword,
+) => {
+  const user = await prisma.users.findFirst({
+    //* Not really needed to role, because email is unique. This is just to be sure...
+    where: {
+      email: userEmail,
+      role: {
+        roleName: userRole,
+      },
+    },
     select: { userId: true, saltedPassword: true },
   });
 
   //validates if the user exist
-  if (!user) return { success: false, message: "User Doesn't Exist" };
+  if (!user) return { success: false, message: "User or email is incorrect" };
 
   //compares the salted password and the unslated password using bcrypt to see if they are the same
   const isMatch = await bcrypt.compare(providedPassword, user.saltedPassword);
@@ -54,7 +64,7 @@ export async function validateUserLogin(userEmail, providedPassword) {
 
   //returns if sucessfull
   return { success: true, message: "Logged in", userId: user.userId };
-}
+};
 
 //get the info of a user from an object like {userId: something} to get userId, userRole, userDepartment, email
 /**
@@ -63,7 +73,7 @@ export async function validateUserLogin(userEmail, providedPassword) {
  * @param {*} userInfo
  * @returns
  */
-export async function fetchUserInfo(userId) {
+export const fetchUserInfo = async (userId) => {
   const userInfo = await prisma.users.findUnique({
     where: {
       userId: userId.userId,
@@ -89,4 +99,4 @@ export async function fetchUserInfo(userId) {
     success: true,
     ...userInfo,
   };
-}
+};
