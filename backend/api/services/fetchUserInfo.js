@@ -1,10 +1,110 @@
+// file has to do with getting all types of info that is related to users
 import { prisma } from "#utils/prismaClient";
+import bcrypt from "bcrypt";
+import debugUtil from "#utils/debugUtil";
+import { deprecate } from "node:util";
 
-async function main() {
-  // Example: Fetch all records from a table
-  // Replace 'user' with your actual model name
-  const allUsers = await prisma.users.findMany();
+// Example: Fetch all records from a table
+// Replace 'user' with your actual model name
+async function exampleFunction(userId) {
+  const allUsers = await prisma.users.findUnique({
+    where: {
+      userId: userId,
+    },
+    select: {
+      userId: true,
+      firstName: true,
+      lastName: true,
+      role: {
+        select: {
+          roleName: true,
+        },
+      },
+      department: {
+        select: {
+          departmentName: true,
+        },
+      },
+    },
+  });
   console.log("All users:", JSON.stringify(allUsers, null, 2));
 }
 
-main();
+// * Actual funcs
+
+//!A way to get the data from the DB so you can COMPARE it with what the user send during LOGIN
+/**
+ * uses @param - userEmail, providedPassword  to get the user password info, and also validates if the login password is correct
+ * @returns an object?
+ */
+export const validateUserLogin = async (
+  userRole,
+  userEmail,
+  providedPassword,
+) => {
+  const user = await prisma.users.findFirst({
+    //* Not really needed to role, because email is unique. This is just to be sure...
+    where: {
+      email: userEmail,
+      role: {
+        roleName: userRole,
+      },
+    },
+    select: { userId: true, saltedPassword: true },
+  });
+
+  //validates if the user exist
+  if (!user) return { success: false, message: "User or email is incorrect" };
+
+  //compares the salted password and the unslated password using bcrypt to see if they are the same
+  const isMatch = await bcrypt.compare(providedPassword, user.saltedPassword);
+  if (!isMatch) {
+    return { success: false, message: "Username or email is incorrect" };
+  }
+
+  //returns if sucessfull
+  return { success: true, message: "Logged in", userId: user.userId };
+};
+
+//get the info of a user from an object like {userId: something} to get userId, userRole, userDepartment, email
+/**
+ * fetches userInfo based on the userId
+ * Might not be needed, because we will be using a JWT to get general user info
+ * @param {*} userInfo
+ * @returns
+ */
+export const fetchUserInfo = async (userId) => {
+  const userInfo = await prisma.users.findUnique({
+    where: {
+      userId: userId.userId,
+    },
+    select: {
+      userId: true,
+      email: true,
+      role: {
+        select: { roleName: true },
+      },
+      department: {
+        select: {
+          departmentName: true,
+        },
+      },
+    },
+  });
+  //! checks if the userInfo isn't null
+  if (!userInfo) return { success: false };
+
+  //? flattens the giving data so we can access it easier
+  const flattenedUserInfo = {
+    userId: userInfo.userId,
+    email: userInfo.email,
+    roleName: userInfo.role?.roleName,
+    departmentName: userInfo.department?.departmentName,
+  };
+
+  //return object with success appended in front
+  return {
+    success: true,
+    ...flattenedUserInfo,
+  };
+};
