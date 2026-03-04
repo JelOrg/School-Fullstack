@@ -1,4 +1,4 @@
-import {} from "#services/postInfoDatabase";
+import {} from "#services/postInfoToDatabase";
 import { fetchCrucialItemInfo, fetchAllItems } from "#services/fetchItemInfo";
 
 //? Spoedaanvraag controller
@@ -12,13 +12,28 @@ export const displaySpoedAanvraagData = async (req, res) => {};
  */
 export const sendSpoedAanvraag = async (req, res) => {
   //* The info from the spoedaanvraag form needs to be put into the database
-  // ! Test to see if the itemInfo can have multiple data objects
-  // ! Maybe we need to get Department by JWT? or we can put manually if needed
   const { itemInfo, departmentName, textField } = req.body;
 
-  // ! not sure of itemInfo or departmentName will show get alway be true
-  if (!itemInfo || !departmentName)
-    return res.status(401).json({ message: "You have to enter a item" });
+  //Migh have weird js behaviour
+  if (!itemInfo || itemInfo.length === 0 || !departmentName)
+    return res
+      .status(401)
+      .json({ message: "You have to enter a item or department" });
+
+  //Since the itemInto can return multiple things, we use map to get all of them back
+  /** what whould be returned...
+   * [
+  { id: 101, name: "Hammer", qty: 2 },
+  { id: 102, name: "Nails", qty: 50 }
+    ]
+   */
+  const processedItems = itemInfo.map((item) => ({
+    itemId: item.itemId,
+    itemName: item.nameItem,
+    requestedAmount: item.amountRequested,
+  }));
+
+  const responseData = {};
 
   // TODO process itemInfo, since you can ask for multiple
   //* Call a post service

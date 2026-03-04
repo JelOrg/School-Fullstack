@@ -46,7 +46,7 @@ export const fetchAllItems = async () => {
 //Get item info of one specific item
 export const fetchCrucialItemInfo = async (itemName) => {
   const itemInfo = await prisma.items.findUnique({
-    where: itemName.itemName,
+    where: itemName,
     select: {
       itemId: true,
       itemName: true,
@@ -54,11 +54,11 @@ export const fetchCrucialItemInfo = async (itemName) => {
     },
   });
 
-  if (!itemInfo) return { success: false, message: "Empty items" };
+  if (!itemInfo) return { success: false, message: "Item not found" };
 
   return {
     success: true,
     message: "Send items crucial info",
-    ...itemInfo,
+    data: itemInfo,
   };
 };

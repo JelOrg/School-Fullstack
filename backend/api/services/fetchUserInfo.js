@@ -74,7 +74,7 @@ export const validateUserLogin = async (
 export const fetchUserInfo = async (userId) => {
   const userInfo = await prisma.users.findUnique({
     where: {
-      userId: userId.userId,
+      userId: userId,
     },
     select: {
       userId: true,

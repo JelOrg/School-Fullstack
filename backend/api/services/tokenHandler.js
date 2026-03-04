@@ -1,7 +1,6 @@
 import jwt from "jsonwebtoken";
 import { randomUUID } from "node:crypto";
 import "#utils/absoluteEnvPath";
-import { fail } from "node:assert";
 
 /**
  * Signs a JWT and attaches it to an HttpOnly cookie.
