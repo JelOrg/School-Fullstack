@@ -38,6 +38,8 @@ export const validateLogin = async (req, res) => {
   const ONE_HOUR = 3600000; // 1 * 60 * 60 * 1000
   //*=================
 
+  //! prob security issues
+  //Some extras so the client know what with the cookie
   const cookieOptions = {
     maxAge: ONE_HOUR,
     // httpOnly: true,

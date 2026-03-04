@@ -40,7 +40,7 @@ const PORT = process.env.SERVER_PORT || 3000;
 // The server searches for the defined html, css, or css files
 server.use(express.static(path.join(root, "..", "frontend")));
 //make the server use cors
-//! is prob a security issue, but to removing for looks from f12..
+//! is prob a security issue, but to removing for looks for f12...
 server.use(cors());
 // Parse JSON request bodies
 server.use(express.json());
@@ -50,7 +50,7 @@ server.use(express.json());
 // ============================================
 //Proccess the file to only make the name(without .html) visible to the frontend
 // --- PAGE ROUTES (The HTML) ---
-// TODO NEED TO FIX CSS NOT SHOWING
+// TODO NEED TO FIX CSS NOT SHOWING for login
 server.get("/", view("inlog"));
 server.get("/login", view("inlog"));
 server.get("/dashboard", view("dashboard"));

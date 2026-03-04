@@ -34,3 +34,24 @@ async function getUserData() {
     display.innerText = data.message;
   }
 }
+
+// for login example
+async function handleLogin() {
+  const response = await fetch("/api/", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      /* email, password */
+    }),
+  });
+
+  const data = await response.json();
+
+  if (data.success) {
+    // This is the actual "Redirect"
+    // It triggers your server.get("/geschiedenis") route!
+    window.location.href = data.redirectTo;
+  } else {
+    alert("Login failed: " + data.message);
+  }
+}
