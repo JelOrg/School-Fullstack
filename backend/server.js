@@ -50,6 +50,7 @@ server.use(cookieParser());
 //Proccess the file to only make the name(without .html) visible to the frontend
 // --- PAGE ROUTES (The HTML) ---
 // TODO NEED TO FIX CSS NOT SHOWING
+// TODO RequireGuest Might not be needed, so check
 server.get("/", requireGuest, view("inlog"));
 server.get("/login", requireGuest, view("inlog"));
 server.get("/dashboard", authenticateToken, view("dashboard"));
