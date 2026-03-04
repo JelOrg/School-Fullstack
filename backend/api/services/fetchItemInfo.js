@@ -3,7 +3,7 @@ import { prisma } from "#utils/prismaClient";
 //* can be used just to fetch all items inside the db, lets say for displayning
 //* all that info
 //gets the lest of all general info for items
-export const fetchAllItem = async () => {
+export const fetchAllItems = async () => {
   const allItems = await prisma.items.findMany({
     select: {
       itemId: true,
@@ -44,4 +44,21 @@ export const fetchAllItem = async () => {
 };
 
 //Get item info of one specific item
-export const fetchCrucialItemInfo = () => {};
+export const fetchCrucialItemInfo = async (itemName) => {
+  const itemInfo = await prisma.items.findUnique({
+    where: itemName.itemName,
+    select: {
+      itemId: true,
+      itemName: true,
+      remainingAmount: true,
+    },
+  });
+
+  if (!itemInfo) return { success: false, message: "Empty items" };
+
+  return {
+    success: true,
+    message: "Send items crucial info",
+    ...itemInfo,
+  };
+};

@@ -103,6 +103,6 @@ export const fetchUserInfo = async (userId) => {
   //return object with success appended in front
   return {
     success: true,
-    ...flattenedUserInfo,
+    data: flattenedUserInfo,
   };
 };
