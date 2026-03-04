@@ -22,6 +22,7 @@ import geschiedenisPage from "#routes/geschiedenis";
 
 //middleware
 import { view } from "#utils/viewHelper";
+//Change the name of requireGuest
 import { authenticateToken, requireGuest } from "#middleware/authenticatie";
 // =============================================
 
