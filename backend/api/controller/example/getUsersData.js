@@ -16,10 +16,18 @@ const getUser = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // 3. The Controller sends the data back to the user
-    res.json(user);
+    // 7. THE RESPONSE (The "Handshake")
+    return res
+      .status(200)
+      .cookie("token", token, cookieOptions)
+      .json({
+        success: true,
+        user: { id: result.user.id, name: result.user.name },
+      });
   } catch (error) {
-    res.status(500).json({ error: "Something went wrong" });
+    // 8. THE SAFETY NET
+    console.error("Login Error:", error);
+    return res.status(500).json({ message: "Internal Server Error" });
   }
 };
 

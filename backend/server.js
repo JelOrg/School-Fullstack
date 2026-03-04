@@ -7,11 +7,13 @@
 import "#utils/absoluteEnvPath";
 //required items for server to work
 import express from "express";
-
 //importing for pathing and url
 import path from "path";
+//removes the errors when trying from f12
+import cors from "cors";
 
 //imports and alias for page routes
+import rootApi from "#routes/root";
 import loginPage from "#routes/login";
 import dashboardPage from "#routes/dashboard";
 import aanvragenPage from "#routes/aanvragen";
@@ -37,6 +39,9 @@ const PORT = process.env.SERVER_PORT || 3000;
 
 // The server searches for the defined html, css, or css files
 server.use(express.static(path.join(root, "..", "frontend")));
+//make the server use cors
+//! is prob a security issue, but to removing for looks for f12...
+server.use(cors());
 // Parse JSON request bodies
 server.use(express.json());
 
@@ -45,7 +50,7 @@ server.use(express.json());
 // ============================================
 //Proccess the file to only make the name(without .html) visible to the frontend
 // --- PAGE ROUTES (The HTML) ---
-// TODO NEED TO FIX CSS NOT SHOWING
+// TODO NEED TO FIX CSS NOT SHOWING for login
 server.get("/", view("inlog"));
 server.get("/login", view("inlog"));
 server.get("/dashboard", view("dashboard"));
@@ -57,6 +62,7 @@ server.get("/geschiedenis", view("geschiedenis"));
 // * ============================================
 //  API ROUTES
 // ============================================
+server.use("/api/", rootApi);
 server.use("/api/login", loginPage);
 server.use("/api/dashboard", dashboardPage);
 server.use("/api/aanvragen", aanvragenPage);
@@ -83,7 +89,5 @@ server.use((err, req, res, next) => {
 
 server.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
-  console.log(
-    `API available at http://localhost:${process.env.DATABASE_PORT}/api`,
-  );
+  console.log(`API available at http://localhost:${PORT}/api`);
 });
