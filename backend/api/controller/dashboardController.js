@@ -2,6 +2,9 @@ import { getCurrentOrNextReqBatchId } from "#services/fetchDatabaseInfo";
 import { fetchDepartmentId } from "#services/fetchDepartmentData";
 import { postToRequestTable } from "#services/postInfoToDatabase";
 
+// ==========================================
+// GET: 
+// ==========================================
 //? Spoedaanvraag controller
 export const displaySpoedAanvraagData = async (req, res) => {};
 
