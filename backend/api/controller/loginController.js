@@ -2,11 +2,12 @@ import { fetchUserInfo, validateUserLogin } from "#services/fetchUserInfo";
 import { generateToken } from "#services/tokenHandler";
 
 //validates if the user login information is correct
-const validateLogin = async (req, res) => {
+export const validateLogin = async (req, res) => {
   //what i want to get out of the body of the req.body
-  const { userRole, userEmail, providedPassword } = req.body;
+  const { userRoleName, userEmail, providedPassword } = req.body;
 
   //checks if there is actually a password or email send
+  // TODO this actually is easy to get past with by inputting false or true
   if (!userEmail || !providedPassword) {
     return res
       .status(400)
@@ -14,7 +15,7 @@ const validateLogin = async (req, res) => {
   }
   //validates that the user is giving the correct role, password, and
   const userLogin = await validateUserLogin(
-    userRole,
+    userRoleName,
     userEmail,
     providedPassword,
   );
@@ -25,6 +26,7 @@ const validateLogin = async (req, res) => {
 
   //fetches user info
   const userInfo = await fetchUserInfo(userLogin.userId);
+
   //uses user info to create a JWT
   const token = generateToken(
     userInfo.userId,
@@ -32,8 +34,12 @@ const validateLogin = async (req, res) => {
     userInfo.departmentName,
   );
 
+  // * could be placed somewhere else
   const ONE_HOUR = 3600000; // 1 * 60 * 60 * 1000
+  //*=================
 
+  //! prob security issues
+  //Some extras so the client know what with the cookie
   const cookieOptions = {
     maxAge: ONE_HOUR,
     // httpOnly: true,
@@ -45,5 +51,6 @@ const validateLogin = async (req, res) => {
   return res.status(200).cookie("token", token, cookieOptions).json({
     success: true,
     message: "Login successful",
+    redirectTo: "/dashboard",
   });
 };

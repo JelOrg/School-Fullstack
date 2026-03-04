@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="/frontend/css/bootstrap.css" />
     <link rel="stylesheet" href="../css/main.css" />
     <link rel="stylesheet" href="../css/inlog.css" />
-  
+    <script src="../javascript/dataConnection.js" defer></script>
   </head>
 
   <body class="bg-rkz-blue">
@@ -66,20 +66,16 @@
           </div>
 
           <!-- inloggen button -->
-          <div class="d-grid">
-            <a href="/frontend/html/dashboard.html" class="text-decoration-none">
-                <button
-                  id="btn-login"
-                  class="btn rounded-pill fw-bold"
-                  type="submit"
-                
-                >
-                  Inloggen
-                  
-                </button>
-            </a>
+          <div>
+            <button
+              id="btn-login"
+              onclick="getUserData()"
+              class="btn rounded-pill fw-bold"
+              type="button"
+            >
+              Inloggen
+            </button>
           </div>
-
           <!-- warning text -->
           <p class="warning-text mt-4">
             Let op: Alleen medewerkers met een geldig ziekenhuis e-mailadres

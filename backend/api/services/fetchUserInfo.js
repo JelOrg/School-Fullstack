@@ -1,8 +1,6 @@
 // file has to do with getting all types of info that is related to users
 import { prisma } from "#utils/prismaClient";
 import bcrypt from "bcrypt";
-import debugUtil from "#utils/debugUtil";
-import { deprecate } from "node:util";
 
 // Example: Fetch all records from a table
 // Replace 'user' with your actual model name
@@ -38,7 +36,7 @@ async function exampleFunction(userId) {
  * @returns an object?
  */
 export const validateUserLogin = async (
-  userRole,
+  userRoleName,
   userEmail,
   providedPassword,
 ) => {
@@ -47,7 +45,7 @@ export const validateUserLogin = async (
     where: {
       email: userEmail,
       role: {
-        roleName: userRole,
+        roleName: userRoleName,
       },
     },
     select: { userId: true, saltedPassword: true },
@@ -76,7 +74,7 @@ export const validateUserLogin = async (
 export const fetchUserInfo = async (userId) => {
   const userInfo = await prisma.users.findUnique({
     where: {
-      userId: userId.userId,
+      userId: userId,
     },
     select: {
       userId: true,
@@ -105,6 +103,6 @@ export const fetchUserInfo = async (userId) => {
   //return object with success appended in front
   return {
     success: true,
-    ...flattenedUserInfo,
+    data: flattenedUserInfo,
   };
 };
