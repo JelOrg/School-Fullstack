@@ -80,6 +80,8 @@ export const fetchUserInfo = async (userId) => {
     },
     select: {
       userId: true,
+      firstName: true,
+      lastName: true,
       email: true,
       role: {
         select: { roleName: true },
@@ -97,6 +99,8 @@ export const fetchUserInfo = async (userId) => {
   //? flattens the giving data so we can access it easier
   const flattenedUserInfo = {
     userId: userInfo.userId,
+    firstName: userInfo.firstName,
+    lastName: userInfo.lastName,
     email: userInfo.email,
     roleName: userInfo.role?.roleName,
     departmentName: userInfo.department?.departmentName,

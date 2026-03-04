@@ -7,6 +7,7 @@
 import "#utils/absoluteEnvPath";
 //required items for server to work
 import express from "express";
+import cookieParser from "cookie-parser";
 
 //importing for pathing and url
 import path from "path";
@@ -21,6 +22,7 @@ import geschiedenisPage from "#routes/geschiedenis";
 
 //middleware
 import { view } from "#utils/viewHelper";
+import { authenticateToken, requireGuest } from "#middleware/authenticatie";
 // =============================================
 
 // *=============================================
@@ -39,6 +41,8 @@ const PORT = process.env.SERVER_PORT || 3000;
 server.use(express.static(path.join(root, "..", "frontend")));
 // Parse JSON request bodies
 server.use(express.json());
+// Parse cookie request bodies
+server.use(cookieParser());
 
 // * ============================================
 //  PAGE EXPLORER
@@ -46,13 +50,13 @@ server.use(express.json());
 //Proccess the file to only make the name(without .html) visible to the frontend
 // --- PAGE ROUTES (The HTML) ---
 // TODO NEED TO FIX CSS NOT SHOWING
-server.get("/", view("inlog"));
-server.get("/login", view("inlog"));
-server.get("/dashboard", view("dashboard"));
-server.get("/aanvragen", view("aanvraag"));
-server.get("/totale-voorraad", view("totale-voorraad"));
-server.get("/statistieken", view("statistieken"));
-server.get("/geschiedenis", view("geschiedenis"));
+server.get("/", requireGuest, view("inlog"));
+server.get("/login", requireGuest, view("inlog"));
+server.get("/dashboard", authenticateToken, view("dashboard"));
+server.get("/aanvragen", authenticateToken, view("aanvraag"));
+server.get("/totale-voorraad", authenticateToken, view("totale-voorraad"));
+server.get("/statistieken", authenticateToken, view("statistieken"));
+server.get("/geschiedenis", authenticateToken, view("geschiedenis"));
 
 // * ============================================
 //  API ROUTES
@@ -61,7 +65,7 @@ server.use("/api/login", loginPage);
 server.use("/api/dashboard", dashboardPage);
 server.use("/api/aanvragen", aanvragenPage);
 server.use("/api/totale-voorraad", totaleVoorraadPage);
-server.use("/api/statestieken", statistiekenPage);
+server.use("/api/statistieken", statistiekenPage);
 server.use("/api/geschiedenis", geschiedenisPage);
 
 // ? ============================================
