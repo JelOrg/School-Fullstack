@@ -2,14 +2,19 @@
  * This file is used for reaching each endpoint of the website
  */
 
-const express = require("express");
+import express from "express";
+import { authenticateToken } from "#middleware/authenticatie";
 const router = express.Router(); // Creates mini Express app
 
 // ============================================
 // MIDDLEWARE
 // ============================================
-router.get("/", (req, res) => {
-  res.send("welcome to the login page");
+router.get("/", authenticateToken, (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: "Welcome to the geschiedenis endpoint",
+    user: req.user,
+  });
 });
 
-module.exports = router; // Exports the router object
+export default router; // Modern export
