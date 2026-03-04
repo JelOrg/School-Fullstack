@@ -1,8 +1,4 @@
 /* Soft dashboard background */
-.dashboard-bg {
-  background: linear-gradient(45deg, #22678b, #6ba9ca);
-  min-height: 100vh;
-}
 
 /* Spoed card */
 .spoed-card {
@@ -27,4 +23,27 @@
 .progress {
   height: 8px;
   border-radius: 10px;
+}
+
+/* Change color for titles on white cards (Kritiek & Meldingen) */
+.card-header h5 {
+  color: #1771d0; /* This matches the professional blue used in your other pages */
+  font-weight: 700;
+}
+
+/* Ensure the Spoedaanvraag title stays white for contrast against the orange */
+.spoed-header h5 {
+  color: #ffffff !important;
+}
+
+/* Apply this to the cards to give them a minimum uniform height */
+.card.h-100 {
+  min-height: 600px; /* Adjust this value to your preference */
+  display: flex;
+  flex-direction: column;
+}
+
+/* This ensures the card-body expands to push the footer/buttons to the bottom */
+.card-body {
+  flex: 1 1 auto;
 }
