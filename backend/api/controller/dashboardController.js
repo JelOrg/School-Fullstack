@@ -1,13 +1,13 @@
-import { postSpoedAanvraag } from "#services/postInfoToDatabase";
-import { fetchCrucialItemInfo, fetchAllItems } from "#services/fetchItemInfo";
 import { getCurrentOrNextReqBatchId } from "#services/fetchDatabaseInfo";
 import { fetchDepartmentId } from "#services/fetchDepartmentData";
-import { request } from "node:http";
-import { useReducer } from "react";
+import { postToRequestTable } from "#services/postInfoToDatabase";
 
 //? Spoedaanvraag controller
 export const displaySpoedAanvraagData = async (req, res) => {};
 
+// ==========================================
+// POST: Create Urgent Request
+// ==========================================
 //? Sends a spoedaanvraag to the db
 //! Will cause race condition, due to multiple users being able to request
 //! the same item making it possible to see 2 or more different remainingAmount items
@@ -46,10 +46,18 @@ export const sendSpoedAanvraag = async (req, res) => {
       .status(500)
       .json({ success: false, message: "Failed to Contact DB" });
 
+  //Gets you the departmentId
+  const departmentId = await fetchDepartmentId(departmentName);
+
+  //quick check that we actually have departmentId
+  if (!departmentId.success)
+    return res.status(404).json({ message: "Department not found" });
+
   // ! Users can still submit even if stock changed since their last fetch.
   // TODO: Add a real-time stock check against the DB before saving.
   // TODO: Filter out items that are no longer available.
 
+  // TODO need to change the db so it can store store Text that is send in the Spoedaanvraag
   /** * Formats raw input into a clean list for processing:
    * Example: [ { itemId: 101, itemName: "Hammer", requestedAmount: 2 },
    * {itemId: something, itemName: somethingelse, requestedAmount: again} ]
@@ -58,29 +66,36 @@ export const sendSpoedAanvraag = async (req, res) => {
     itemId: item.itemId,
     itemName: item.nameItem,
     requestedAmount: item.amountRequested,
+
+    //Constants
+    userId: userId,
+    requestBatchId: requestBatchId,
+    departmentId: departmentId,
   }));
 
-  //Gets you the departmentId
-  const departmentId = await fetchDepartmentId(departmentName);
-
-  //quick check that we actually have departmentId
-  if (!departmentId.success)
-    return res.status(404).json({ message: "Department not found" });
-
-  // TODO need to change the db so it can take in more things
-
   //* Sends the post request to the db
-  const postingToDb = postSpoedAanvraag(
-    userId,
-    requestedItemsList,
-    departmentId.data.departmentId,
-    textField,
-    requestBatchId.data,
-  );
+  const postingToDb = await postToRequestTable(requestedItemsList);
+
+  //checks if the posting is successful
+  if (!postingToDb.success)
+    return res.status(400).json({ message: postingToDb.message });
+
+  // Finish with detail
+  return res.status(201).json({
+    success: true,
+    message: "Spoedaanvraag successfully created!",
+    count: postingToDb.count, // if your service returned the count
+  });
 };
 
+// ==========================================
+// GET:
+// ==========================================
 //? kritieke voorraad controllers
 export const getKritiekeVoorraad = async (req, res) => {};
 
+// ==========================================
+// GET:
+// ==========================================
 //? meldingen controller
 export const getMeldingen = async (req, res) => {};
