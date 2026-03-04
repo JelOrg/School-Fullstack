@@ -17,6 +17,9 @@ router.get("/", (req, res) => {
   });
 });
 
+//route to validate the login
+router.post("/validation", validateLogin);
+
 //login endpoint that creates and returns auth cookie token
 router.post("/", validateLogin);
 

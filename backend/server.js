@@ -11,8 +11,11 @@ import cookieParser from "cookie-parser";
 
 //importing for pathing and url
 import path from "path";
+//removes the errors when trying from f12
+import cors from "cors";
 
 //imports and alias for page routes
+import rootApi from "#routes/root";
 import loginPage from "#routes/login";
 import dashboardPage from "#routes/dashboard";
 import aanvragenPage from "#routes/aanvragen";
@@ -40,6 +43,9 @@ const PORT = process.env.SERVER_PORT || 3000;
 
 // The server searches for the defined html, css, or css files
 server.use(express.static(path.join(root, "..", "frontend")));
+//make the server use cors
+//! is prob a security issue, but to removing for looks for f12...
+server.use(cors());
 // Parse JSON request bodies
 server.use(express.json());
 // Parse cookie request bodies
@@ -50,6 +56,7 @@ server.use(cookieParser());
 // ============================================
 //Proccess the file to only make the name(without .html) visible to the frontend
 // --- PAGE ROUTES (The HTML) ---
+<<<<<<< HEAD
 // TODO NEED TO FIX CSS NOT SHOWING
 // TODO RequireGuest Might not be needed, so check
 server.get("/", requireGuest, view("inlog"));
@@ -59,10 +66,21 @@ server.get("/aanvragen", authenticateToken, view("aanvraag"));
 server.get("/totale-voorraad", authenticateToken, view("totale-voorraad"));
 server.get("/statistieken", authenticateToken, view("statistieken"));
 server.get("/geschiedenis", authenticateToken, view("geschiedenis"));
+=======
+// TODO NEED TO FIX CSS NOT SHOWING for login
+server.get("/", view("inlog"));
+server.get("/login", view("inlog"));
+server.get("/dashboard", view("dashboard"));
+server.get("/aanvragen", view("aanvraag"));
+server.get("/totale-voorraad", view("totale-voorraad"));
+server.get("/statistieken", view("statistieken"));
+server.get("/geschiedenis", view("geschiedenis"));
+>>>>>>> github-desktop-JelOrg/main
 
 // * ============================================
 //  API ROUTES
 // ============================================
+server.use("/api/", rootApi);
 server.use("/api/login", loginPage);
 server.use("/api/dashboard", dashboardPage);
 server.use("/api/aanvragen", aanvragenPage);
@@ -89,7 +107,5 @@ server.use((err, req, res, next) => {
 
 server.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
-  console.log(
-    `API available at http://localhost:${process.env.DATABASE_PORT}/api`,
-  );
+  console.log(`API available at http://localhost:${PORT}/api`);
 });
