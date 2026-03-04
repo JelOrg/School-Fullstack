@@ -1,3 +1,5 @@
+//TODO moving magic numbers to a different file
+//TODO maybe we could create a larger function that handles differently
 //role-to-level map used for authorization checks
 const ROLE_AUTH_LEVEL = {
   user: 1,
