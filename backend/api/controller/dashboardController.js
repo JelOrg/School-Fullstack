@@ -121,6 +121,7 @@ export const fetchDashboardDisplayData = async (req, res) => {
       // 1. TRIGGER: Periodic Security Check (Every 5 mins)
       if (Date.now() - lastVerified > VERIFY_INTERVAL) {
         //TODO NEED TO MAKE THIS validate if the token is exactly like what is stored in the db
+        const isActive = processToken(req.cookie?.token);
         const isValid = await validateToken();
         if (!isValid.success) {
         }

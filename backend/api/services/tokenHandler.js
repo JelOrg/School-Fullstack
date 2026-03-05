@@ -52,7 +52,7 @@ export const processToken = (userToken) => {
 };
 
 //* Validates token with real db data
-export const validateToken = async (processToken) => {
+export const validateToken = async (processedToken) => {
   //Checks if the user is still active in the db, so no bans or such
   const user = await prisma.users
     .findUnique({
