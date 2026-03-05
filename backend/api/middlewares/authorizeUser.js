@@ -1,10 +1,21 @@
-//TODO moving magic numbers to a different file
-//TODO maybe we could create a larger function that handles differently
 //role-to-level map used for authorization checks
 import { ROLE_AUTH_LEVEL } from "#utils/magicNumberFile";
 
-//checks if a logged-in user's role has enough permissions
-export const getUserAuthorizationLevel = (req, res, next) => {
+export const getUserAuthorizationLevel = (required) => (req, res, next) => {
+  const userLevel = ROLE_AUTH_LEVEL[req.tokenInformation?.role];
+
+  // 1. If role is unrecognized, bounce to login
+  if (!userLevel) return res.redirect("/login");
+
+  //Saves the auth level
+  req.userAuthLevel = userLevel;
+
+  // 2. If level is too low, bounce to dashboard (with loop protection)
+  if (userLevel < required) {
+    if (req.path === "/dashboard") return res.status(403).send("Forbidden");
+    return res.redirect("/dashboard");
+  }
+
   next();
 };
 
