@@ -146,12 +146,15 @@ export const fetchDashboardDisplayData = async (req, res) => {
       ]);
 
       // 3. Send combined JSON (Note: sanitized names match the fetch above)
-      res.write(
-        `data: ${JSON.stringify({
-          vitals: voorraadData,
-          info: alertsData,
-        })}\n\n`,
-      );
+      // Change step 3 to this:
+      if (!res.writableEnded) {
+        res.write(
+          `data: ${JSON.stringify({
+            voorraadData: voorraadData,
+            alertsData: alertsData,
+          })}\n\n`,
+        );
+      }
     } catch (err) {
       console.error("Dashboard Stream Error:", err);
       // Optional: send a 'retry' or 'error' event to the client
