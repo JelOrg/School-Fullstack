@@ -1,12 +1,10 @@
 import { processToken } from "#services/tokenHandler";
 import { generateToken } from "#services/tokenHandler";
 
-// TODO FIle CAN be Rewritten
 //checks if the request has a token and if the token is still valid
 export const authenticateToken = (req, res, next) => {
   //takes in a JWT non mobile token
-  const cookieToken = generateToken(20, "employee", "roze");
-  // const cookieToken = req.cookies?.token;
+  const cookieToken = req.cookies?.token;
 
   //Checks if a token is found
   if (!cookieToken) {
@@ -23,8 +21,8 @@ export const authenticateToken = (req, res, next) => {
     return res.redirect("/login");
   }
 
-  // TODO make a DB search for specific user,
-  // TODO if there is no user found with those credentials return a nope
+  //TODO make a db check on userId(PK) and the other 2 things to see if the user exists,
+  //TODO or we can have a special column for they have access to the site
 
   //attach token payload for authorization middleware
   req.tokenInformation = processedToken.tokenInfo;

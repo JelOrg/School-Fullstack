@@ -6,6 +6,8 @@ import aanvragenPage from "#routes/aanvragen";
 import totaleVoorraadPage from "#routes/totale-voorraad";
 import statistiekenPage from "#routes/statistieken";
 import geschiedenisPage from "#routes/geschiedenis";
+import profilePage from "#routes/profile";
+import settingsPage from "#routes/settings";
 
 //middleware
 import { view } from "#utils/viewHelper";
@@ -68,6 +70,20 @@ mainServerRouter.get(
   view("geschiedenis"),
 );
 
+//profile
+mainServerRouter.get(
+  "/profile",
+  protect(ROLE_AUTH_LEVEL.employee),
+  view("profile"),
+);
+
+//settings
+mainServerRouter.get(
+  "/settings",
+  protect(ROLE_AUTH_LEVEL.employee),
+  view("settings"),
+);
+
 // * ============================================
 //  API ROUTES
 // ============================================
@@ -109,6 +125,20 @@ mainServerRouter.use(
   "/api/geschiedenis",
   protect(ROLE_AUTH_LEVEL.admin),
   geschiedenisPage,
+);
+
+//profile
+mainServerRouter.use(
+  "/api/profile",
+  protect(ROLE_AUTH_LEVEL.employee),
+  profilePage,
+);
+
+//settings
+mainServerRouter.use(
+  "/api/settings",
+  protect(ROLE_AUTH_LEVEL.employee),
+  settingsPage,
 );
 
 export default mainServerRouter;
