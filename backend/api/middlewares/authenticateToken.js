@@ -15,10 +15,14 @@ export const authenticateToken = (req, res, next) => {
   //verifies token and decodes payload
   const processedToken = processToken(cookieToken);
 
-  if (!processedToken.success) res.clearCookie("token");
+  // 4. Bad token? Clear it and EXIT then reroutes.
+  if (!processedToken.success) {
+    res.clearCookie("token");
+    return res.redirect("/login");
+  }
 
   //attach token payload for authorization middleware
-  req.user = processedToken.tokenInfo;
+  req.tokenInformation = processedToken.tokenInfo;
 
   next();
 };
