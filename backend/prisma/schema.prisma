@@ -99,6 +99,7 @@ model users {
   saltedPassword     String     @db.Text
   roleId       Int
   departmentId Int
+  isActive Boolean @default(true)
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @default(now()) @updatedAt @db.Timestamp
 
@@ -115,4 +116,13 @@ model role {
   roleId   Int     @id @default(autoincrement())
   roleName String
   users    users[]
+}
+
+
+//A field that should store text from the request,
+// so that we don't have to write multiple time to req table
+
+model reqDescirptions{
+  reqDescriptionId Int @id @default(autoincrement())
+  descriptionField String @db.LongText
 }

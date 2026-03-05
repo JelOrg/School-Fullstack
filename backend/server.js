@@ -37,6 +37,7 @@ server.use(cookieParser());
 // * ============================================
 //  PAGE ROUTER
 // ============================================
+//? Rate limiting?
 import mainServerRouter from "./routingHub.js";
 server.use("/", mainServerRouter);
 

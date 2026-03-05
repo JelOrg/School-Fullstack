@@ -29,8 +29,11 @@ const mainServerRouter = express.Router();
 
 //Proccess the file to only make the name(without .html) visible to the frontend
 // --- PAGE ROUTES (The HTML) ---
-// TODO NEED TO FIX CSS NOT SHOWING
 
+// TODO NEED TO MAKE AN OPEN DATAVIEWER THAT JUST DISPLAYS DATA ON EACH ROUTE PROTECTED ROUTE,
+//TODO THIS NEEDs TO CHECK A HEARBEAT CONTOLLER THAT CHECKS THE TOKEN EVERY 5 MIN
+
+//TODO Make the login screen redirect to dashboard if the user has a valid token
 //login
 mainServerRouter.get("/", view("inlog"));
 mainServerRouter.get("/login", view("inlog"));

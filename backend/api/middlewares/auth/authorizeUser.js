@@ -14,7 +14,7 @@ export const getUserAuthorizationLevel = (required) => (req, res, next) => {
   // 2. If level is too low, bounce to dashboard (with loop protection)
   if (userLevel < required) {
     if (req.path === "/dashboard") return res.status(403).send("Forbidden");
-    return res.redirect("/dashboard");
+    return res.redirect("/dashboard?error=denied");
   }
 
   next();
