@@ -5,7 +5,7 @@ import {
 } from "#services/fetchDatabaseInfo";
 import { fetchDepartmentId } from "#services/fetchDepartmentData";
 import { postToRequestTable } from "#services/postInfoToDatabase";
-import { processToken } from "#services/tokenHandler";
+import { processToken, validateToken } from "#services/tokenHandler";
 import {
   HTTP_STATUS,
   REFRESH_RATES,
@@ -120,16 +120,9 @@ export const fetchDashboardDisplayData = async (req, res) => {
     try {
       // 1. TRIGGER: Periodic Security Check (Every 5 mins)
       if (Date.now() - lastVerified > VERIFY_INTERVAL) {
-        const isValid = processToken(req.cookies.token);
-        if (!isValid) {
-          // 1. Tell the frontend why we are stopping
-          res.write(
-            `event: auth_error\ndata: ${JSON.stringify({ url: "/login" })}\n\n`,
-          );
-
-          // 2. Kill the loop and the connection
-          clearInterval(intervalId);
-          return res.end();
+        //TODO NEED TO MAKE THIS validate if the token is exactly like what is stored in the db
+        const isValid = await validateToken();
+        if (!isValid.success) {
         }
         lastVerified = Date.now();
       }

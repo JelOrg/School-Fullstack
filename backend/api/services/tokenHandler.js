@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import { randomUUID } from "node:crypto";
 import "#utils/absoluteEnvPath";
+import { prisma } from "#utils/prismaClient";
 
 /**
  * Signs a JWT and attaches it to an HttpOnly cookie.
@@ -48,4 +49,38 @@ export const processToken = (userToken) => {
   } catch (error) {
     return { success: false, error: error.message };
   }
+};
+
+//* Validates token with real db data
+export const validateToken = async (processToken) => {
+  //Checks if the user is still active in the db, so no bans or such
+  const user = await prisma.users
+    .findUnique({
+      where: {
+        userId: processedToken.tokenInfo.userId,
+      },
+      select: {
+        isActive: true,
+        role: { select: { roleName: true } },
+        department: { select: { departmentName: true } },
+      },
+    })
+    .catch((err) => {
+      // This will show exactly where it failed in your logs
+      err.message = `[Auth DB Check Failed]: ${err.message}`;
+      throw err;
+    });
+
+  // 2. Run the checks
+  const isDeactivated = !user || !user.isActive;
+  const roleMismatch =
+    processedToken.tokenInfo.userRoleName !== user.role.roleName;
+  const deptMismatch =
+    processedToken.tokenInfo.userDepartmentName !==
+    user.department.departmentName;
+
+  if (isDeactivated || roleMismatch || deptMismatch)
+    return { success: false, message: "token not valid" };
+
+  return { success: true, message: "token not valid" };
 };
