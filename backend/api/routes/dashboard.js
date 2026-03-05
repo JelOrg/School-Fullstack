@@ -2,19 +2,17 @@
  * This file is used for reaching each endpoint of the website
  */
 
+import {
+  fetchDashboardDisplayData,
+  sendSpoedAanvraag,
+} from "#controller/dashboardController";
 import express from "express";
-import { authenticateToken } from "#middleware/authenticatie";
 const router = express.Router(); // Creates mini Express app
 
-// ============================================
-// MIDDLEWARE
-// ============================================
-router.get("/", authenticateToken, (req, res) => {
-  res.status(200).json({
-    success: true,
-    message: "Welcome to the dashboard endpoint",
-    user: req.user,
-  });
-});
+// The Routing Hub (inside your protected router file)
+router.post("/send-spoed-aanvraag", sendSpoedAanvraag);
+
+//Get the dispaly data for the frontend
+router.get("/fetch-display-data", fetchDashboardDisplayData);
 
 export default router; // Modern export

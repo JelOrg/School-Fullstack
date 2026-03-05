@@ -40,20 +40,26 @@ export const validateUserLogin = async (
   userEmail,
   providedPassword,
 ) => {
-  const user = await prisma.users.findFirst({
-    //* Not really needed to role, because email is unique. This is just to be sure...
-    where: {
-      email: userEmail,
-      role: {
-        roleName: userRoleName,
+  const user = await prisma.users
+    .findFirst({
+      //* Not really needed to role, because email is unique. This is just to be sure...
+      where: {
+        email: userEmail,
+        role: {
+          roleName: userRoleName,
+        },
       },
-    },
-    select: { userId: true, saltedPassword: true },
-  });
+      select: { userId: true, saltedPassword: true },
+    })
+    .catch((err) => {
+      err.message = `[Failed getting user login data]: ${err.message}`;
+      throw err;
+    });
 
   //validates if the user exist
   if (!user) return { success: false, message: "User or email is incorrect" };
 
+  // TODO Check also if this encryption doesn't mess with not being able to log in
   //compares the salted password and the unslated password using bcrypt to see if they are the same
   const isMatch = await bcrypt.compare(providedPassword, user.saltedPassword);
   if (!isMatch) {
@@ -72,23 +78,29 @@ export const validateUserLogin = async (
  * @returns
  */
 export const fetchUserInfo = async (userId) => {
-  const userInfo = await prisma.users.findUnique({
-    where: {
-      userId: userId,
-    },
-    select: {
-      userId: true,
-      email: true,
-      role: {
-        select: { roleName: true },
+  const userInfo = await prisma.users
+    .findUnique({
+      where: {
+        userId: userId,
       },
-      department: {
-        select: {
-          departmentName: true,
+      select: {
+        userId: true,
+        email: true,
+        role: {
+          select: { roleName: true },
+        },
+        department: {
+          select: {
+            departmentName: true,
+          },
         },
       },
-    },
-  });
+    })
+    .catch((err) => {
+      err.message = `[Failed fetching user data]: ${err.message}`;
+      throw err;
+    });
+
   //! checks if the userInfo isn't null
   if (!userInfo) return { success: false };
 

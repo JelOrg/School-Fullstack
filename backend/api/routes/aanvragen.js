@@ -2,15 +2,15 @@
  * This file is used for reaching each endpoint of the website
  */
 
+import { HTTP_STATUS } from "#utils/magicNumberFile";
 import express from "express";
-import { authenticateToken } from "#middleware/authenticatie";
 const router = express.Router(); // Creates mini Express app
 
 // ============================================
 // MIDDLEWARE
 // ============================================
-router.get("/", authenticateToken, (req, res) => {
-  res.status(200).json({
+router.get("/", (req, res) => {
+  res.status(HTTP_STATUS.OK).json({
     success: true,
     message: "Welcome to the aanvragen endpoint",
     user: req.user,
