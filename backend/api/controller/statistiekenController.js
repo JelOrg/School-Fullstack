@@ -4,6 +4,8 @@ import { HTTP_STATUS, REFRESH_RATES } from "#utils/magicNumberFile";
 //GET: returns statistics data for statistieken page
 export const fetchStatistiekenDisplayData = async (req, res) => {
   try {
+
+    //Add a jwt token check
     const requestedTopLimit = Number(req.query.topLimit || 10);
     const safeTopLimit = Number.isNaN(requestedTopLimit)
       ? 10
