@@ -5,7 +5,8 @@ import { HTTP_STATUS, REFRESH_RATES } from "#utils/magicNumberFile";
 export const fetchStatistiekenDisplayData = async (req, res) => {
   try {
 
-    //Add a jwt token check
+    //TODO Add a jwt token check
+    //TODO Remove some limits
     const requestedTopLimit = Number(req.query.topLimit || 10);
     const safeTopLimit = Number.isNaN(requestedTopLimit)
       ? 10
