@@ -121,8 +121,26 @@ export const fetchDashboardDisplayData = async (req, res) => {
       // 1. TRIGGER: Periodic Security Check (Every 5 mins)
       if (Date.now() - lastVerified > VERIFY_INTERVAL) {
         //TODO NEED TO MAKE THIS validate if the token is exactly like what is stored in the db
+
         const isActive = processToken(req.cookie?.token);
-        const isValid = await validateToken();
+
+        //TODO DIDN't actually do anything with this.
+        //Boots user out haven't tested this...
+        const bootOut = () => {
+          // Signal the browser to redirect to a REAL logout route
+          res.write("event: auth_error\n");
+          // Redirect to a route that handles the cookie clearing
+          res.write('data: {"url": "/api/auth/logout?session=expired"}\n\n');
+
+          clearInterval(intervalId);
+          return res.end();
+        };
+
+        if (!isActive.success) {
+        }
+
+        const isValid = await validateToken(isActive.tokenInfo);
+
         if (!isValid.success) {
         }
         lastVerified = Date.now();

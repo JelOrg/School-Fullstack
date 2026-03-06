@@ -82,5 +82,5 @@ export const validateToken = async (processedToken) => {
   if (isDeactivated || roleMismatch || deptMismatch)
     return { success: false, message: "token not valid" };
 
-  return { success: true, message: "token not valid" };
+  return { success: true, message: "token is valid" };
 };
