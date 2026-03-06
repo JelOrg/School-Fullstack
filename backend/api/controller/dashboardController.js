@@ -5,6 +5,7 @@ import {
 } from "#services/fetchDatabaseInfo";
 import { fetchDepartmentId } from "#services/fetchDepartmentData";
 import { postToRequestTable } from "#services/postInfoToDatabase";
+import { verifySSESession } from "#services/sseAuthService";
 import { processToken, validateToken } from "#services/tokenHandler";
 import {
   HTTP_STATUS,
@@ -38,7 +39,7 @@ export const sendSpoedAanvraag = async (req, res) => {
 
   // Inside the Controller
   if (!userId)
-    return res.status(HTTP_STATUS.NOT_FOUND).json({
+    return res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
       success: false,
       message: "Invalid session/Invalid JWT decoding",
     });
@@ -60,7 +61,7 @@ export const sendSpoedAanvraag = async (req, res) => {
   //quick check that we actually have departmentId
   if (!departmentId.success)
     return res
-      .status(HTTP_STATUS.NOT_FOUND)
+      .status(HTTP_STATUS.INTERNAL_SERVER_ERROR)
       .json({ message: "Department not found" });
 
   // ! Users can still submit even if stock changed since their last fetch.
@@ -89,7 +90,7 @@ export const sendSpoedAanvraag = async (req, res) => {
   //checks if the posting is successful
   if (!postingToDb.success)
     return res
-      .status(HTTP_STATUS.BAD_REQUEST)
+      .status(HTTP_STATUS.INTERNAL_SERVER_ERROR)
       .json({ message: postingToDb.message });
 
   // Finish with detail
@@ -120,29 +121,8 @@ export const fetchDashboardDisplayData = async (req, res) => {
     try {
       // 1. TRIGGER: Periodic Security Check (Every 5 mins)
       if (Date.now() - lastVerified > VERIFY_INTERVAL) {
-        //TODO NEED TO MAKE THIS validate if the token is exactly like what is stored in the db
-
-        const isActive = processToken(req.cookie?.token);
-
-        //TODO DIDN't actually do anything with this.
-        //Boots user out haven't tested this...
-        const bootOut = () => {
-          // Signal the browser to redirect to a REAL logout route
-          res.write("event: auth_error\n");
-          // Redirect to a route that handles the cookie clearing
-          res.write('data: {"url": "/api/auth/logout?session=expired"}\n\n');
-
-          clearInterval(intervalId);
-          return res.end();
-        };
-
-        if (!isActive.success) {
-        }
-
-        const isValid = await validateToken(isActive.tokenInfo);
-
-        if (!isValid.success) {
-        }
+        //TODO this doesn't work yet, i have just plopped it down
+        const isValidSSESession = verifySSESession();
         lastVerified = Date.now();
       }
 
