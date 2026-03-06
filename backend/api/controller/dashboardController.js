@@ -25,7 +25,7 @@ import {
  * @param {*} res
  */
 export const sendSpoedAanvraag = async (req, res) => {
-  //* The info from the spoedaanvraag form needs to be put into the database
+  //TODO The info from the spoedaanvraag form needs to be put into the database
   const { userId, itemInfo, departmentName, textField } = req.body;
 
   //! Might have weird js behaviour
@@ -117,16 +117,19 @@ export const fetchDashboardDisplayData = async (req, res) => {
 
   let lastVerified = Date.now();
 
+  //Create a SSE connection, meaning you have an open connection to sever
   const intervalId = setInterval(async () => {
     try {
-      // 1. TRIGGER: Periodic Security Check (Every 5 mins)
+      // 1. Periodic security check
       if (Date.now() - lastVerified > VERIFY_INTERVAL) {
-        //TODO this doesn't work yet, i have just plopped it down
-        const isValidSSESession = verifySSESession();
+        const isValidSSESession = await verifySSESession(req, res, intervalId);
+
+        if (!isValidSSESession.success) return;
+
         lastVerified = Date.now();
       }
 
-      // 2. Fetch both (using the names you defined)
+      // 2. Fetch data
       const [voorraadData, alertsData] = await Promise.all([
         fetchKritiekVoorraad(
           req.userAuthLevel,
@@ -138,19 +141,12 @@ export const fetchDashboardDisplayData = async (req, res) => {
         ),
       ]);
 
-      // 3. Send combined JSON (Note: sanitized names match the fetch above)
-      // Change step 3 to this:
+      // 3. Send to client
       if (!res.writableEnded) {
-        res.write(
-          `data: ${JSON.stringify({
-            voorraadData: voorraadData,
-            alertsData: alertsData,
-          })}\n\n`,
-        );
+        res.write(`data: ${JSON.stringify({ voorraadData, alertsData })}\n\n`);
       }
     } catch (err) {
       console.error("Dashboard Stream Error:", err);
-      // Optional: send a 'retry' or 'error' event to the client
     }
   }, REFRESH_RATES.CRITICAL_VITALS);
 

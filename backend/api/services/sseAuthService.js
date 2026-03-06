@@ -1,4 +1,4 @@
-import { processToken } from "./tokenHandler";
+import { processToken, validateToken } from "#services/tokenHandler";
 
 /**
  * Standard Security Guard for all SSE Streams
@@ -9,24 +9,22 @@ export const verifySSESession = async (req, res, intervalId) => {
   const isActive = processToken(req.cookies?.token);
 
   // 2. Validate against DB (only if processToken succeeded)
-  const isValid = isActive.success
-    ? await validateToken(isActive.tokenInfo)
-    : { success: false };
+  if (!isActive.success) return { success: false, message: "User is expired" };
 
-  // 3. The "Standard" Action
-  if (!isActive.success || !isValid.success) {
-    // Clear the loop to prevent memory leaks
-    if (intervalId) clearInterval(intervalId);
-
-    // Send the specific signal the frontend is listening for
+  const tokenValidation = await validateToken(isActive.tokenInfo);
+  if (!tokenValidation.success) {
+    // 3. Clean up and close the SSE connection
+    if (intervalId) clearInterval(intervalId); // Prevent memory leaks
     res.write("event: auth_error\n");
     res.write(
       `data: ${JSON.stringify({ url: "/api/auth/logout?session=expired" })}\n\n`,
     );
-
     res.end();
-    return false; // Validation failed
+    return {
+      success: false,
+      message:
+        "User credentials are incorrect or account is not active anymore",
+    };
   }
-
-  return true; // Validation passed
+  return { success: true, message: "Session is valid" };
 };

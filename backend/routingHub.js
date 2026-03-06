@@ -15,6 +15,8 @@ import { view } from "#utils/viewHelper";
 //Auth
 import { authenticateToken } from "#middleware/auth/authenticateToken";
 import { getUserAuthorizationLevel } from "#middleware/auth/authorizeUser";
+import { sanitizeIn } from "#middleware/validation/inputSanitizer";
+import { sanitizeOut } from "#middleware/validation/outputSanitizer";
 import { ROLE_AUTH_LEVEL } from "#utils/magicNumberFile";
 
 const protect = (requiredLevel) => {
@@ -30,9 +32,10 @@ const mainServerRouter = express.Router();
 //Proccess the file to only make the name(without .html) visible to the frontend
 // --- PAGE ROUTES (The HTML) ---
 
-// TODO NEED TO MAKE AN OPEN DATAVIEWER THAT JUST DISPLAYS DATA ON EACH ROUTE PROTECTED ROUTE,
-//TODO THIS NEEDs TO CHECK A HEARBEAT CONTOLLER THAT CHECKS THE TOKEN EVERY 5 MIN
+mainServerRouter.use(sanitizeIn);
+mainServerRouter.use(sanitizeOut);
 
+// TODO NEED TO MAKE AN OPEN DATAVIEWER THAT JUST DISPLAYS DATA ON EACH ROUTE PROTECTED ROUTE,
 //TODO Make the login screen redirect to dashboard if the user has a valid token
 //login
 mainServerRouter.get("/", view("inlog"));
