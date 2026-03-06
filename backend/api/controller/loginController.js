@@ -1,6 +1,10 @@
 import { fetchUserInfo, validateUserLogin } from "#services/fetchUserInfo";
 import { generateToken } from "#services/tokenHandler";
 
+//* importing magic numbers
+import { HTTP_STATUS, ONE_HOUR } from "#utils/magicNumberFile";
+
+//TODO CHECK IF THE PASSWORD DECRYPT ACTUALLY WORKS AND THAT THE COOKIE IS SEND
 //validates if the user login information is correct
 export const validateLogin = async (req, res) => {
   //what i want to get out of the body of the req.body
@@ -10,7 +14,7 @@ export const validateLogin = async (req, res) => {
   // TODO this actually is easy to get past with by inputting false or true
   if (!userEmail || !providedPassword) {
     return res
-      .status(400)
+      .status(HTTP_STATUS.BAD_REQUEST)
       .json({ message: "You have to put email or password" });
   }
   //validates that the user is giving the correct role, password, and
@@ -21,22 +25,31 @@ export const validateLogin = async (req, res) => {
   );
 
   if (!userLogin.success) {
-    return res.status(401).json({ message: "Invalid email or password" });
+    return res
+      .status(HTTP_STATUS.BAD_REQUEST)
+      .json({ message: "Invalid email or password" });
   }
 
   //fetches user info
   const userInfo = await fetchUserInfo(userLogin.userId);
 
-  //uses user info to create a JWT
-  const token = generateToken(
-    userInfo.userId,
-    userInfo.roleName,
-    userInfo.departmentName,
-  );
+  if (!userInfo.success) {
+    return res
+      .status(HTTP_STATUS.INTERNAL_SERVER_ERROR)
+      .json({ message: "Could not fetch user data" });
+  }
 
-  // * could be placed somewhere else
-  const ONE_HOUR = 3600000; // 1 * 60 * 60 * 1000
-  //*=================
+  // userInfo.data holds the flattened object: { userId, email, roleName, departmentName }
+  const { userId, roleName, departmentName } = userInfo.data;
+
+  //uses user info to create a JWT — generateToken returns { success, token }
+  const tokenResult = generateToken(userId, roleName, departmentName);
+
+  if (!tokenResult.success) {
+    return res
+      .status(HTTP_STATUS.INTERNAL_SERVER_ERROR)
+      .json({ message: "Token generation failed" });
+  }
 
   //! prob security issues
   //Some extras so the client know what with the cookie
@@ -48,7 +61,7 @@ export const validateLogin = async (req, res) => {
   };
 
   // The "Ending": Send the cookie and a success message
-  return res.status(200).cookie("token", token, cookieOptions).json({
+  return res.status(HTTP_STATUS.OK).cookie("token", tokenResult.token, cookieOptions).json({
     success: true,
     message: "Login successful",
     redirectTo: "/dashboard",

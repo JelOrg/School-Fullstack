@@ -2,8 +2,6 @@
 // ! imports
 // ! ============================================
 
-// TODO find a way to get this to work
-
 import "#utils/absoluteEnvPath";
 //required items for server to work
 import express from "express";
@@ -25,40 +23,37 @@ import geschiedenisPage from "#routes/geschiedenis";
 
 //middleware
 import { view } from "#utils/viewHelper";
-//Change the name of requireGuest
 import { authenticateToken, requireGuest } from "#middleware/authenticatie";
+
+// Sanitizers
+import { sanitizeIn } from "#middleware/inputSanitizer";
+import { sanitizeOut } from "#middleware/outputSanitizer";
+
 // =============================================
 
-// *=============================================
-//Get the root file where this file is
 const root = process.cwd();
 const server = express();
-
 const PORT = process.env.SERVER_PORT || 3000;
-// =============================================
 
 // ? ============================================
 // MIDDLEWARE
 // ============================================
 
-// The server searches for the defined html, css, or css files
 server.use(express.static(path.join(root, "..", "frontend")));
-//make the server use cors
-//! is prob a security issue, but to removing for looks for f12...
 server.use(cors());
-// Parse JSON request bodies
 server.use(express.json());
-// Parse cookie request bodies
 server.use(cookieParser());
 
+// Sanitize all incoming data (body, query, params)
+server.use(sanitizeIn);
+// Sanitize all outgoing JSON responses
+server.use(sanitizeOut);
+
 // * ============================================
-//  PAGE EXPLORER
+//  PAGE ROUTES
 // ============================================
-//Proccess the file to only make the name(without .html) visible to the frontend
-// --- PAGE ROUTES (The HTML) ---
-<<<<<<< HEAD
-// TODO NEED TO FIX CSS NOT SHOWING
-// TODO RequireGuest Might not be needed, so check
+
+// TODO: RequireGuest might not be needed, check later
 server.get("/", requireGuest, view("inlog"));
 server.get("/login", requireGuest, view("inlog"));
 server.get("/dashboard", authenticateToken, view("dashboard"));
@@ -66,20 +61,11 @@ server.get("/aanvragen", authenticateToken, view("aanvraag"));
 server.get("/totale-voorraad", authenticateToken, view("totale-voorraad"));
 server.get("/statistieken", authenticateToken, view("statistieken"));
 server.get("/geschiedenis", authenticateToken, view("geschiedenis"));
-=======
-// TODO NEED TO FIX CSS NOT SHOWING for login
-server.get("/", view("inlog"));
-server.get("/login", view("inlog"));
-server.get("/dashboard", view("dashboard"));
-server.get("/aanvragen", view("aanvraag"));
-server.get("/totale-voorraad", view("totale-voorraad"));
-server.get("/statistieken", view("statistieken"));
-server.get("/geschiedenis", view("geschiedenis"));
->>>>>>> github-desktop-JelOrg/main
 
 // * ============================================
 //  API ROUTES
 // ============================================
+
 server.use("/api/", rootApi);
 server.use("/api/login", loginPage);
 server.use("/api/dashboard", dashboardPage);
@@ -92,7 +78,6 @@ server.use("/api/geschiedenis", geschiedenisPage);
 // ? ERROR HANDLING
 // ? ============================================
 
-// Global error handler
 server.use((err, req, res, next) => {
   console.error("Error:", err.message);
   res.status(500).json({
