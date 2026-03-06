@@ -4,6 +4,8 @@ import { HTTP_STATUS, REFRESH_RATES } from "#utils/magicNumberFile";
 //GET: returns latest request history rows for geschiedenis page
 export const fetchGeschiedenisDisplayData = async (req, res) => {
   try {
+
+    //Add a check for jwt.token if valid
     const requestedLimit = Number(req.query.limit || 10);
     const safeLimit = Number.isNaN(requestedLimit)
       ? 10
