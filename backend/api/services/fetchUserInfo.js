@@ -86,6 +86,7 @@ export const fetchUserInfo = async (userId) => {
       select: {
         userId: true,
         email: true,
+        isActive: true,
         role: {
           select: { roleName: true },
         },
@@ -110,6 +111,7 @@ export const fetchUserInfo = async (userId) => {
     email: userInfo.email,
     roleName: userInfo.role?.roleName,
     departmentName: userInfo.department?.departmentName,
+    isActive: userInfo.isActive,
   };
 
   //return object with success appended in front

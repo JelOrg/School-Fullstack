@@ -5,7 +5,7 @@ import {
 } from "#services/fetchDatabaseInfo";
 import { fetchDepartmentId } from "#services/fetchDepartmentData";
 import { postToRequestTable } from "#services/postInfoToDatabase";
-import { verifySSESession } from "#services/sseAuthService";
+import { closeSSESession } from "#services/SSEService";
 import { processToken, validateToken } from "#services/tokenHandler";
 import {
   HTTP_STATUS,
@@ -25,6 +25,7 @@ import {
  * @param {*} res
  */
 export const sendSpoedAanvraag = async (req, res) => {
+  //TODO ADD A THING TO THE DB THAT IS LIKE idURGENT to signify that the req is urgent
   //TODO The info from the spoedaanvraag form needs to be put into the database
   const { userId, itemInfo, departmentName, textField } = req.body;
 
@@ -50,7 +51,7 @@ export const sendSpoedAanvraag = async (req, res) => {
   //Get a request batch id, so +1 from the latest batchId
   const requestBatchId = await getCurrentOrNextReqBatchId(true);
 
-  if (!requestBatchId)
+  if (!requestBatchId.succes)
     return res
       .status(HTTP_STATUS.INTERNAL_SERVER_ERROR)
       .json({ success: false, message: "Failed to Contact DB" });
@@ -122,9 +123,14 @@ export const fetchDashboardDisplayData = async (req, res) => {
     try {
       // 1. Periodic security check
       if (Date.now() - lastVerified > VERIFY_INTERVAL) {
-        const isValidSSESession = await verifySSESession(req, res, intervalId);
+        //checks if the cookie isn't expired
+        const isActive = processToken(req.cookies?.token);
 
-        if (!isValidSSESession.success) return;
+        if (!isActive.success) return closeSSESession(res, intervalId);
+
+        const isValid = await validateToken(isActive.tokenInfo);
+
+        if (!isValid.success) return closeSSESession(res, intervalId);
 
         lastVerified = Date.now();
       }

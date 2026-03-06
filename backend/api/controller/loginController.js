@@ -33,6 +33,11 @@ export const validateLogin = async (req, res) => {
   //fetches user info
   const userInfo = await fetchUserInfo(userLogin.userId);
 
+  if (!userInfo.data.isActive)
+    return res
+      .status(HTTP_STATUS.FORBIDDEN)
+      .json({ message: "User account is not active anymore" });
+
   //uses user info to create a JWT
   const token = generateToken(
     userInfo.userId,
@@ -41,13 +46,8 @@ export const validateLogin = async (req, res) => {
   );
 
   //! prob security issues
+  //TODO CHeck if this actually works
   //Some extras so the client know what with the cookie
-  const cookieOptions = {
-    maxAge: ONE_HOUR,
-    // httpOnly: true,
-    // sameSite: "strict",
-    // secure: process.env.NODE_ENV === "production",
-  };
 
   // The "Ending": Send the cookie and a success message
   return res.status(HTTP_STATUS.OK).cookie("token", token, cookieOptions).json({

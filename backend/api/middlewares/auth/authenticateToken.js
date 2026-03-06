@@ -13,14 +13,14 @@ export const authenticateToken = async (req, res, next) => {
 
   //4. Bad token? Clear it and EXIT then reroutes.
   if (!processedToken.success) {
-    res.clearCookie("token");
+    res.clearCookie("token", { ...cookieOptions });
     return res.redirect("/login?error=denied");
   }
 
-  const isValid = await validateToken(processedToken);
+  const isValid = await validateToken(processedToken.tokenInfo);
 
   if (!isValid.success) {
-    res.clearCookie("token", { path: "/" });
+    res.clearCookie("token", { ...cookieOptions });
     return res.redirect("/login?error=denied");
   }
 
