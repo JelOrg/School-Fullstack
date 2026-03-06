@@ -1,6 +1,10 @@
 import { fetchUserInfo, validateUserLogin } from "#services/fetchUserInfo";
 import { generateToken } from "#services/tokenHandler";
 
+//* importing magic numbers
+import { HTTP_STATUS, ONE_HOUR } from "#utils/magicNumberFile";
+
+//TODO CHECK IF THE PASSWORD DECRYPT ACTUALLY WORKS AND THAT THE COOKIE IS SEND
 //validates if the user login information is correct
 export const validateLogin = async (req, res) => {
   //what i want to get out of the body of the req.body
@@ -10,7 +14,7 @@ export const validateLogin = async (req, res) => {
   // TODO this actually is easy to get past with by inputting false or true
   if (!userEmail || !providedPassword) {
     return res
-      .status(400)
+      .status(HTTP_STATUS.BAD_REQUEST)
       .json({ message: "You have to put email or password" });
   }
   //validates that the user is giving the correct role, password, and
@@ -21,11 +25,18 @@ export const validateLogin = async (req, res) => {
   );
 
   if (!userLogin.success) {
-    return res.status(401).json({ message: "Invalid email or password" });
+    return res
+      .status(HTTP_STATUS.BAD_REQUEST)
+      .json({ message: "Invalid email or password" });
   }
 
   //fetches user info
   const userInfo = await fetchUserInfo(userLogin.userId);
+
+  if (!userInfo.data.isActive)
+    return res
+      .status(HTTP_STATUS.FORBIDDEN)
+      .json({ message: "User account is not active anymore" });
 
   //uses user info to create a JWT
   const token = generateToken(
@@ -34,21 +45,12 @@ export const validateLogin = async (req, res) => {
     userInfo.departmentName,
   );
 
-  // * could be placed somewhere else
-  const ONE_HOUR = 3600000; // 1 * 60 * 60 * 1000
-  //*=================
-
   //! prob security issues
+  //TODO CHeck if this actually works
   //Some extras so the client know what with the cookie
-  const cookieOptions = {
-    maxAge: ONE_HOUR,
-    // httpOnly: true,
-    // sameSite: "strict",
-    // secure: process.env.NODE_ENV === "production",
-  };
 
   // The "Ending": Send the cookie and a success message
-  return res.status(200).cookie("token", token, cookieOptions).json({
+  return res.status(HTTP_STATUS.OK).cookie("token", token, cookieOptions).json({
     success: true,
     message: "Login successful",
     redirectTo: "/dashboard",

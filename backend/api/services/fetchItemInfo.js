@@ -4,20 +4,25 @@ import { prisma } from "#utils/prismaClient";
 //* all that info
 //gets the lest of all general info for items
 export const fetchAllItems = async () => {
-  const allItems = await prisma.items.findMany({
-    select: {
-      itemId: true,
-      itemName: true,
-      description: true,
-      remainingAmount: true,
+  const allItems = await prisma.items
+    .findMany({
+      select: {
+        itemId: true,
+        itemName: true,
+        description: true,
+        remainingAmount: true,
 
-      categories: {
-        select: {
-          categoryName: true,
+        categories: {
+          select: {
+            categoryName: true,
+          },
         },
       },
-    },
-  });
+    })
+    .catch((err) => {
+      err.message = `[Failed fetching all items from db]: ${err.message}`;
+      throw err;
+    });
 
   if (!allItems || allItems.length === 0) {
     return {
@@ -45,14 +50,19 @@ export const fetchAllItems = async () => {
 
 //Get item info of one specific item
 export const fetchCrucialItemInfo = async (itemName) => {
-  const itemInfo = await prisma.items.findUnique({
-    where: itemName,
-    select: {
-      itemId: true,
-      itemName: true,
-      remainingAmount: true,
-    },
-  });
+  const itemInfo = await prisma.items
+    .findUnique({
+      where: itemName,
+      select: {
+        itemId: true,
+        itemName: true,
+        remainingAmount: true,
+      },
+    })
+    .catch((err) => {
+      err.message = `[Failed getting crucial item info]: ${err.message}`;
+      throw err;
+    });
 
   if (!itemInfo) return { success: false, message: "Item not found" };
 

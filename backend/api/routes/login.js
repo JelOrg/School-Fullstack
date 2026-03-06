@@ -5,13 +5,14 @@
 // ! Imports
 import express from "express";
 import { validateLogin } from "#controller/loginController";
+import { HTTP_STATUS } from "#utils/magicNumberFile";
 
 const router = express.Router(); // Creates mini Express app
 // ============================================
 // MIDDLEWARE
 // ============================================
 router.get("/", (req, res) => {
-  res.status(200).json({
+  res.status(HTTP_STATUS.OK).json({
     success: true,
     message: "Login endpoint is ready",
   });

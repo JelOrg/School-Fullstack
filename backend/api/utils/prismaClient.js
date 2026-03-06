@@ -13,4 +13,16 @@ const adapter = new PrismaMariaDb({
 
 const prisma = new PrismaClient({ adapter });
 
+prisma
+  .$connect()
+  .then(() => {
+    console.log("✅ MySQL: Connection established successfully.");
+  })
+  .catch((err) => {
+    console.error("❌ MariaDB: Connection failed!");
+    console.error(err);
+    // In a healthcare app, you might want to kill the process if the DB is down
+    // process.exit(1);
+  });
+
 export { prisma };

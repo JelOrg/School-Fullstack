@@ -2,38 +2,25 @@
 // ! imports
 // ! ============================================
 
-// TODO find a way to get this to work
-
-import "#utils/absoluteEnvPath";
 //required items for server to work
 import express from "express";
+//cookie parser
 import cookieParser from "cookie-parser";
-
 //importing for pathing and url
 import path from "path";
 //removes the errors when trying from f12
 import cors from "cors";
 
-//imports and alias for page routes
-import rootApi from "#routes/root";
-import loginPage from "#routes/login";
-import dashboardPage from "#routes/dashboard";
-import aanvragenPage from "#routes/aanvragen";
-import totaleVoorraadPage from "#routes/totale-voorraad";
-import statistiekenPage from "#routes/statistieken";
-import geschiedenisPage from "#routes/geschiedenis";
-
-//middleware
-import { view } from "#utils/viewHelper";
-//Change the name of requireGuest
-import { authenticateToken, requireGuest } from "#middleware/authenticatie";
+//
+import "#utils/absoluteEnvPath";
+import mainServerRouter from "./routingHub.js";
+import { HTTP_STATUS } from "#utils/magicNumberFile";
 // =============================================
 
 // *=============================================
 //Get the root file where this file is
 const root = process.cwd();
 const server = express();
-
 const PORT = process.env.SERVER_PORT || 3000;
 // =============================================
 
@@ -52,41 +39,10 @@ server.use(express.json());
 server.use(cookieParser());
 
 // * ============================================
-//  PAGE EXPLORER
+//  PAGE ROUTER
 // ============================================
-//Proccess the file to only make the name(without .html) visible to the frontend
-// --- PAGE ROUTES (The HTML) ---
-<<<<<<< HEAD
-// TODO NEED TO FIX CSS NOT SHOWING
-// TODO RequireGuest Might not be needed, so check
-server.get("/", requireGuest, view("inlog"));
-server.get("/login", requireGuest, view("inlog"));
-server.get("/dashboard", authenticateToken, view("dashboard"));
-server.get("/aanvragen", authenticateToken, view("aanvraag"));
-server.get("/totale-voorraad", authenticateToken, view("totale-voorraad"));
-server.get("/statistieken", authenticateToken, view("statistieken"));
-server.get("/geschiedenis", authenticateToken, view("geschiedenis"));
-=======
-// TODO NEED TO FIX CSS NOT SHOWING for login
-server.get("/", view("inlog"));
-server.get("/login", view("inlog"));
-server.get("/dashboard", view("dashboard"));
-server.get("/aanvragen", view("aanvraag"));
-server.get("/totale-voorraad", view("totale-voorraad"));
-server.get("/statistieken", view("statistieken"));
-server.get("/geschiedenis", view("geschiedenis"));
->>>>>>> github-desktop-JelOrg/main
-
-// * ============================================
-//  API ROUTES
-// ============================================
-server.use("/api/", rootApi);
-server.use("/api/login", loginPage);
-server.use("/api/dashboard", dashboardPage);
-server.use("/api/aanvragen", aanvragenPage);
-server.use("/api/totale-voorraad", totaleVoorraadPage);
-server.use("/api/statistieken", statistiekenPage);
-server.use("/api/geschiedenis", geschiedenisPage);
+//? Rate limiting?
+server.use("/", mainServerRouter);
 
 // ? ============================================
 // ? ERROR HANDLING
@@ -95,7 +51,7 @@ server.use("/api/geschiedenis", geschiedenisPage);
 // Global error handler
 server.use((err, req, res, next) => {
   console.error("Error:", err.message);
-  res.status(500).json({
+  res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
     error: "Something went wrong!",
     message: err.message,
   });

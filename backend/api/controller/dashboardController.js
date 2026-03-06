@@ -1,16 +1,22 @@
-import { getCurrentOrNextReqBatchId } from "#services/fetchDatabaseInfo";
+import {
+  fetchKritiekVoorraad,
+  fetchMeldingenAlert,
+  getCurrentOrNextReqBatchId,
+} from "#services/fetchDatabaseInfo";
 import { fetchDepartmentId } from "#services/fetchDepartmentData";
 import { postToRequestTable } from "#services/postInfoToDatabase";
-
-// ==========================================
-// GET: 
-// ==========================================
-//? Spoedaanvraag controller
-export const displaySpoedAanvraagData = async (req, res) => {};
+import { closeSSESession } from "#services/SSEService";
+import { processToken, validateToken } from "#services/tokenHandler";
+import {
+  HTTP_STATUS,
+  REFRESH_RATES,
+  VERIFY_INTERVAL,
+} from "#utils/magicNumberFile";
 
 // ==========================================
 // POST: Create Urgent Request
 // ==========================================
+//TODO TEST ALSO
 //? Sends a spoedaanvraag to the db
 //! Will cause race condition, due to multiple users being able to request
 //! the same item making it possible to see 2 or more different remainingAmount items
@@ -19,21 +25,22 @@ export const displaySpoedAanvraagData = async (req, res) => {};
  * @param {*} res
  */
 export const sendSpoedAanvraag = async (req, res) => {
-  //* The info from the spoedaanvraag form needs to be put into the database
+  //TODO ADD A THING TO THE DB THAT IS LIKE idURGENT to signify that the req is urgent
+  //TODO The info from the spoedaanvraag form needs to be put into the database
   const { userId, itemInfo, departmentName, textField } = req.body;
 
   //! Might have weird js behaviour
 
   //checking for any non gotten data
   if (!itemInfo || itemInfo.length === 0 || !departmentName)
-    return res.status(401).json({
+    return res.status(HTTP_STATUS.BAD_REQUEST).json({
       success: false,
       message: "You have to enter a item or department",
     });
 
   // Inside the Controller
   if (!userId)
-    return res.status(401).json({
+    return res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
       success: false,
       message: "Invalid session/Invalid JWT decoding",
     });
@@ -44,9 +51,9 @@ export const sendSpoedAanvraag = async (req, res) => {
   //Get a request batch id, so +1 from the latest batchId
   const requestBatchId = await getCurrentOrNextReqBatchId(true);
 
-  if (!requestBatchId)
+  if (!requestBatchId.succes)
     return res
-      .status(500)
+      .status(HTTP_STATUS.INTERNAL_SERVER_ERROR)
       .json({ success: false, message: "Failed to Contact DB" });
 
   //Gets you the departmentId
@@ -54,7 +61,9 @@ export const sendSpoedAanvraag = async (req, res) => {
 
   //quick check that we actually have departmentId
   if (!departmentId.success)
-    return res.status(404).json({ message: "Department not found" });
+    return res
+      .status(HTTP_STATUS.INTERNAL_SERVER_ERROR)
+      .json({ message: "Department not found" });
 
   // ! Users can still submit even if stock changed since their last fetch.
   // TODO: Add a real-time stock check against the DB before saving.
@@ -81,24 +90,75 @@ export const sendSpoedAanvraag = async (req, res) => {
 
   //checks if the posting is successful
   if (!postingToDb.success)
-    return res.status(400).json({ message: postingToDb.message });
+    return res
+      .status(HTTP_STATUS.INTERNAL_SERVER_ERROR)
+      .json({ message: postingToDb.message });
 
   // Finish with detail
-  return res.status(201).json({
+  return res.status(HTTP_STATUS.CREATED).json({
     success: true,
     message: "Spoedaanvraag successfully created!",
     count: postingToDb.count, // if your service returned the count
   });
 };
 
+//TODO TEST THIS, THIS MIGHT BE BUGGY
 // ==========================================
-// GET:
+// GET: Data for the dashboard. Creates a constant connection to db
 // ==========================================
 //? kritieke voorraad controllers
-export const getKritiekeVoorraad = async (req, res) => {};
-
-// ==========================================
-// GET:
-// ==========================================
 //? meldingen controller
-export const getMeldingen = async (req, res) => {};
+//? Spoedaanvraag controller
+export const fetchDashboardDisplayData = async (req, res) => {
+  res.writeHead(HTTP_STATUS.OK, {
+    "Content-Type": "text/event-stream",
+    "Cache-Control": "no-cache", // Good for SSE
+    Connection: "keep-alive",
+  });
+
+  let lastVerified = Date.now();
+
+  //Create a SSE connection, meaning you have an open connection to sever
+  const intervalId = setInterval(async () => {
+    try {
+      // 1. Periodic security check
+      if (Date.now() - lastVerified > VERIFY_INTERVAL) {
+        //checks if the cookie isn't expired
+        const isActive = processToken(req.cookies?.token);
+
+        if (!isActive.success) return closeSSESession(res, intervalId);
+
+        const isValid = await validateToken(isActive.tokenInfo);
+
+        if (!isValid.success) return closeSSESession(res, intervalId);
+
+        lastVerified = Date.now();
+      }
+
+      //! This could be the cause for data nor being feteched
+      // 2. Fetch data
+      const [voorraadData, alertsData] = await Promise.all([
+        fetchKritiekVoorraad(
+          req.userAuthLevel,
+          req.tokenInformation.userDepartmentName,
+        ),
+        fetchMeldingenAlert(
+          req.userAuthLevel,
+          req.tokenInformation.userDepartmentName,
+        ),
+      ]);
+
+      // 3. Send to client
+      if (!res.writableEnded) {
+        res.write(`data: ${JSON.stringify({ voorraadData, alertsData })}\n\n`);
+      }
+    } catch (err) {
+      console.error("Dashboard Stream Error:", err);
+    }
+  }, REFRESH_RATES.CRITICAL_VITALS);
+
+  req.on("close", () => {
+    console.log("Client closed connection. Clearing interval.");
+    clearInterval(intervalId);
+  });
+};

@@ -1,9 +1,11 @@
-/* Soft dashboard background */
+/* ============================================================
+   dashboard.css — only styles unique to the dashboard page.
+   Everything else is handled by main.css + Bootstrap.
+   ============================================================ */
 
-/* Spoed card */
+/* Spoedaanvraag card — orange gradient, unique to dashboard */
 .spoed-card {
   background: linear-gradient(180deg, #e44907, #ff6a2f);
-  border-radius: 15px;
 }
 
 .spoed-header {
@@ -11,39 +13,7 @@
   border-bottom: none;
 }
 
-/* General card rounding */
-/* Update your existing .card rule */
-.card {
-  border-radius: 15px;
-  overflow: hidden; /* This ensures the header background doesn't overlap the rounded corners */
-  border: none;     /* Optional: matching the 'border-0' style of your other pages */
-}
-
-/* Progress height */
-.progress {
-  height: 8px;
-  border-radius: 10px;
-}
-
-/* Change color for titles on white cards (Kritiek & Meldingen) */
-.card-header h5 {
-  color: #1771d0; /* This matches the professional blue used in your other pages */
-  font-weight: 700;
-}
-
-/* Ensure the Spoedaanvraag title stays white for contrast against the orange */
+/* Keep the spoed title white (overrides the blue from main.css) */
 .spoed-header h5 {
   color: #ffffff !important;
-}
-
-/* Apply this to the cards to give them a minimum uniform height */
-.card.h-100 {
-  min-height: 600px; /* Adjust this value to your preference */
-  display: flex;
-  flex-direction: column;
-}
-
-/* This ensures the card-body expands to push the footer/buttons to the bottom */
-.card-body {
-  flex: 1 1 auto;
 }
