@@ -135,15 +135,16 @@ export const fetchDashboardDisplayData = async (req, res) => {
         lastVerified = Date.now();
       }
 
+      //! This could be the cause for data nor being feteched
       // 2. Fetch data
       const [voorraadData, alertsData] = await Promise.all([
         fetchKritiekVoorraad(
           req.userAuthLevel,
-          req.tokenInfo.userDepartmentName,
+          req.tokenInformation.userDepartmentName,
         ),
         fetchMeldingenAlert(
           req.userAuthLevel,
-          req.tokenInfo.userDepartmentName,
+          req.tokenInformation.userDepartmentName,
         ),
       ]);
 

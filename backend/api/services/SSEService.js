@@ -6,7 +6,7 @@ export const closeSSESession = (res, intervalId) => {
   if (!res.writableEnded) {
     res.write("event: auth_error\n");
     res.write(
-      `data: ${JSON.stringify({ url: "/api/auth/logout?session=expired" })}\n\n`,
+      `data: ${JSON.stringify({ url: "/api/login/logout?session=expired" })}\n\n`,
     );
     res.end();
   }
