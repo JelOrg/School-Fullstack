@@ -4,10 +4,7 @@
    CSS variables) are all in main.css.
    ============================================================ */
 
-/* Profile page has a white background, overrides the body gradient */
-body {
-  background: #ffffff !important;
-}
+
 
 /* Full-height profile card layout */
 .profile-card {

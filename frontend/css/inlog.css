@@ -4,14 +4,13 @@
    ============================================================ */
 
 /* Override the body gradient — login page is plain white */
-body {
-  background: #ffffff !important;
-}
+
 
 .logo {
   width: 10rem;
   height: auto;
   border-radius: 1rem;
+  margin-top: 1rem;
 }
 
 .login-box {
@@ -19,6 +18,7 @@ body {
   border-radius: 1.5rem;
   width: 100%;
   max-width: 400px;
+  margin-bottom: 1rem;
 }
 
 #btn-login {
@@ -34,4 +34,12 @@ body {
   color: #e01c1c;
   text-align: center;
   font-weight: bold;
+}
+
+.h1-title {
+  color: #ffffff;
+}
+
+.p-subtitle {
+  color: #ffffff;
 }
