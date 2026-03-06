@@ -3,6 +3,7 @@ import { prisma } from "#utils/prismaClient";
 //builds a where-filter based on auth level and department
 const buildDepartmentScopeFilter = (userAuthLevel, userDepartmentName) => {
   //manager/admin can view all departments
+  //TODO maybe not need??
   if (userAuthLevel >= 2) return {};
 
   //employee should only view own department requests
@@ -91,6 +92,7 @@ export const fetchRecentRequestsHistory = async ({
 };
 
 //fetches statistics overview data for the statistics page
+//TODO we can increase or remove limits, since we need to get a lot of data for the statistics
 export const fetchRequestStatistics = async ({
   userAuthLevel,
   userDepartmentName,
