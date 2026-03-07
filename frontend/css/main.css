@@ -28,6 +28,11 @@ body {
   border-bottom: 1px solid #e5e5e5;
 }
 
+.nav-link.active {
+  font-weight: 700;
+  color: #1771d0 !important;
+}
+
 /* ── Footer ───────────────────────────────────────────────── */
 footer {
   margin-top: auto;
