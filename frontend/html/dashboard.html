@@ -81,8 +81,12 @@
     </header>
 
     <!-- Main Dashboard interface -->
+
+    <main class="py-4 px-1 container-fluid ">
+
     <main class="py-4 px-1 container-fluid">
     
+
       <div class="container-fluid px-4">
         <div class="d-flex justify-content-between align-items-center mb-4">
           <h2 class="mb-0">Dashboard</h2>
@@ -99,25 +103,29 @@
 
               <div class="card-body">
                 <label class="form-label">Zoek supplies</label>
-                <input
-                  class="form-control mb-3"
-                  placeholder="Zoek op naam of categorie"
-                />
+                <div style="position:relative">
+                  <input id="spoed-zoek"
+                    class="form-control mb-3"
+                    placeholder="Zoek op naam of categorie"
+                    autocomplete="off"
+                  />
+                  <div id="spoed-suggestions"></div>
+                </div>
 
                 <label class="form-label">Afdeling</label>
-                <input
+                <input id="spoed-afdeling"
                   class="form-control mb-3"
                   placeholder="Bijv. SEH, Cardiologie"
                 />
 
                 <label class="form-label">Noodsituatie</label>
-                <textarea
+                <textarea id="spoed-situatie"
                   class="form-control mb-3"
                   rows="4"
                   placeholder="Beschrijf kort de noodsituatie"
                 ></textarea>
 
-                <button class="btn btn-light w-100 fw-bold">
+                <button id="btn-spoed-versturen" class="btn btn-light w-100 fw-bold">
                   Spoedaanvraag versturen
                 </button>
               </div>
@@ -131,7 +139,7 @@
                 <h5 class="mb-0">Kritiek Voorraadoverzicht</h5>
               </div>
 
-              <div class="card-body">
+              <div class="card-body" id="critical-stock-list">
                 <div class="row mb-3">
                   <div class="col">
                     <select class="form-select">
@@ -144,28 +152,7 @@
                     </select>
                   </div>
                 </div>
-
-                <!-- Example voorraad item -->
-                <div class="card mb-3 border-0 shadow-sm">
-                  <div class="card-body">
-                    <div class="d-flex justify-content-between">
-                      <h6 class="fw-bold">Steriele handschoenen M</h6>
-                      <span class="badge bg-danger">Kritiek</span>
-                    </div>
-                    <small class="text-muted">15 dozen • Min: 50</small>
-
-                    <div class="progress mt-2">
-                      <div
-                        class="progress-bar bg-danger"
-                        style="width: 30%"
-                      ></div>
-                    </div>
-
-                    <small class="text-danger">
-                      ⚠ Direct aanvullen vereist
-                    </small>
-                  </div>
-                </div>
+                <p class="text-muted small static-placeholder">Laden...</p>
               </div>
             </section>
           </div>
@@ -175,7 +162,7 @@
             <section class="card shadow border-0 h-100">
               <div class="card-header bg-white d-flex justify-content-between">
                 <h5 class="mb-0">Meldingen</h5>
-                <span class="badge bg-danger">4</span>
+                <span class="badge bg-danger" id="notif-badge">0</span>
               </div>
 
               <div class="card-body">
@@ -197,24 +184,8 @@
                   </div>
 
                   <hr />
-
-                  <!-- Example melding -->
-                  <div class="card mb-3 border-danger">
-                    <div class="card-body">
-                      <span class="badge bg-danger mb-2">SPOED</span>
-                      <p class="small mb-2">
-                        Zuurstof nodig op SEH. 3 zuurstofbommen direct nodig.
-                      </p>
-
-                      <div class="d-flex gap-2">
-                        <button class="btn btn-sm btn-danger w-100">
-                          Annuleer
-                        </button>
-                        <button class="btn btn-sm btn-success w-100">
-                          Bevestig
-                        </button>
-                      </div>
-                    </div>
+                  <div id="notifications-list">
+                    <p class="text-muted small text-center">Laden...</p>
                   </div>
                 </div>
               </div>
@@ -229,5 +200,6 @@
       <p>&copy; 2024 RKZ Voorraadbeheer. Alle rechten voorbehouden.</p>
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../javascript/dashboard.js"></script>
   </body>
 </html>

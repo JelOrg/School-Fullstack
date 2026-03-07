@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="../css/bootstrap.css" />
     <link rel="stylesheet" href="../css/main.css" />
     <link rel="stylesheet" href="../css/inlog.css" />
-    <script src="../javascript/dataConnection.js" defer></script>
+    <script src="../javascript/inlog.js" defer></script>
   </head>
 
   <body class="bg-rkz-blue">
@@ -22,7 +22,7 @@
 
       <!-- rollen kiezen -->
       <div class="login-box shadow-lg p-4">
-        <form action="/login" method="post">
+        <form onsubmit="return false;">
           <div class="mb-3">
             <label class="form-label fw-bold">Rol</label>
             <select class="form-select rounded-pill" name="rol" required>
