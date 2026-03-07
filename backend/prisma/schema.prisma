@@ -48,6 +48,7 @@ model request {
   requestBatchId  Int
   itemId          Int
   requestedAmount Int
+  isUrgent Boolean
   requestedDate   DateTime @default(now())
   userId          Int
   createdAt       DateTime @default(now())

@@ -18,11 +18,13 @@ export const REFRESH_RATES = {
   SYSTEM_STATUS: 60000, // 1 minute for battery/wifi status
 };
 
+//!USED FOR CONTOLLERS TO PUT THE LIMIT OF AMOUNT OF REQUESTED ITEMS
 export const DB_LIMITS = {
   MAX_POOL_SIZE: 10,
   QUERY_TIMEOUT: 15000,
 };
 
+//!ALL HTTP STATUS CODES
 /**
  * Standard HTTP Status Codes
  * Categorized for easy reference in Controllers
@@ -45,5 +47,5 @@ export const HTTP_STATUS = {
   SERVICE_UNAVAILABLE: 503,
 };
 
-//Used for SSE
+//! USED FOR SSE SERVICE
 export const VERIFY_INTERVAL = 5 * 60 * 1000; // 5 Minutes

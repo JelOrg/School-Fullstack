@@ -7,7 +7,7 @@ import { HTTP_STATUS, ONE_HOUR } from "#utils/magicNumberFile";
 //TODO CHECK IF THE PASSWORD DECRYPT ACTUALLY WORKS AND THAT THE COOKIE IS SEND
 //validates if the user login information is correct
 export const validateLogin = async (req, res) => {
-  //what i want to get out of the body of the req.body
+  //! userRoleName doens't exist in token, because there is no token...
   const { userRoleName, userEmail, providedPassword } = req.body;
 
   //checks if there is actually a password or email send
