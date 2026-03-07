@@ -79,7 +79,8 @@ export const fetchRecentRequestsHistory = async ({
     itemName: request.items?.itemName,
     remainingAmount: request.items?.remainingAmount,
     requestedByUserId: request.users?.userId,
-    requestedByName: `${request.users?.firstName || ""} ${request.users?.lastName || ""}`.trim(),
+    requestedByName:
+      `${request.users?.firstName || ""} ${request.users?.lastName || ""}`.trim(),
     roleName: request.users?.role?.roleName,
     departmentName: request.users?.department?.departmentName,
   }));
@@ -132,6 +133,7 @@ export const fetchRequestStatistics = async ({
     0,
   );
 
+  //!Check
   const itemAggregationMap = new Map();
   for (const row of allScopedRequests) {
     const key = row.items?.itemId ?? -1;

@@ -1,5 +1,5 @@
 //Config options for cookies
-const cookieOptions = {
+export const cookieOptions = {
   maxAge: ONE_HOUR,
   path: "/",
   // httpOnly: true,

@@ -7,11 +7,9 @@
 import { HTTP_STATUS } from "#utils/magicNumberFile";
 
 import { getCurrentOrNextReqBatchId } from "#services/fetchDatabaseInfo";
-import { postToRequestTable, postRequestDescription } from "#services/postInfoToDatabase";
+import { postToRequestTable } from "#services/postInfoToDatabase";
 import express from "express";
-const router = express.Router();
 
-import express from "express";
 import { sendNormaleAanvraag } from "#controller/aanvragenDashboard";
 const router = express.Router(); // Creates mini Express app
 
@@ -65,17 +63,17 @@ router.post("/", async (req, res) => {
   }
 
   // Optionally save notes to reqDescirptions table
-  if (notes) {
-    await postRequestDescription(notes).catch(() =>
-      console.warn("Kon aanvraag notities niet opslaan.")
-    );
-  }
+  // if (notes) {
+  //   await postRequestDescription(notes).catch(() =>
+  //     console.warn("Kon aanvraag notities niet opslaan."),
+  //   );
+  // }
 
   // Write to request table — only fields the schema has
   const result = await postToRequestTable([
     {
       requestBatchId: batchResult.data,
-      itemId:          Number(itemId),
+      itemId: Number(itemId),
       requestedAmount: Number(amountRequested),
       userId,
     },

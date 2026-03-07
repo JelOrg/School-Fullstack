@@ -16,7 +16,8 @@ import { HTTP_STATUS } from "#utils/magicNumberFile";
 export const sendNormaleAanvraag = async (req, res) => {
   //TODO ADD A THING TO THE DB THAT IS LIKE idURGENT to signify that the req is urgent
   //TODO The info from the spoedaanvraag form needs to be put into the database
-  const { userId, itemInfo, departmentName, textField } = req.body;
+  const { itemInfo, textField } = req.body;
+  const { departmentName, userId } = req.tokenInformation;
 
   //! Might have weird js behaviour
 
@@ -51,7 +52,7 @@ export const sendNormaleAanvraag = async (req, res) => {
   //quick check that we actually have departmentId
   if (!departmentId.success)
     return res
-      .status(HTTP_STATUS.INTERNAL_SERVER_ERROR)
+      .status(HTTP_STATUS.NOT_FOUND)
       .json({ message: "Department not found" });
 
   // ! Users can still submit even if stock changed since their last fetch.
@@ -65,13 +66,13 @@ export const sendNormaleAanvraag = async (req, res) => {
    */
   const requestedItemsList = itemInfo.map((item) => ({
     itemId: item.itemId,
-    itemName: item.nameItem,
+    itemName: item.itemName,
     requestedAmount: item.amountRequested,
     isUrgent: false,
 
     //Constants
     userId: userId,
-    requestBatchId: requestBatchId,
+    requestBatchId: requestBatchId.data,
     departmentId: departmentId,
   }));
 

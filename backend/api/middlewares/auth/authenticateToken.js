@@ -9,7 +9,7 @@ export const authenticateToken = async (req, res, next) => {
   if (!cookieToken) return res.redirect("/login?error=denied");
 
   //verifies token and decodes payload
-  const processedToken = processToken(cookieToken.token);
+  const processedToken = processToken(cookieToken);
 
   //4. Bad token? Clear it and EXIT then reroutes.
   if (!processedToken.success) {

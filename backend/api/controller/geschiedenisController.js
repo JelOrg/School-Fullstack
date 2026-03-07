@@ -20,14 +20,17 @@ export const fetchGeschiedenisDisplayData = async (req, res) => {
       //Checks if the session is still valid or active
       lastVerified = await SSESessionCheck(req, res, intervalId, lastVerified);
 
-      //Add a check for jwt.token if valid
+      //! Could be causing a crash
       const requestedLimit = Number(req.query.limit || 10);
+
+      //? ummmm
       const safeLimit = Number.isNaN(requestedLimit)
         ? 10
         : Math.min(Math.max(requestedLimit, 1), 100);
 
       const userDepartmentName = req.tokenInformation?.userDepartmentName;
-      const userAuthLevel = req.userAuthLevel || 1;
+      //!Maybe we don't add a normal authLevel for people
+      const userAuthLevel = req.userAuthLevel;
 
       const historyResult = await fetchRecentRequestsHistory({
         userAuthLevel: userAuthLevel,

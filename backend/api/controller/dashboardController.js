@@ -31,19 +31,20 @@ import {
 export const sendSpoedAanvraag = async (req, res) => {
   //TODO ADD A THING TO THE DB THAT IS LIKE idURGENT to signify that the req is urgent
   //TODO The info from the spoedaanvraag form needs to be put into the database
-  const { userId, itemInfo, departmentName, textField } = req.body;
+  const { itemInfo, textField } = req.body;
+  const { userId, departmentName } = req.tokenInformation;
 
   //! Might have weird js behaviour
 
   //checking for any non gotten data
-  if (!itemInfo || itemInfo.length === 0 || !departmentName)
+  if (!itemInfo || itemInfo.length === 0)
     return res.status(HTTP_STATUS.BAD_REQUEST).json({
       success: false,
       message: "You have to enter a item or department",
     });
 
   // Inside the Controller
-  if (!userId)
+  if (!userId || !departmentName)
     return res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
       success: false,
       message: "Invalid session/Invalid JWT decoding",
@@ -73,6 +74,7 @@ export const sendSpoedAanvraag = async (req, res) => {
   // TODO: Add a real-time stock check against the DB before saving.
   // TODO: Filter out items that are no longer available.
 
+  //TODO This doesn't get the itemId from body, or we can have those linked to what is shown on the frontend
   // TODO need to change the db so it can store store Text that is send in the Spoedaanvraag
   /** * Formats raw input into a clean list for processing:
    * Example: [ { itemId: 101, itemName: "Hammer", requestedAmount: 2 },
@@ -87,7 +89,7 @@ export const sendSpoedAanvraag = async (req, res) => {
     //Constants
     userId: userId,
     requestBatchId: requestBatchId,
-    departmentId: departmentId,
+    departmentId: departmentId.data.departmentId,
   }));
 
   //* Sends the post request to the db
