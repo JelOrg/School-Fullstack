@@ -9,6 +9,8 @@ import { HTTP_STATUS } from "#utils/magicNumberFile";
 
 import { fetchAllItems } from "#services/fetchItemInfo";
 import express from "express";
+import { fetchTotalVoorraadData } from "#controller/totaleVoorraadController";
+
 const router = express.Router();
 
 router.get("/", async (req, res) => {
@@ -19,24 +21,17 @@ router.get("/", async (req, res) => {
     return { success: false, data: [] };
   });
 
-import express from "express";
-import { authenticateToken } from "#middleware/authenticatie";
-import { authorizeByLevelAndDepartment } from "#middleware/authorisatie";
-import { fetchTotalVoorraadData } from "#controller/totaleVoorraadController";
-const router = express.Router(); // Creates mini Express app
-
-// ============================================
-// MIDDLEWARE
-// ============================================
-//?Whaaat??
-router.get("/", (req, res) => {
-  res.status(200).json({
-    success: true,
-    count: items.length,
-    data: items,
+  // ============================================
+  // MIDDLEWARE
+  // ============================================
+  //?Whaaat??
+  router.get("/", (req, res) => {
+    res.status(200).json({
+      success: true,
+      count: items.length,
+      data: items,
+    });
   });
-});
-
 
   if (!result.success) {
     return res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
@@ -54,14 +49,14 @@ router.get("/", (req, res) => {
     items = items.filter(
       (i) =>
         i.itemName.toLowerCase().includes(term) ||
-        i.categoryName.toLowerCase().includes(term)
+        i.categoryName.toLowerCase().includes(term),
     );
   }
 
   // Filter by category
   if (category) {
     items = items.filter(
-      (i) => i.categoryName.toLowerCase() === category.toLowerCase()
+      (i) => i.categoryName.toLowerCase() === category.toLowerCase(),
     );
   }
 
@@ -71,6 +66,7 @@ router.get("/", (req, res) => {
     data: items,
   });
 });
+
 router.get("/fetch-totale-voorraad", fetchTotalVoorraadData);
 
 export default router;
