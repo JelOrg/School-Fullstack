@@ -82,6 +82,7 @@ export const sendSpoedAanvraag = async (req, res) => {
     itemId: item.itemId,
     itemName: item.nameItem,
     requestedAmount: item.amountRequested,
+    isUrgent: true,
 
     //Constants
     userId: userId,

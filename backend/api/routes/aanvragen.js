@@ -5,7 +5,6 @@
  */
 
 import express from "express";
-import { authenticateToken } from "#middleware/authenticatie";
 import { sendNormaleAanvraag } from "#controller/aanvragenDashboard";
 const router = express.Router(); // Creates mini Express app
 
@@ -23,6 +22,7 @@ router.get("/", (req, res) => {
  * POST /api/aanvragen
  * Body:   { itemId, itemName, amountRequested, departmentName, urgency, notes }
  * userId: read from JWT token via req.tokenInformation (set by authenticateToken)
+ * We have a controller that handles posting, we just need a filter
  */
 router.post("/", async (req, res) => {
   const { itemId, amountRequested, departmentName, notes } = req.body;

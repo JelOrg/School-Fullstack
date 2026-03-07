@@ -67,6 +67,7 @@ export const sendNormaleAanvraag = async (req, res) => {
     itemId: item.itemId,
     itemName: item.nameItem,
     requestedAmount: item.amountRequested,
+    isUrgent: false,
 
     //Constants
     userId: userId,
