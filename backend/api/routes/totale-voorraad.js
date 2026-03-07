@@ -20,17 +20,20 @@ router.get("/", async (req, res) => {
   });
 
 import express from "express";
-
+import { authenticateToken } from "#middleware/authenticatie";
+import { authorizeByLevelAndDepartment } from "#middleware/authorisatie";
+import { fetchTotalVoorraadData } from "#controller/totaleVoorraadController";
 const router = express.Router(); // Creates mini Express app
 
 // ============================================
 // MIDDLEWARE
 // ============================================
+//?Whaaat??
 router.get("/", (req, res) => {
-  res.status(HTTP_STATUS.OK).json({
+  res.status(200).json({
     success: true,
-    message: "Welcome to the totale-voorraad endpoint",
-    user: req.user,
+    count: items.length,
+    data: items,
   });
 });
 
@@ -68,5 +71,6 @@ router.get("/", (req, res) => {
     data: items,
   });
 });
+router.get("/fetch-totale-voorraad", fetchTotalVoorraadData);
 
 export default router;

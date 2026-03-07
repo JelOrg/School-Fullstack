@@ -5,7 +5,11 @@ import {
 } from "#services/fetchDatabaseInfo";
 import { fetchDepartmentId } from "#services/fetchDepartmentData";
 import { postToRequestTable } from "#services/postInfoToDatabase";
-import { closeSSESession } from "#services/SSEService";
+import {
+  closeSSESession,
+  SSEHeader,
+  SSESessionCheck,
+} from "#services/SSEService";
 import { processToken, validateToken } from "#services/tokenHandler";
 import {
   HTTP_STATUS,
@@ -78,6 +82,7 @@ export const sendSpoedAanvraag = async (req, res) => {
     itemId: item.itemId,
     itemName: item.nameItem,
     requestedAmount: item.amountRequested,
+    isUrgent: true,
 
     //Constants
     userId: userId,
@@ -110,31 +115,19 @@ export const sendSpoedAanvraag = async (req, res) => {
 //? meldingen controller
 //? Spoedaanvraag controller
 export const fetchDashboardDisplayData = async (req, res) => {
-  res.writeHead(HTTP_STATUS.OK, {
-    "Content-Type": "text/event-stream",
-    "Cache-Control": "no-cache", // Good for SSE
-    Connection: "keep-alive",
-  });
-
+  //Header for what is needed in the header of a SSE
+  SSEHeader(res);
   let lastVerified = Date.now();
+
+  req.on("close", () => closeSSESession(res, intervalId));
 
   //Create a SSE connection, meaning you have an open connection to sever
   const intervalId = setInterval(async () => {
     try {
-      // 1. Periodic security check
-      if (Date.now() - lastVerified > VERIFY_INTERVAL) {
-        //checks if the cookie isn't expired
-        const isActive = processToken(req.cookies?.token);
+      //Checks if the session is still valid or active
+      lastVerified = await SSESessionCheck(req, res, intervalId, lastVerified);
 
-        if (!isActive.success) return closeSSESession(res, intervalId);
-
-        const isValid = await validateToken(isActive.tokenInfo);
-
-        if (!isValid.success) return closeSSESession(res, intervalId);
-
-        lastVerified = Date.now();
-      }
-
+      //TODO Need to check if you really need department name? or we could just not use it for now
       //! This could be the cause for data nor being feteched
       // 2. Fetch data
       const [voorraadData, alertsData] = await Promise.all([
