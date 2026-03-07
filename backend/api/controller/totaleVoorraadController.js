@@ -16,30 +16,17 @@ import {
 // GET: TotaleVoorraad controller
 // ==========================================
 export const fetchDashboardDisplayData = async (req, res) => {
-  res.writeHead(HTTP_STATUS.OK, {
-    "Content-Type": "text/event-stream",
-    "Cache-Control": "no-cache", // Good for SSE
-    Connection: "keep-alive",
-  });
-
+  //Header for what is needed in the header of a SSE
+  SSEHeader(res);
   let lastVerified = Date.now();
+
+  req.on("close", () => closeSSESession(res, intervalId));
 
   //Create a SSE connection, meaning you have an open connection to sever
   const intervalId = setInterval(async () => {
     try {
-      // 1. Periodic security check
-      if (Date.now() - lastVerified > VERIFY_INTERVAL) {
-        //checks if the cookie isn't expired
-        const isActive = processToken(req.cookies?.token);
-
-        if (!isActive.success) return closeSSESession(res, intervalId);
-
-        const isValid = await validateToken(isActive.tokenInfo);
-
-        if (!isValid.success) return closeSSESession(res, intervalId);
-
-        lastVerified = Date.now();
-      }
+      //Checks if the session is still valid or active
+      lastVerified = await SSESessionCheck(req, res, intervalId, lastVerified);
 
       //! This could be the cause for data nor being feteched
       // 2. Fetch data

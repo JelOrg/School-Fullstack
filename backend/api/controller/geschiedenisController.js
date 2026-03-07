@@ -3,28 +3,17 @@ import { HTTP_STATUS, REFRESH_RATES } from "#utils/magicNumberFile";
 
 //GET: returns latest request history rows for geschiedenis page
 export const fetchGeschiedenisDisplayData = async (req, res) => {
-  res.writeHead(HTTP_STATUS.OK, {
-    "Content-Type": "text/event-stream",
-    "Cache-Control": "no-cache", // Good for SSE
-    Connection: "keep-alive",
-  });
+  //Header for what is needed in the header of a SSE
+  SSEHeader(res);
+  let lastVerified = Date.now();
 
-  const lastVerified = Date.now();
+  req.on("close", () => closeSSESession(res, intervalId));
 
-  const intervalId = setInterval(async (req, res) => {
+  //Create a SSE connection, meaning you have an open connection to sever
+  const intervalId = setInterval(async () => {
     try {
-      if (Date.now() - lastVerified > VERIFY_INTERVAL) {
-        //checks if the cookie isn't expired
-        const isActive = processToken(req.cookies?.token);
-
-        if (!isActive.success) return closeSSESession(res, intervalId);
-
-        const isValid = await validateToken(isActive.tokenInfo);
-
-        if (!isValid.success) return closeSSESession(res, intervalId);
-
-        lastVerified = Date.now();
-      }
+      //Checks if the session is still valid or active
+      lastVerified = await SSESessionCheck(req, res, intervalId, lastVerified);
 
       //Add a check for jwt.token if valid
       const requestedLimit = Number(req.query.limit || 10);
