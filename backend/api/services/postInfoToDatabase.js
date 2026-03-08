@@ -5,9 +5,13 @@ import { prisma } from "#utils/prismaClient";
  * Sends a few post to the db depending on the amount of items in the list
  */
 export const postToRequestTable = async (requestItemsList) => {
+  const dataToInsert = Array.isArray(requestItemsList)
+    ? requestItemsList
+    : [requestItemsList];
+
   const sendPost = await prisma.request
     .createMany({
-      data: requestItemsList,
+      data: dataToInsert,
     })
     .catch((err) => {
       err.message = `[Sending request to table]: ${err.message}`;

@@ -1,9 +1,10 @@
+import { REMAINING_AMOUNT, TAKE_LIMIT } from "#utils/magicNumberFile";
 import { prisma } from "#utils/prismaClient";
 
 //fetches the request batch id, and also checks if a request exist.
 //Autoincrements to give you a batchId.
 export const getCurrentOrNextReqBatchId = async (shouldIncrement = false) => {
-  const batchId = await prisma.request
+  const result = await prisma.request
     .aggregate({
       _max: {
         requestBatchId: true,
@@ -14,23 +15,58 @@ export const getCurrentOrNextReqBatchId = async (shouldIncrement = false) => {
       throw err;
     });
 
-  //! might mess up if there is an exception or error
-  const currenctBatchId = batchId._max.requestBatchId ?? 0;
+  // Falls back to 0 when no requests exist yet
+  const currentBatchId = result._max.requestBatchId ?? 0;
 
-  if (!shouldIncrement)
+  if (!shouldIncrement) {
     return {
-      succes: true,
+      success: true,
       message: "BatchId given, not incremented",
-      data: currenctBatchId,
+      data: currentBatchId,
     };
+  }
 
   return {
-    succes: true,
+    success: true,
     message: "Incremented BatchId given",
-    data: currenctBatchId + 1,
+    data: currentBatchId + 1,
   };
 };
 
-export const fetchKritiekVoorraad = async () => {};
+//! Things that get kritieke voorraad, for now the other fetchs won't be taking into account
+export const fetchKritiekeVoorraad = async (userAuthLevel, departmentName) => {
+  const kritiekeVoorraad = await prisma.items
+    .findMany({
+      where: {
+        remainingAmount: {
+          lte: REMAINING_AMOUNT,
+        },
+      },
+      select: {
+        itemId: true,
+        itemName: true,
+        remainingAmount: true,
+        description: true,
+      },
+      take: TAKE_LIMIT,
+      orderBy: { itemName: "asc" },
+    })
+    .catch((err) => {
+      err.message = `[Getting kritiekeVoorraad failed]: ${err.message}`;
+      throw err;
+    });
 
-export const fetchMeldingenAlert = async () => {};
+  if (!kritiekeVoorraad || kritiekeVoorraad.length === 0) {
+    return {
+      success: false,
+      message: "There are no kritieke voorraad, or there are no items fetched",
+      data: [],
+    };
+  }
+
+  return {
+    success: true,
+    message: "Kritieke voorraad found",
+    data: kritiekeVoorraad,
+  };
+};

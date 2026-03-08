@@ -49,3 +49,12 @@ export const HTTP_STATUS = {
 
 //! USED FOR SSE SERVICE
 export const VERIFY_INTERVAL = 5 * 60 * 1000; // 5 Minutes
+
+//! A const that tells the amount of kritieke vooraad is shown
+export const TAKE_LIMIT = 10;
+
+//! A const that tells the amount of urgent req that yo can take from the backend
+export const TAKE_LIMIT_URGENT_REQUEST = 50;
+
+//! A hardcoded amount for when voorraad is low in the fetchKritikeVoorraad
+export const REMAINING_AMOUNT = 25;

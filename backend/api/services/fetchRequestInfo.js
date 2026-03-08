@@ -1,3 +1,4 @@
+import { TAKE_LIMIT, TAKE_LIMIT_URGENT_REQUEST } from "#utils/magicNumberFile";
 import { prisma } from "#utils/prismaClient";
 
 //builds a where-filter based on auth level and department
@@ -164,3 +165,52 @@ export const fetchRequestStatistics = async ({
     },
   };
 };
+
+//! For fecthing All urgent request
+export const fetchUrgentRequest = async (userAuthLevel, departmentName) => {
+  const urgentRequest = await prisma.request
+    .findMany({
+      where: {
+        isUrgent: true,
+        isCompleted: false,
+      },
+      select: {
+        requestBatchId: true,
+        requestedAmount: true,
+        requestedDate: true,
+
+        items: { select: { itemName: true } },
+        users: { select: { lastName: true, firstName: true } },
+        department: { select: { departmentName: true } },
+      },
+      take: TAKE_LIMIT_URGENT_REQUEST,
+      orderBy: { requestedDate: "desc" },
+    })
+    .catch((error) => {
+      console.error("Failed to fetch urgent requests:", error);
+      return null;
+    });
+
+  if (!urgentRequest || urgentRequest.length === 0) {
+    return { success: false, message: "No urgent requests found." };
+  }
+
+  const flattendItems = urgentRequest.map((request) => ({
+    requestBatchId: request.requestBatchId,
+    requestedAmount: request.requestedAmount,
+    requestedDate: request.requestedDate,
+    item: request.items.itemName,
+    userFirstName: request.users.firstName,
+    userLastName: request.users.lastName,
+    departmentName: request.department.departmentName,
+  }));
+
+  return {
+    success: true,
+    message: "Fetched urgent request",
+    data: flattendItems,
+  };
+};
+
+const something = await fetchUrgentRequest();
+console.log(something);
