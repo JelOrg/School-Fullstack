@@ -3,6 +3,7 @@ import {
   fetchMeldingenAlert,
   getCurrentOrNextReqBatchId,
 } from "#services/fetchDatabaseInfo";
+import { fetchAllItems } from "#services/fetchItemInfo";
 import {
   closeSSESession,
   SSEHeader,
@@ -19,8 +20,6 @@ export const fetchTotalVoorraadData = async (req, res) => {
   SSEHeader(res);
   let lastVerified = Date.now();
 
-  req.on("close", () => closeSSESession(res, intervalId));
-
   //Create a SSE connection, meaning you have an open connection to sever
   const intervalId = setInterval(async () => {
     try {
@@ -29,20 +28,11 @@ export const fetchTotalVoorraadData = async (req, res) => {
 
       //! This could be the cause for data nor being feteched
       // 2. Fetch data
-      const [voorraadData, alertsData] = await Promise.all([
-        fetchKritiekVoorraad(
-          req.userAuthLevel,
-          req.tokenInformation.userDepartmentName,
-        ),
-        fetchMeldingenAlert(
-          req.userAuthLevel,
-          req.tokenInformation.userDepartmentName,
-        ),
-      ]);
+      const voorraadData = await fetchAllItems();
 
       // 3. Send to client
       if (!res.writableEnded) {
-        res.write(`data: ${JSON.stringify({ voorraadData, alertsData })}\n\n`);
+        res.write(`data: ${JSON.stringify(voorraadData)}\n\n`);
       }
     } catch (err) {
       console.error("Dashboard Stream Error:", err);

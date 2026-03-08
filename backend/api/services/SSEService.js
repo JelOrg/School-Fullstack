@@ -26,6 +26,11 @@ export const closeSSESession = (res, intervalId) => {
   };
 };
 
+/**
+ *
+ * SSE HEADER???
+ * @param {*} res
+ */
 export const SSEHeader = (res) => {
   res.writeHead(HTTP_STATUS.OK, {
     "Content-Type": "text/event-stream",
@@ -52,7 +57,7 @@ export const SSESessionCheck = async (req, res, intervalId, lastVerified) => {
     const isValid = await validateToken(isActive.tokenInfo);
 
     if (!isValid.success) return closeSSESession(res, intervalId);
-
-    return (lastVerified = Date.now());
+    return Date.now();
   }
+  return lastVerified;
 };

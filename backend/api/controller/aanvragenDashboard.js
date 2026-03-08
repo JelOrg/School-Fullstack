@@ -16,20 +16,21 @@ import { HTTP_STATUS } from "#utils/magicNumberFile";
 export const sendNormaleAanvraag = async (req, res) => {
   //TODO ADD A THING TO THE DB THAT IS LIKE idURGENT to signify that the req is urgent
   //TODO The info from the spoedaanvraag form needs to be put into the database
+  //* Item info is send as an object, needs to hold itemId, itemName, and amount requested
   const { itemInfo, textField } = req.body;
-  const { departmentName, userId } = req.tokenInformation;
+  const { userId, departmentName } = req.tokenInformation;
 
   //! Might have weird js behaviour
 
   //checking for any non gotten data
-  if (!itemInfo || itemInfo.length === 0 || !departmentName)
+  if (!itemInfo || itemInfo.length === 0)
     return res.status(HTTP_STATUS.BAD_REQUEST).json({
       success: false,
       message: "You have to enter a item or department",
     });
 
   // Inside the Controller
-  if (!userId)
+  if (!userId || !departmentName)
     return res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
       success: false,
       message: "Invalid session/Invalid JWT decoding",
@@ -50,15 +51,16 @@ export const sendNormaleAanvraag = async (req, res) => {
   const departmentId = await fetchDepartmentId(departmentName);
 
   //quick check that we actually have departmentId
-  if (!departmentId.success)
+  if (!departmentId.success || !departmentId.data?.departmentId)
     return res
-      .status(HTTP_STATUS.NOT_FOUND)
+      .status(HTTP_STATUS.INTERNAL_SERVER_ERROR)
       .json({ message: "Department not found" });
 
   // ! Users can still submit even if stock changed since their last fetch.
   // TODO: Add a real-time stock check against the DB before saving.
   // TODO: Filter out items that are no longer available.
 
+  //TODO This doesn't get the itemId from body, or we can have those linked to what is shown on the frontend
   // TODO need to change the db so it can store store Text that is send in the Spoedaanvraag
   /** * Formats raw input into a clean list for processing:
    * Example: [ { itemId: 101, itemName: "Hammer", requestedAmount: 2 },
@@ -66,14 +68,15 @@ export const sendNormaleAanvraag = async (req, res) => {
    */
   const requestedItemsList = itemInfo.map((item) => ({
     itemId: item.itemId,
-    itemName: item.itemName,
+    //?Possible to add itemName?
+    // itemName: item.nameItem,
     requestedAmount: item.amountRequested,
-    isUrgent: false,
+    requestBatchId: requestBatchId,
+    isUrgent: true,
 
     //Constants
     userId: userId,
-    requestBatchId: requestBatchId.data,
-    departmentId: departmentId,
+    departmentId: departmentId.data.departmentId,
   }));
 
   //* Sends the post request to the db

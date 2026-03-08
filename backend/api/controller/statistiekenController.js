@@ -12,8 +12,6 @@ export const fetchStatistiekenDisplayData = async (req, res) => {
   SSEHeader(res);
   let lastVerified = Date.now();
 
-  req.on("close", () => closeSSESession(res, intervalId));
-
   //Create a SSE connection, meaning you have an open connection to sever
   const intervalId = setInterval(async () => {
     try {
@@ -24,6 +22,12 @@ export const fetchStatistiekenDisplayData = async (req, res) => {
 
       const userDepartmentName = req.tokenInformation?.userDepartmentName;
       const userAuthLevel = req.userAuthLevel || 1;
+
+      //TODO FIX THIS
+      const requestedLimit = Number(req.query.limit || 10);
+      const safeLimit = Number.isNaN(requestedLimit)
+        ? 10
+        : Math.min(Math.max(requestedLimit, 1), 100);
 
       const statisticsResult = await fetchRequestStatistics({
         userAuthLevel: userAuthLevel,

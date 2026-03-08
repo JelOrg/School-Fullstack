@@ -59,7 +59,6 @@ export const validateUserLogin = async (
   //validates if the user exist
   if (!user) return { success: false, message: "User or email is incorrect" };
 
-  // TODO Check also if this encryption doesn't mess with not being able to log in
   //compares the salted password and the unslated password using bcrypt to see if they are the same
   const isMatch = await bcrypt.compare(providedPassword, user.saltedPassword);
   if (!isMatch) {

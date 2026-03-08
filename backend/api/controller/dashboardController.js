@@ -31,6 +31,7 @@ import {
 export const sendSpoedAanvraag = async (req, res) => {
   //TODO ADD A THING TO THE DB THAT IS LIKE idURGENT to signify that the req is urgent
   //TODO The info from the spoedaanvraag form needs to be put into the database
+  //* Item info is send as an object, needs to hold itemId, itemName, and amount requested
   const { itemInfo, textField } = req.body;
   const { userId, departmentName } = req.tokenInformation;
 
@@ -65,7 +66,8 @@ export const sendSpoedAanvraag = async (req, res) => {
   const departmentId = await fetchDepartmentId(departmentName);
 
   //quick check that we actually have departmentId
-  if (!departmentId.success)
+  //! can be bugged?
+  if (!departmentId.success || !departmentId.data?.departmentId)
     return res
       .status(HTTP_STATUS.INTERNAL_SERVER_ERROR)
       .json({ message: "Department not found" });
@@ -82,13 +84,14 @@ export const sendSpoedAanvraag = async (req, res) => {
    */
   const requestedItemsList = itemInfo.map((item) => ({
     itemId: item.itemId,
-    itemName: item.nameItem,
+    //?Possible to add itemName?
+    // itemName: item.nameItem,
     requestedAmount: item.amountRequested,
+    requestBatchId: requestBatchId,
     isUrgent: true,
 
     //Constants
     userId: userId,
-    requestBatchId: requestBatchId,
     departmentId: departmentId.data.departmentId,
   }));
 

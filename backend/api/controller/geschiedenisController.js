@@ -12,51 +12,52 @@ export const fetchGeschiedenisDisplayData = async (req, res) => {
   SSEHeader(res);
   let lastVerified = Date.now();
 
-  req.on("close", () => closeSSESession(res, intervalId));
-
   //Create a SSE connection, meaning you have an open connection to sever
   const intervalId = setInterval(async () => {
     try {
-      //Checks if the session is still valid or active
       lastVerified = await SSESessionCheck(req, res, intervalId, lastVerified);
 
-      //! Could be causing a crash
       const requestedLimit = Number(req.query.limit || 10);
-
-      //? ummmm
       const safeLimit = Number.isNaN(requestedLimit)
         ? 10
         : Math.min(Math.max(requestedLimit, 1), 100);
 
-      const userDepartmentName = req.tokenInformation?.userDepartmentName;
-      //!Maybe we don't add a normal authLevel for people
+      const DepartmentName = req.tokenInformation?.DepartmentName;
       const userAuthLevel = req.userAuthLevel;
 
       const historyResult = await fetchRecentRequestsHistory({
-        userAuthLevel: userAuthLevel,
-        userDepartmentName: userDepartmentName,
+        AuthLevel: userAuthLevel,
+        DepartmentName: DepartmentName,
         limit: safeLimit,
       });
 
       if (!historyResult.success) {
-        return res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
-          success: false,
-          message: "Failed to fetch geschiedenis data",
-        });
+        res.write(
+          `data: ${JSON.stringify({
+            success: false,
+            message: "Failed to fetch geschiedenis data",
+          })}\n\n`,
+        );
+        return; // stop this interval tick, but keep connection alive
       }
 
-      return res.status(HTTP_STATUS.OK).json({
-        success: true,
-        message: historyResult.message,
-        data: historyResult.data,
-        count: historyResult.data.length,
-      });
+      res.write(
+        `data: ${JSON.stringify({
+          success: true,
+          message: historyResult.message,
+          data: historyResult.data,
+          count: historyResult.data.length,
+        })}\n\n`,
+      );
     } catch (error) {
-      return res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
-        success: false,
-        message: "Unexpected error while fetching geschiedenis data",
-        error: error.message,
-      });
+      res.write(
+        `data: ${JSON.stringify({
+          success: false,
+          message: "Unexpected error while fetching geschiedenis data",
+          error: error.message,
+        })}\n\n`,
+      );
+      // don't close connection on every error unless it's unrecoverable
     }
   }, REFRESH_RATES.STANDARD_DASHBOARD);
 
