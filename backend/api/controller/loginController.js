@@ -1,5 +1,6 @@
 import { fetchUserInfo, validateUserLogin } from "#services/fetchUserInfo";
 import { generateToken } from "#services/tokenHandler";
+import { cookieOptions } from "#utils/config";
 
 //* importing magic numbers
 import { HTTP_STATUS, ONE_HOUR } from "#utils/magicNumberFile";
@@ -7,7 +8,7 @@ import { HTTP_STATUS, ONE_HOUR } from "#utils/magicNumberFile";
 //TODO CHECK IF THE PASSWORD DECRYPT ACTUALLY WORKS AND THAT THE COOKIE IS SEND
 //validates if the user login information is correct
 export const validateLogin = async (req, res) => {
-  //what i want to get out of the body of the req.body
+  //! userRoleName doens't exist in token, because there is no token...
   const { userRoleName, userEmail, providedPassword } = req.body;
 
   //checks if there is actually a password or email send
@@ -40,19 +41,24 @@ export const validateLogin = async (req, res) => {
 
   //uses user info to create a JWT
   const token = generateToken(
-    userInfo.userId,
-    userInfo.roleName,
-    userInfo.departmentName,
+    userInfo.data.userId,
+    userInfo.data.roleName,
+    userInfo.data.departmentName,
   );
+
+  const jwtToken = token.token;
 
   //! prob security issues
   //TODO CHeck if this actually works
   //Some extras so the client know what with the cookie
 
   // The "Ending": Send the cookie and a success message
-  return res.status(HTTP_STATUS.OK).cookie("token", token, cookieOptions).json({
-    success: true,
-    message: "Login successful",
-    redirectTo: "/dashboard",
-  });
+  return res
+    .status(HTTP_STATUS.OK)
+    .cookie("token", jwtToken, cookieOptions)
+    .json({
+      success: true,
+      message: "Login successful",
+      redirectTo: "/dashboard",
+    });
 };

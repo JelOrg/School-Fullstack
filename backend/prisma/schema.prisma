@@ -25,6 +25,7 @@ model department {
   updatedAt      DateTime @default(now()) @updatedAt @db.Timestamp
 
   users          users[]
+  request request[]
 }
 
 model items {
@@ -48,15 +49,20 @@ model request {
   requestBatchId  Int
   itemId          Int
   requestedAmount Int
+  isUrgent Boolean
+  isCompleted Boolean
   requestedDate   DateTime @default(now())
   userId          Int
+  departmentId Int
   createdAt       DateTime @default(now())
   updatedAt       DateTime @default(now()) @updatedAt @db.Timestamp
 
   items           items    @relation(fields: [itemId], references: [itemId], map: "Request_itemId_fkey")
   users           users    @relation(fields: [userId], references: [userId], map: "Request_userId_fkey")
+  department           department    @relation(fields: [departmentId], references: [departmentId], map: "Request_departmentId_fkey")
 
   @@index([itemId], map: "Request_itemId_idx")
+  @@index([departmentId], map: "Request_departmentId_idx")
   @@index([userId], map: "Request_userId_idx")
 }
 

@@ -2,34 +2,6 @@
 import { prisma } from "#utils/prismaClient";
 import bcrypt from "bcrypt";
 
-// Example: Fetch all records from a table
-// Replace 'user' with your actual model name
-async function exampleFunction(userId) {
-  const allUsers = await prisma.users.findUnique({
-    where: {
-      userId: userId,
-    },
-    select: {
-      userId: true,
-      firstName: true,
-      lastName: true,
-      role: {
-        select: {
-          roleName: true,
-        },
-      },
-      department: {
-        select: {
-          departmentName: true,
-        },
-      },
-    },
-  });
-  console.log("All users:", JSON.stringify(allUsers, null, 2));
-}
-
-// * Actual funcs
-
 //!A way to get the data from the DB so you can COMPARE it with what the user send during LOGIN
 /**
  * uses @param - userEmail, providedPassword  to get the user password info, and also validates if the login password is correct
@@ -59,7 +31,6 @@ export const validateUserLogin = async (
   //validates if the user exist
   if (!user) return { success: false, message: "User or email is incorrect" };
 
-  // TODO Check also if this encryption doesn't mess with not being able to log in
   //compares the salted password and the unslated password using bcrypt to see if they are the same
   const isMatch = await bcrypt.compare(providedPassword, user.saltedPassword);
   if (!isMatch) {

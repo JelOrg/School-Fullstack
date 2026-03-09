@@ -1,3 +1,6 @@
+import { HTTP_STATUS, VERIFY_INTERVAL } from "#utils/magicNumberFile";
+import { processToken, validateToken } from "#services/tokenHandler";
+
 /**
  * CLoses SSE session
  */
@@ -21,4 +24,40 @@ export const closeSSESession = (res, intervalId) => {
     success: false,
     message: "SSE session closed and interval cleared",
   };
+};
+
+/**
+ *
+ * SSE HEADER???
+ * @param {*} res
+ */
+export const SSEHeader = (res) => {
+  res.writeHead(HTTP_STATUS.OK, {
+    "Content-Type": "text/event-stream",
+    "Cache-Control": "no-cache", // Good for SSE
+    Connection: "keep-alive",
+  });
+};
+
+/**
+ * COMBINED SSE SERVICE with token verify and closing service
+ * @param {*} req
+ * @param {*} res
+ * @param {*} intervalId
+ * @param {*} lastVerified
+ * @returns
+ */
+export const SSESessionCheck = async (req, res, intervalId, lastVerified) => {
+  if (Date.now() - lastVerified > VERIFY_INTERVAL) {
+    //checks if the cookie isn't expired
+    const isActive = processToken(req.cookies?.token);
+
+    if (!isActive.success) return closeSSESession(res, intervalId);
+
+    const isValid = await validateToken(isActive.tokenInfo);
+
+    if (!isValid.success) return closeSSESession(res, intervalId);
+    return Date.now();
+  }
+  return lastVerified;
 };
