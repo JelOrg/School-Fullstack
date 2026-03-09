@@ -1,107 +1,9 @@
-.history-minimal {
-  padding: 0;
-  width: 100%;
-  max-width: 100%;
-}
+/* ============================================================
+   geschiedenis.css — only styles unique to the history page.
+   Tables, badges, selects and layout are all handled by main.css.
+   ============================================================ */
 
-.history-bar {
-  background-color: #1771d0;
-  padding: 0.75rem 1.5rem;
-  display: flex;
-  align-items: center;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-#nav-header .nav-link.active {
-  color: #1771d0;
-  font-weight: 600;
-}
-
-/* History layout */
-.history-minimal {
-  padding: 0;
-  width: 100%;
-  max-width: 100%;
-}
-
-/* Neutral title */
-.history-title-wrap {
-  background: transparent;
-}
-
-/* .history-page-title {
-  font-size: 2rem;
-  font-weight: 700;
-  color: #111827;
-  line-height: 1.1;
-} */
-
-/* Content spacing */
-.history-content {
-  padding-top: 1.25rem;
-}
-
-.history-subtitle {
-  font-size: 1.05rem;
-  color: #617089;
-  font-weight: 400;
-  margin-bottom: 1rem;
-}
-
-.history-icon {
-  width: 2rem;
-  height: 2rem;
-  color: #1771d0;
-  flex-shrink: 0;
-}
-
-/* Filter controls */
-.filter-label {
-  display: block;
-  margin-bottom: 0.5rem;
-  color: #1f2d3d;
-  font-size: 1.05rem;
-  font-weight: 500;
-}
-
-.custom-select {
-  height: 42px;
-  border: 1px solid #cfd8e3;
-  border-radius: 12px;
-  font-size: 1rem;
-  color: #1f2d3d;
-}
-
-.custom-select:focus {
-  border-color: #2f80ed;
-  box-shadow: 0 0 0 0.18rem rgba(47, 128, 237, 0.2);
-}
-
-/* History table */
-.history-table thead th {
-  background-color: #f7f9fc;
-  color: #1771d0;
-  font-weight: 700;
-  text-transform: none;
-  letter-spacing: 0;
-  border-bottom: 1px solid #d9e2ef;
-  padding: 0.85rem 1rem;
-  white-space: nowrap;
-}
-
-.history-table tbody td {
-  color: #1f2d3d;
-  padding: 0.85rem 1rem;
-  border-bottom: 1px solid #edf1f6;
-  vertical-align: middle;
-}
-
-.history-table tbody tr:last-child td {
-  border-bottom: none;
-}
-
-/* Status field */
+/* Note/annotation input field — unique to geschiedenis */
 .note-input {
   width: 100%;
   min-width: 280px;
@@ -113,9 +15,7 @@
   background-color: #fbfdff;
 }
 
-.note-input::placeholder {
-  color: #8a99ad;
-}
+.note-input::placeholder { color: #8a99ad; }
 
 .note-input:focus {
   outline: none;
@@ -124,19 +24,6 @@
   background-color: #ffffff;
 }
 
-/* Mobile */
 @media (max-width: 768px) {
-  .history-page-title {
-    font-size: 1.6rem;
-  }
-
-  .history-table thead th,
-  .history-table tbody td {
-    padding: 0.75rem;
-    font-size: 0.93rem;
-  }
-
-  .note-input {
-    min-width: 220px;
-  }
+  .note-input { min-width: 220px; }
 }
