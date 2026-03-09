@@ -1,44 +1,45 @@
-/* inlog.css */
+/* ============================================================
+   inlog.css — only styles unique to the login page.
+   The login page has a white background (overrides the body gradient).
+   ============================================================ */
 
-.bg-rkz-blue {
-  background-color: #ffffff !important; /* */
-}
+/* Override the body gradient — login page is plain white */
+
 
 .logo {
-  width: 10rem; /* */
+  width: 10rem;
   height: auto;
   border-radius: 1rem;
-}
-
-.h1-title {
-  font-size: 2rem; /* */
-  color: rgb(0, 0, 0);
-  text-align: center;
-}
-
-.p-subtitle {
-  font-size: 1.1rem; /* */
-  color: rgb(0, 0, 0);
-  text-align: center;
+  margin-top: 1rem;
 }
 
 .login-box {
-  background-color: #ffffff; /* */
+  background-color: #ffffff;
   border-radius: 1.5rem;
   width: 100%;
   max-width: 400px;
+  margin-bottom: 1rem;
 }
 
 #btn-login {
-  background-color: rgb(224, 28, 28) !important; /* */
+  background-color: #e01c1c !important;
   color: white;
   border: none;
   padding: 0.6rem;
+  width: 100%;
 }
 
 .warning-text {
-  font-size: 0.8rem; /* */
-  color: rgb(224, 28, 28);
+  font-size: 0.8rem;
+  color: #e01c1c;
   text-align: center;
   font-weight: bold;
+}
+
+.h1-title {
+  color: #ffffff;
+}
+
+.p-subtitle {
+  color: #ffffff;
 }

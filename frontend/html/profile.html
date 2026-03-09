@@ -5,7 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <link rel="stylesheet" href="../css/bootstrap.css" />
+    <link rel="stylesheet" href="../css/bootstrap-5.3.8-dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="../css/main.css" />
     <link rel="stylesheet" href="../css/profile.css" />
   </head>
@@ -141,7 +141,7 @@
 
           <div class="row g-3 activity-cards">
             <div class="col-6">
-              <article class="card stat-card stat-blue h-100">
+              <article class="card stat-card stat-blue h-0">
                 <div class="card-body text-center py-3">
                   <h4 class="mb-1">10</h4>
                   <p>Aanvragen</p>
@@ -150,7 +150,7 @@
             </div>
 
             <div class="col-6">
-              <article class="card stat-card stat-green h-100">
+              <article class="card stat-card stat-green h-0">
                 <div class="card-body text-center py-3">
                   <h4 class="mb-1">5</h4>
                   <p>Spoedgevallen</p>
@@ -162,11 +162,17 @@
 
         <!-- Navigatie terug naar dashboard -->
         <div class="profile-actions d-flex justify-content-center">
-          <a href="dashboard" class="btn-dashboard-back">
+          <a href="dashboard.html" class="btn-dashboard-back">
             &larr; Terug naar Dashboard
           </a>
         </div>
       </section>
     </main>
+
+    <footer class="text-center">
+      <p>&copy; 2024 RKZ Voorraadbeheer. Alle rechten voorbehouden.</p>
+    </footer>
+   <script src="../css/bootstrap-5.3.8-dist/js/bootstrap.bundle.min.js"></script>
+   <script src="../javascript/dataConnection.js"></script>
   </body>
 </html>

@@ -1,21 +1,8 @@
-/* Custom Status Badges */
-.badge {
-  padding: 6px 12px;
-  border-radius: 20px;
-  font-weight: 500;
-}
+/* ============================================================
+   totalevoorraad.css — badges are now in main.css.
+   This file is kept for any future styles unique to this page.
+   ============================================================ */
 
-.badge-kritiek {
-  background-color: #fde2e2;
-  color: #d00000;
-}
-
-.badge-laag {
-  background-color: #fff4d6;
-  color: #b76e00;
-}
-
-.badge-goed {
-  background-color: #d8f3dc;
-  color: #2d6a4f;
-}
+/* Currently nothing extra needed — badges and table styles
+   are all covered by main.css. Keep this file linked in the
+   HTML so you have a place to add page-specific styles later. */
