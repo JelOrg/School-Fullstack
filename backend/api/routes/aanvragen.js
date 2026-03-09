@@ -6,6 +6,8 @@
  * GET  /api/aanvragen/send-normale-aanvraag → submit via controller
  */
 
+//most of this should be in the controller
+
 import { HTTP_STATUS } from "#utils/magicNumberFile";
 import { getCurrentOrNextReqBatchId } from "#services/fetchDatabaseInfo";
 import { postToRequestTable } from "#services/postInfoToDatabase";
