@@ -23,16 +23,17 @@ export const fetchStatistiekenDisplayData = async (req, res) => {
       const userDepartmentName = req.tokenInformation?.userDepartmentName;
       const userAuthLevel = req.userAuthLevel || 1;
 
-      //TODO FIX THIS
+      //Clamp the requested limit between 1 and 100 to prevent abuse
       const requestedLimit = Number(req.query.limit || 10);
       const safeLimit = Number.isNaN(requestedLimit)
         ? 10
         : Math.min(Math.max(requestedLimit, 1), 100);
 
+      //Fetch statistics from the database, scoped by auth level and department
       const statisticsResult = await fetchRequestStatistics({
         userAuthLevel: userAuthLevel,
         userDepartmentName: userDepartmentName,
-        topLimit: safeTopLimit,
+        topLimit: safeLimit,
       });
 
       if (!statisticsResult.success)

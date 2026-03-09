@@ -18,12 +18,13 @@ export const fetchGeschiedenisDisplayData = async (req, res) => {
         ? 10
         : Math.min(Math.max(requestedLimit, 1), 100);
 
-      const DepartmentName = req.tokenInformation?.DepartmentName;
-      const userAuthLevel = req.userAuthLevel;
+      const userDepartmentName = req.tokenInformation?.userDepartmentName;
+      const userAuthLevel = req.userAuthLevel || 1;
 
+      //Fetch the request history from the database, scoped by auth level and department
       const historyResult = await fetchRecentRequestsHistory({
-        AuthLevel: userAuthLevel,
-        DepartmentName: DepartmentName,
+        userAuthLevel: userAuthLevel,
+        userDepartmentName: userDepartmentName,
         limit: safeLimit,
       });
 
