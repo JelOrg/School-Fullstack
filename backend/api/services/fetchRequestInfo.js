@@ -214,3 +214,77 @@ export const fetchUrgentRequest = async (userAuthLevel, departmentName) => {
     data: flattendItems,
   };
 };
+
+//fetches the aanvragen (requests) for a specific user, or all if admin/manager
+export const fetchUserAanvragen = async ({
+  userAuthLevel,
+  userDepartmentName,
+  userId,
+  limit = 20,
+}) => {
+  //Build the filter: employees see only their own requests, managers/admins see all (or department-scoped)
+  const whereFilter =
+    userAuthLevel >= 2
+      ? buildDepartmentScopeFilter(userAuthLevel, userDepartmentName)
+      : { userId: userId };
+
+  const aanvragen = await prisma.request
+    .findMany({
+      where: whereFilter,
+      orderBy: {
+        requestedDate: "desc",
+      },
+      take: limit,
+      select: {
+        requestId: true,
+        requestBatchId: true,
+        requestedAmount: true,
+        isUrgent: true,
+        requestedDate: true,
+        items: {
+          select: {
+            itemId: true,
+            itemName: true,
+            remainingAmount: true,
+          },
+        },
+        users: {
+          select: {
+            userId: true,
+            firstName: true,
+            lastName: true,
+            department: {
+              select: {
+                departmentName: true,
+              },
+            },
+          },
+        },
+      },
+    })
+    .catch((err) => {
+      err.message = `[Failed fetching user aanvragen]: ${err.message}`;
+      throw err;
+    });
+
+  const mappedAanvragen = aanvragen.map((request) => ({
+    requestId: request.requestId,
+    requestBatchId: request.requestBatchId,
+    requestedAmount: request.requestedAmount,
+    isUrgent: request.isUrgent,
+    requestedDate: request.requestedDate,
+    itemId: request.items?.itemId,
+    itemName: request.items?.itemName,
+    remainingAmount: request.items?.remainingAmount,
+    requestedByUserId: request.users?.userId,
+    requestedByName:
+      `${request.users?.firstName || ""} ${request.users?.lastName || ""}`.trim(),
+    departmentName: request.users?.department?.departmentName,
+  }));
+
+  return {
+    success: true,
+    message: "User aanvragen fetched",
+    data: mappedAanvragen,
+  };
+};

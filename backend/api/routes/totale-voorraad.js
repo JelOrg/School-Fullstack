@@ -1,36 +1,30 @@
 /**
  * totale-voorraad.js — Route file
- * GET /api/totale-voorraad            → all items
- * GET /api/totale-voorraad?search=x   → filtered items (used by dashboard & aanvraag autocomplete)
- * GET /api/totale-voorraad?category=x → filter by category
+ * GET /api/totale-voorraad                      → all items (with optional search/category filter)
+ * GET /api/totale-voorraad/fetch-totale-voorraad → SSE stream of voorraad data
  */
 
 import { HTTP_STATUS } from "#utils/magicNumberFile";
-
 import { fetchAllItems } from "#services/fetchItemInfo";
-import express from "express";
 import { fetchTotalVoorraadData } from "#controller/totaleVoorraadController";
+import express from "express";
 
 const router = express.Router();
 
+// ============================================
+// ROUTES
+// ============================================
+
+/**
+ * GET /api/totale-voorraad
+ * Returns all items, optionally filtered by ?search= or ?category=
+ */
 router.get("/", async (req, res) => {
   const { search, category } = req.query;
 
   const result = await fetchAllItems().catch((err) => {
     console.error("[totale-voorraad GET] fout:", err);
     return { success: false, data: [] };
-  });
-
-  // ============================================
-  // MIDDLEWARE
-  // ============================================
-  //?Whaaat??
-  router.get("/", (req, res) => {
-    res.status(200).json({
-      success: true,
-      count: items.length,
-      data: items,
-    });
   });
 
   if (!result.success) {
@@ -43,7 +37,7 @@ router.get("/", async (req, res) => {
 
   let items = result.data;
 
-  // Filter by search term (itemName or categoryName)
+  //Filter by search term (matches on itemName or categoryName)
   if (search) {
     const term = search.toLowerCase();
     items = items.filter(
@@ -53,7 +47,7 @@ router.get("/", async (req, res) => {
     );
   }
 
-  // Filter by category
+  //Filter by exact category name
   if (category) {
     items = items.filter(
       (i) => i.categoryName.toLowerCase() === category.toLowerCase(),
@@ -67,6 +61,7 @@ router.get("/", async (req, res) => {
   });
 });
 
+//SSE endpoint — streams totale voorraad data to the frontend in real-time
 router.get("/fetch-totale-voorraad", fetchTotalVoorraadData);
 
 export default router;
