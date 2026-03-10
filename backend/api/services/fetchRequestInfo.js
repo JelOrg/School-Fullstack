@@ -1,56 +1,30 @@
 import { TAKE_LIMIT, TAKE_LIMIT_URGENT_REQUEST } from "#utils/magicNumberFile";
 import { prisma } from "#utils/prismaClient";
 
-//!==== wont work
-//builds a where-filter based on auth level and department
-const buildDepartmentScopeFilter = (userAuthLevel, userDepartmentName) => {
-  //manager/admin can view all departments
-  //TODO maybe not need??
-  if (userAuthLevel >= 2) return {};
-
-  //employee should only view own department requests
-  return {
-    users: {
-      department: {
-        departmentName: userDepartmentName,
-      },
-    },
-  };
-};
-
 //fetches latest request history data (default top 10)
 export const fetchRecentRequestsHistory = async ({
+  //TODO Can add a per dep or user auth filter, maybe later
   userAuthLevel,
   userDepartmentName,
   limit = 10,
 }) => {
-  const whereFilter = buildDepartmentScopeFilter(
-    userAuthLevel,
-    userDepartmentName,
-  );
-
   const recentRequests = await prisma.request
     .findMany({
-      where: whereFilter,
       orderBy: {
         requestedDate: "desc",
       },
       take: limit,
       select: {
-        requestId: true,
         requestBatchId: true,
         requestedAmount: true,
         requestedDate: true,
         items: {
           select: {
-            itemId: true,
             itemName: true,
-            remainingAmount: true,
           },
         },
         users: {
           select: {
-            userId: true,
             firstName: true,
             lastName: true,
             department: {
@@ -73,16 +47,12 @@ export const fetchRecentRequestsHistory = async ({
     });
 
   const mappedHistory = recentRequests.map((request) => ({
-    requestId: request.requestId,
+    itemName: request.items?.itemName,
     requestBatchId: request.requestBatchId,
     requestedAmount: request.requestedAmount,
     requestedDate: request.requestedDate,
-    itemId: request.items?.itemId,
-    itemName: request.items?.itemName,
-    remainingAmount: request.items?.remainingAmount,
-    requestedByUserId: request.users?.userId,
-    requestedByName:
-      `${request.users?.firstName || ""} ${request.users?.lastName || ""}`.trim(),
+    firstName: request.users.firstName,
+    lastName: request.users.lastName,
     roleName: request.users?.role?.roleName,
     departmentName: request.users?.department?.departmentName,
   }));
