@@ -5,10 +5,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <link rel="stylesheet" href="../css/bootstrap-5.3.8-dist/css/bootstrap.min.css" />
+    <link
+      rel="stylesheet"
+      href="../css/bootstrap-5.3.8-dist/css/bootstrap.min.css"
+    />
     <link rel="stylesheet" href="../css/main.css" />
     <link rel="stylesheet" href="../css/inlog.css" />
-    <script src="../javascript/inlog.js" defer></script>
   </head>
 
   <body class="bg-rkz-blue">
@@ -25,17 +27,10 @@
         <form onsubmit="return false;">
           <div class="mb-3">
             <label class="form-label fw-bold">Rol</label>
-            <select class="form-select rounded-pill" name="rol" required>
-              <option value="verpleegkundige">Verpleegkundige</option>
-              <option value="arts">Arts</option>
-              <option value="spoedarts">Spoedarts</option>
-              <option value="specialist">Specialist</option>
-              <option value="logistieke afdeling">Logistieke afdeling</option>
-              <option value="interne apotheek">Interne apotheek</option>
-              <option value="ziekenhuismanagement">Ziekenhuismanagement</option>
-              <option value="directie">Directie</option>
-              <option value="inkoopafdeling">Inkoopafdeling</option>
-              <option value="magazijn">Magazijn</option>
+            <select class="form-select rounded-pill" name="role" required>
+              <option value="employee">employee</option>
+              <option value="manager">manager</option>
+              <option value="admin">admin</option>
             </select>
           </div>
 
@@ -56,7 +51,7 @@
             <input
               class="form-control rounded-pill"
               type="password"
-              name="wachtwoord"
+              name="password"
               required
             />
           </div>
@@ -65,7 +60,7 @@
           <div>
             <button
               id="btn-login"
-              onclick="getUserData()"
+              onclick="logIn()"
               class="btn rounded-pill fw-bold"
               type="button"
             >
@@ -80,11 +75,11 @@
         </form>
       </div>
     </main>
-    
+
     <footer class="text-center">
       <p>&copy; 2024 RKZ Voorraadbeheer. Alle rechten voorbehouden.</p>
     </footer>
-   <script src="../css/bootstrap-5.3.8-dist/js/bootstrap.bundle.min.js"></script>
-   <script src="../javascript/dataConnection.js"></script>
   </body>
+  <script src="../css/bootstrap-5.3.8-dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../javascript/inlog.js"></script>
 </html>

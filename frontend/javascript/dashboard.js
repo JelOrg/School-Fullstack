@@ -1,27 +1,14 @@
 /**
- * dashboard.js
- *
  * Backend routes used:
  *   GET  /api/dashboard/fetch-display-data  → SSE stream, pushes { voorraadData, alertsData } every 2s
  *   POST /api/dashboard/send-spoed-aanvraag → { userId, itemInfo, departmentName, textField }
- *
- * Auth: cookie is sent automatically by the browser (credentials:"include").
- *       If the cookie is missing/expired, the server redirects to /login — we follow that.
  *
  * Data shapes from your fixed fetchDatabaseInfo.js:
  *   voorraadData.data  → [{ itemId, itemName, remainingAmount, criticalThreshold, categoryName }]
  *   alertsData.data    → [{ requestId, requestBatchId, itemName, requestedAmount, department, requestedBy, requestedDate }]
  */
 
-// ─── On page load ─────────────────────────────────────────────────────────────
-document.addEventListener("DOMContentLoaded", () => {
-  startDashboardStream();
-  setupSpoedForm();
-  setupNotificationFilters();
-});
-
 // ─── SSE: Live dashboard data ─────────────────────────────────────────────────
-let allAlerts = [];
 
 function startDashboardStream() {
   // EventSource sends cookies automatically — no extra setup needed
@@ -64,15 +51,16 @@ function renderKritiekVoorraad(items) {
     return;
   }
 
-  container.innerHTML = items.map((item) => {
-    // remainingAmount / criticalThreshold gives us the fill %
-    const pct = Math.min(
-      Math.round((item.remainingAmount / item.criticalThreshold) * 100),
-      100
-    );
-    const barColor = pct <= 30 ? "bg-danger" : "bg-warning";
+  container.innerHTML = items
+    .map((item) => {
+      // remainingAmount / criticalThreshold gives us the fill %
+      const pct = Math.min(
+        Math.round((item.remainingAmount / item.criticalThreshold) * 100),
+        100,
+      );
+      const barColor = pct <= 30 ? "bg-danger" : "bg-warning";
 
-    return `
+      return `
       <div class="card mb-3 border-0 shadow-sm">
         <div class="card-body">
           <div class="d-flex justify-content-between">
@@ -89,7 +77,8 @@ function renderKritiekVoorraad(items) {
           <small class="text-danger mt-1 d-block">⚠ Direct aanvullen vereist</small>
         </div>
       </div>`;
-  }).join("");
+    })
+    .join("");
 
   // Update badge count on the kritieke voorraad header if you add one
   const badge = document.getElementById("kritiek-badge");
@@ -110,9 +99,10 @@ function renderMeldingen(alerts) {
     return;
   }
 
-  container.innerHTML = alerts.map((alert) => {
-    const date = new Date(alert.requestedDate).toLocaleString("nl-NL");
-    return `
+  container.innerHTML = alerts
+    .map((alert) => {
+      const date = new Date(alert.requestedDate).toLocaleString("nl-NL");
+      return `
       <div class="card mb-3 border-danger" id="alert-${alert.requestBatchId}">
         <div class="card-body">
           <span class="badge bg-danger mb-2">AANVRAAG</span>
@@ -126,7 +116,8 @@ function renderMeldingen(alerts) {
           <small class="text-muted">${date}</small>
         </div>
       </div>`;
-  }).join("");
+    })
+    .join("");
 }
 
 // ─── Notification filters ─────────────────────────────────────────────────────
@@ -146,7 +137,7 @@ function setupNotificationFilters() {
       const sorted = [...allAlerts].sort((a, b) =>
         asc
           ? new Date(a.requestedDate) - new Date(b.requestedDate)
-          : new Date(b.requestedDate) - new Date(a.requestedDate)
+          : new Date(b.requestedDate) - new Date(a.requestedDate),
       );
       renderMeldingen(sorted);
     });
@@ -155,83 +146,56 @@ function setupNotificationFilters() {
 
 // ─── Spoedaanvraag form ───────────────────────────────────────────────────────
 // Keeps track of items the user has searched and selected
-let spoedSelectedItems = [];
+function postSpoedAanvraag() {
+  document
+    .getElementById("btn-spoed-versturen")
+    .addEventListener("click", async () => {
+      const zoek = document.getElementById("spoed-zoek").value.trim();
+      const afdeling = document.getElementById("spoed-afdeling").value.trim();
+      const situatie = document.getElementById("spoed-situatie").value.trim();
 
-function setupSpoedForm() {
-  const searchInput = document.getElementById("spoed-zoek");
-  const btn = document.getElementById("btn-spoed-versturen");
+      // Basic validation
+      if (!zoek || !afdeling || !situatie) {
+        alert("Vul alle velden in.");
+        return;
+      }
 
-  if (searchInput) {
-    searchInput.addEventListener("input", debounce(handleSpoedSearch, 300));
-  }
-  if (btn) {
-    btn.addEventListener("click", sendSpoedaanvraag);
-  }
-}
+      const btn = document.getElementById("btn-spoed-versturen");
+      btn.disabled = true;
+      btn.textContent = "Bezig met versturen...";
 
-async function handleSpoedSearch(e) {
-  const term = e.target.value.trim();
-  const suggestionsEl = document.getElementById("spoed-suggestions");
-  if (!suggestionsEl) return;
-
-  if (term.length < 2) {
-    suggestionsEl.innerHTML = "";
-    return;
-  }
-
-  try {
-    // Your aanvragen route doesn't have item search yet — using totale-voorraad endpoint
-    // TODO: once you add GET /api/totale-voorraad?search=term, update this URL
-    const response = await fetch(
-      `/api/totale-voorraad?search=${encodeURIComponent(term)}`,
-      { credentials: "include" }
-    );
-    const data = await response.json();
-    const items = data.data || [];
-
-    if (items.length === 0) {
-      suggestionsEl.innerHTML = `<p class="small text-muted px-2 py-1">Geen items gevonden.</p>`;
-      return;
-    }
-
-    suggestionsEl.innerHTML = `
-      <ul class="list-group shadow" style="position:absolute;z-index:999;width:100%;">
-        ${items.slice(0, 6).map((item) => `
-          <li class="list-group-item list-group-item-action"
-              style="cursor:pointer"
-              data-id="${item.itemId}"
-              data-name="${item.itemName}"
-              data-remaining="${item.remainingAmount}">
-            <strong>${item.itemName}</strong>
-            <small class="text-muted ms-2">${item.categoryName} &bull; ${item.remainingAmount} stuks beschikbaar</small>
-          </li>`).join("")}
-      </ul>`;
-
-    suggestionsEl.querySelectorAll("li").forEach((li) => {
-      li.addEventListener("click", () => {
-        const itemId = Number(li.dataset.id);
-        const itemName = li.dataset.name;
-
-        // Prompt for amount
-        const amount = prompt(`Hoeveel stuks van "${itemName}" heeft u nodig?\nBeschikbaar: ${li.dataset.remaining}`);
-        if (!amount || isNaN(Number(amount)) || Number(amount) <= 0) return;
-
-        // Add to selected items list
-        spoedSelectedItems.push({
-          itemId,
-          nameItem: itemName,        // matches dashboardController: item.nameItem
-          amountRequested: Number(amount), // matches dashboardController: item.amountRequested
+      try {
+        const response = await fetch("/api/dashboard/send-spoed-aanvraag", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({
+            itemInfo: [
+              {
+                itemId: parseInt(zoek),
+                departmentName: afdeling,
+                textField: situatie,
+              },
+            ],
+          }),
         });
 
-        document.getElementById("spoed-zoek").value = "";
-        suggestionsEl.innerHTML = "";
-        renderSpoedSelectedItems();
-      });
-    });
+        const data = await response.json();
 
-  } catch (err) {
-    console.error("Item search fout:", err);
-  }
+        if (!response.ok || !data.success) {
+          alert(data.message || "Er is iets misgegaan.");
+          return;
+        }
+
+        alert("Spoedaanvraag verstuurd!");
+      } catch (err) {
+        alert("Kan geen verbinding maken met de server.");
+        console.error("Spoed fout:", err);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "Spoedaanvraag versturen";
+      }
+    });
 }
 
 function renderSpoedSelectedItems() {
@@ -250,11 +214,15 @@ function renderSpoedSelectedItems() {
 
   listEl.innerHTML = `
     <ul class="list-group list-group-flush small">
-      ${spoedSelectedItems.map((item, i) => `
+      ${spoedSelectedItems
+        .map(
+          (item, i) => `
         <li class="list-group-item d-flex justify-content-between align-items-center px-0 py-1">
           ${item.nameItem} — <strong>${item.amountRequested} stuks</strong>
           <button class="btn btn-sm btn-link text-danger p-0" onclick="removeSpoedItem(${i})">✕</button>
-        </li>`).join("")}
+        </li>`,
+        )
+        .join("")}
     </ul>`;
 }
 
@@ -264,12 +232,12 @@ function removeSpoedItem(index) {
 }
 
 async function sendSpoedaanvraag() {
-  const afdelingInput  = document.getElementById("spoed-afdeling");
-  const situatieInput  = document.getElementById("spoed-situatie");
-  const btn            = document.getElementById("btn-spoed-versturen");
+  const afdelingInput = document.getElementById("spoed-afdeling");
+  const situatieInput = document.getElementById("spoed-situatie");
+  const btn = document.getElementById("btn-spoed-versturen");
 
   const departmentName = afdelingInput?.value.trim();
-  const textField      = situatieInput?.value.trim();
+  const textField = situatieInput?.value.trim();
 
   if (spoedSelectedItems.length === 0) {
     showSpoedFeedback("Zoek en selecteer minimaal één supply.", "danger");
@@ -312,7 +280,6 @@ async function sendSpoedaanvraag() {
     renderSpoedSelectedItems();
     if (afdelingInput) afdelingInput.value = "";
     if (situatieInput) situatieInput.value = "";
-
   } catch (err) {
     showSpoedFeedback("Kan geen verbinding maken met de server.", "danger");
     console.error("Spoed versturen fout:", err);
@@ -332,7 +299,9 @@ function showSpoedFeedback(msg, type) {
   }
   el.className = `alert alert-${type} mt-2 small`;
   el.textContent = msg;
-  setTimeout(() => { if (el) el.remove(); }, 4000);
+  setTimeout(() => {
+    if (el) el.remove();
+  }, 4000);
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────

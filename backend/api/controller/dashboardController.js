@@ -33,7 +33,7 @@ export const sendSpoedAanvraag = async (req, res) => {
   //TODO The info from the spoedaanvraag form needs to be put into the database
   //* Item info is send as an object, needs to hold itemId, itemName, and amount requested
   const { itemInfo, textField } = req.body;
-  const { userId, departmentName } = req.tokenInformation;
+  const { userId, userDepartmentName } = req.tokenInformation;
 
   //! Might have weird js behaviour
 
@@ -45,7 +45,7 @@ export const sendSpoedAanvraag = async (req, res) => {
     });
 
   // Inside the Controller
-  if (!userId || !departmentName)
+  if (!userId || !userDepartmentName)
     return res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
       success: false,
       message: "Invalid session/Invalid JWT decoding",
@@ -63,7 +63,7 @@ export const sendSpoedAanvraag = async (req, res) => {
       .json({ success: false, message: "Failed to Contact DB" });
 
   //Gets you the departmentId
-  const departmentId = await fetchDepartmentId(departmentName);
+  const departmentId = await fetchDepartmentId(userDepartmentName);
 
   //quick check that we actually have departmentId
   //! can be bugged?
@@ -82,17 +82,21 @@ export const sendSpoedAanvraag = async (req, res) => {
    * Example: [ { itemId: 101, itemName: "Hammer", requestedAmount: 2 },
    * {itemId: something, itemName: somethingelse, requestedAmount: again} ]
    */
+  console.log(
+    "This is buggy(sending increasing by one request), and request amount should be changed to what the actual person is sending",
+  );
   const requestedItemsList = itemInfo.map((item) => ({
     itemId: item.itemId,
     //?Possible to add itemName?
     // itemName: item.nameItem,
-    requestedAmount: item.amountRequested,
-    requestBatchId: requestBatchId,
+    requestedAmount: 30,
+    requestBatchId: requestBatchId.data,
     isUrgent: true,
 
     //Constants
     userId: userId,
     departmentId: departmentId.data.departmentId,
+    isCompleted: false,
   }));
 
   //* Sends the post request to the db

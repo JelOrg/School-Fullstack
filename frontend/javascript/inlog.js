@@ -7,10 +7,31 @@
  *                 No localStorage, no Authorization headers needed anywhere.
  */
 
-async function getUserData() {
-  const userRoleName     = document.querySelector('select[name="rol"]').value.trim();
-  const userEmail        = document.querySelector('input[name="email"]').value.trim();
-  const providedPassword = document.querySelector('input[name="wachtwoord"]').value.trim();
+function clearError() {
+  const el = document.getElementById("login-error");
+  if (el) el.textContent = "";
+}
+
+function showError(msg) {
+  let el = document.getElementById("login-error");
+  if (!el) {
+    el = document.createElement("p");
+    el.id = "login-error";
+    el.style.cssText =
+      "color:#d00000;font-weight:bold;text-align:center;margin-top:0.75rem;";
+    document.querySelector(".login-box form").appendChild(el);
+  }
+  el.textContent = msg;
+}
+
+async function logIn() {
+  const userRoleName = document
+    .querySelector('select[name="role"]')
+    .value.trim();
+  const userEmail = document.querySelector('input[name="email"]').value.trim();
+  const providedPassword = document
+    .querySelector('input[name="password"]')
+    .value.trim();
 
   clearError();
 
@@ -25,23 +46,24 @@ async function getUserData() {
 
   try {
     // credentials:"include" tells the browser to store the cookie the server sets
-    const response = await fetch("/api/login", {
+    const response = await fetch("/api/login/validation", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
-      body: JSON.stringify({ userRoleName, userEmail, providedPassword }),
+      body: JSON.stringify({
+        userRoleName,
+        userEmail,
+        providedPassword,
+      }),
     });
 
     const data = await response.json();
 
-    if (!response.ok || !data.success) {
-      showError(data.message || "Ongeldig e-mailadres of wachtwoord.");
-      return;
-    }
+    if (!response.ok || !data.success)
+      return showError(data.message || "Ongeldig e-mailadres of wachtwoord.");
 
     // Follow the redirectTo the server sends back ("/dashboard")
     window.location.href = data.redirectTo || "/dashboard";
-
   } catch (err) {
     showError("Kan geen verbinding maken met de server. Probeer opnieuw.");
     console.error("Login fout:", err);
@@ -49,20 +71,4 @@ async function getUserData() {
     btn.disabled = false;
     btn.textContent = "Inloggen";
   }
-}
-
-function showError(msg) {
-  let el = document.getElementById("login-error");
-  if (!el) {
-    el = document.createElement("p");
-    el.id = "login-error";
-    el.style.cssText = "color:#d00000;font-weight:bold;text-align:center;margin-top:0.75rem;";
-    document.querySelector(".login-box form").appendChild(el);
-  }
-  el.textContent = msg;
-}
-
-function clearError() {
-  const el = document.getElementById("login-error");
-  if (el) el.textContent = "";
 }
