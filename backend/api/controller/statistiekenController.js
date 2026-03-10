@@ -18,12 +18,21 @@ export const fetchStatistiekenDisplayData = async (req, res) => {
       //TODO Make this actually have a limit
       //TODO Check if you really need a departmentName for now
       //Checks if the session is still valid or active
-      lastVerified = await SSESessionCheck(req, res, intervalId, lastVerified);
+      const isValid = await SSESessionCheck(req, res, intervalId, lastVerified);
+
+      if (!isValid.success) {
+        return res.write(
+          `data: ${JSON.stringify({ success: false, message: "Session error?" })}\n\n`,
+        );
+      }
+
+      lastVerified = isValid.lastVerified;
 
       const userDepartmentName = req.tokenInformation?.userDepartmentName;
       const userAuthLevel = req.userAuthLevel || 1;
 
       //Clamp the requested limit between 1 and 100 to prevent abuse
+      //! Maybe is allowing all the data to be shown
       const requestedLimit = Number(req.query.limit || 10);
       const safeLimit = Number.isNaN(requestedLimit)
         ? 10

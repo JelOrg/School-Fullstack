@@ -1,4 +1,5 @@
 import { processToken, validateToken } from "#services/tokenHandler";
+import { cookieOptions } from "#utils/config";
 
 //checks if the request has a token and if the token is still valid
 export const authenticateToken = async (req, res, next) => {

@@ -57,7 +57,7 @@ export const sendSpoedAanvraag = async (req, res) => {
   //Get a request batch id, so +1 from the latest batchId
   const requestBatchId = await getCurrentOrNextReqBatchId(true);
 
-  if (!requestBatchId.succes)
+  if (!requestBatchId.success)
     return res
       .status(HTTP_STATUS.INTERNAL_SERVER_ERROR)
       .json({ success: false, message: "Failed to Contact DB" });
@@ -130,7 +130,15 @@ export const fetchDashboardDisplayData = async (req, res) => {
   const intervalId = setInterval(async () => {
     try {
       //Checks if the session is still valid or active
-      lastVerified = await SSESessionCheck(req, res, intervalId, lastVerified);
+      const isValid = await SSESessionCheck(req, res, intervalId, lastVerified);
+
+      if (!isValid.success) {
+        return res.write(
+          `data: ${JSON.stringify({ success: false, message: "Session error?" })}\n\n`,
+        );
+      }
+
+      lastVerified = isValid.lastVerified;
 
       //TODO Need to check if you really need department name? or we could just not use it for now
       //! This could be the cause for data nor being feteched
@@ -165,5 +173,3 @@ export const fetchDashboardDisplayData = async (req, res) => {
     clearInterval(intervalId);
   });
 };
-
-console.log(await fetchKritiekeVoorraad(3, "roze"));

@@ -50,7 +50,7 @@ mainServerRouter.get(
 
 //aanvragen
 mainServerRouter.get(
-  "/aanvragen",
+  "/aanvraag",
   protect(ROLE_AUTH_LEVEL.employee),
   view("aanvraag"),
 );

@@ -11,7 +11,15 @@ export const fetchGeschiedenisDisplayData = async (req, res) => {
   //Create a SSE connection, meaning you have an open connection to sever
   const intervalId = setInterval(async () => {
     try {
-      lastVerified = await SSESessionCheck(req, res, intervalId, lastVerified);
+      const isValid = await SSESessionCheck(req, res, intervalId, lastVerified);
+
+      if (!isValid.success) {
+        return res.write(
+          `data: ${JSON.stringify({ success: false, message: "Session error?" })}\n\n`,
+        );
+      }
+
+      lastVerified = isValid.lastVerified;
 
       const requestedLimit = Number(req.query.limit || 10);
       const safeLimit = Number.isNaN(requestedLimit)
