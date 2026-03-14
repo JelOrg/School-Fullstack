@@ -58,8 +58,8 @@ async function postAanvraag() {
     alert("Kan geen verbinding maken met de server.");
     console.error("Aanvraag fout:", err);
   } finally {
-    btn.disabled = false;
-    btn.textContent = "Aanvraag versturen";
+    // btn.disabled = false;
+    // btn.textContent = "Aanvraag versturen";
   }
 }
 

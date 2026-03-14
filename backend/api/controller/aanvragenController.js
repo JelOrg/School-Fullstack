@@ -70,13 +70,14 @@ export const sendNormaleAanvraag = async (req, res) => {
     itemId: item.itemId,
     //?Possible to add itemName?
     // itemName: item.nameItem,
-    requestedAmount: item.amountRequested,
-    requestBatchId: requestBatchId,
+    requestedAmount: item.requestedAmount,
+    requestBatchId: requestBatchId.data,
     isUrgent: false,
 
     //Constants
     userId: userId,
     departmentId: departmentId.data.departmentId,
+    isCompleted: false,
   }));
 
   //* Sends the post request to the db
