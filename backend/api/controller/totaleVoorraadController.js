@@ -30,7 +30,9 @@ export const fetchTotalVoorraadData = async (req, res) => {
       lastVerified = isValid.lastVerified;
 
       // 2. Fetch data
-      const voorraadData = await fetchAllItems();
+      const voorraadObject = await fetchAllItems();
+
+      const voorraadData = voorraadObject.data;
 
       // 3. Send to client
       if (!res.writableEnded) {

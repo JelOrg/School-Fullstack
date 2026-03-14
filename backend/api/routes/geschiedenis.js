@@ -19,6 +19,6 @@ router.get("/", (req, res) => {
 });
 
 //fetch top (default 10) recent request history data
-router.get("/fetch-display-data", fetchGeschiedenisDisplayData);
+router.get("/fetch-geschiedenis-display-data", fetchGeschiedenisDisplayData);
 
 export default router; // Modern export

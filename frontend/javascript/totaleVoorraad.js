@@ -1,19 +1,4 @@
-function initSSE() {
-  const eventSource = new EventSource("/totale-voorraad");
-
-  eventSource.onmessage = (event) => {
-    const data = JSON.parse(event.data);
-    if (!data.success) return; // ← fixed logic
-    renderTable(data.items); // ← pass the array, not the whole object
-  };
-
-  //   eventSource.onerror = (err) => {
-  //     console.error("SSE connection error:", err);
-  //     eventSource.close();
-  //     setTimeout(initSSE, 3000); // ← auto-reconnect
-  //   };
-}
-
+// ─── RENDER TABLE ─────────────────────────────────────────────────
 function renderTable(items) {
   const tbody = document.querySelector("tbody");
   tbody.innerHTML = "";
@@ -43,12 +28,34 @@ function renderTable(items) {
   });
 }
 
+// ─── BADGE ────────────────────────────────────────────────────────
 function renderBadge(amount) {
   if (amount <= 0) return `<span class="badge badge-kritiek">Kritiek</span>`;
   if (amount <= 10) return `<span class="badge badge-laag">Laag</span>`;
   return `<span class="badge badge-goed">Goed</span>`;
 }
 
+// ─── SSE ──────────────────────────────────────────────────────────
+function initVoorraadSSE() {
+  const eventSource = new EventSource(
+    "api/totale-voorraad/fetch-totale-voorraad",
+    {
+      withCredentials: true,
+    },
+  );
+
+  eventSource.onmessage = (event) => {
+    const items = JSON.parse(event.data);
+    renderTable(items);
+  };
+
+  eventSource.onerror = (err) => {
+    console.error("SSE fout:", err);
+    eventSource.close();
+  };
+}
+
+// ─── INIT ─────────────────────────────────────────────────────────
 document.addEventListener("DOMContentLoaded", () => {
-  initSSE();
+  initVoorraadSSE();
 });
