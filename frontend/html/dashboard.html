@@ -5,7 +5,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <link rel="stylesheet" href="../css/bootstrap-5.3.8-dist/css/bootstrap.min.css" />
+    <link
+      rel="stylesheet"
+      href="../css/bootstrap-5.3.8-dist/css/bootstrap.min.css"
+    />
     <link rel="stylesheet" href="../css/main.css" />
     <link rel="stylesheet" href="../css/dashboard.css" />
   </head>
@@ -84,50 +87,60 @@
 
     <!-- Main Dashboard interface -->
 
-    <main class="py-4 px-1 container-fluid ">
-
     <main class="py-4 px-1 container-fluid">
-    
-
       <div class="container-fluid px-4">
         <div class="d-flex justify-content-between align-items-center mb-4">
           <h2 class="mb-0">Dashboard</h2>
         </div>
 
-        <div class="row g-4">
+        <div class="row g-4 align-items-start">
           <!-- LEFT: Spoedaanvraag -->
           <div class="col-lg-3">
-            <section class="card shadow-lg border-0 spoed-card h-100">
+            <section class="card shadow-lg border-0 spoed-card">
               <div class="card-header spoed-header text-white">
                 <h5 class="mb-0">Spoedaanvraag</h5>
                 <small>Hoogste prioriteit</small>
               </div>
-
               <div class="card-body">
                 <label class="form-label">Zoek supplies</label>
-                <div style="position:relative">
-                  <input id="spoed-zoek"
+                <div style="position: relative">
+                  <input
+                    id="spoed-zoek"
                     class="form-control mb-3"
                     placeholder="Zoek op naam of categorie"
                     autocomplete="off"
                   />
                   <div id="spoed-suggestions"></div>
+                  <label
+                    class="form-label fw-bold"
+                    for="aantal-supplies-selecter"
+                    >Aantal:</label
+                  >
+                  <input
+                    class="form-control"
+                    type="number"
+                    id="aantal-supplies-selecter"
+                    placeholder="Voer aantal in"
+                  />
                 </div>
-
                 <label class="form-label">Afdeling</label>
-                <input id="spoed-afdeling"
+                <input
+                  id="spoed-afdeling"
                   class="form-control mb-3"
                   placeholder="Bijv. SEH, Cardiologie"
                 />
-
                 <label class="form-label">Noodsituatie</label>
-                <textarea id="spoed-situatie"
+                <textarea
+                  id="spoed-situatie"
                   class="form-control mb-3"
                   rows="4"
                   placeholder="Beschrijf kort de noodsituatie"
                 ></textarea>
-
-                <button type="button" id="btn-spoed-versturen" class="btn btn-light w-100 fw-bold">
+                <button
+                  type="button"
+                  id="btn-spoed-versturen"
+                  class="btn btn-light w-100 fw-bold"
+                >
                   Spoedaanvraag versturen
                 </button>
               </div>
@@ -136,11 +149,10 @@
 
           <!-- MIDDLE: Kritieke voorraad -->
           <div class="col-lg-6">
-            <section class="card shadow border-0 h-100">
+            <section class="card shadow border-0">
               <div class="card-header bg-white">
                 <h5 class="mb-0">Kritiek Voorraadoverzicht</h5>
               </div>
-
               <div class="card-body" id="critical-stock-list">
                 <div class="row mb-3">
                   <div class="col">
@@ -160,35 +172,36 @@
           </div>
 
           <!-- RIGHT: Meldingen -->
+          <!-- RIGHT: Meldingen -->
           <div class="col-lg-3">
-            <section class="card shadow border-0 h-100">
+            <section class="card shadow border-0">
               <div class="card-header bg-white d-flex justify-content-between">
                 <h5 class="mb-0">Meldingen</h5>
                 <span class="badge bg-danger" id="notif-badge">0</span>
               </div>
-
               <div class="card-body">
-                <div class="card-body">
-                  <!-- Filters -->
-                  <div class="mb-3">
-                    <label class="form-label small">Type melding</label>
-                    <select class="form-select form-select-sm mb-2">
-                      <option>Alle meldingen</option>
-                      <option>Spoed</option>
-                      <option>Kritieke voorraad</option>
-                    </select>
-
-                    <label class="form-label small">Sorteren</label>
-                    <select class="form-select form-select-sm">
-                      <option>Nieuwste eerst</option>
-                      <option>Oudste eerst</option>
-                    </select>
-                  </div>
-
-                  <hr />
-                  <div id="notifications-list">
-                    <p class="text-muted small text-center">Laden...</p>
-                  </div>
+                <div class="mb-3">
+                  <label class="form-label small">Type melding</label>
+                  <select
+                    id="melding-type-filter"
+                    class="form-select form-select-sm mb-2"
+                  >
+                    <option value="all">Alle meldingen</option>
+                    <option value="spoed">Spoed</option>
+                    <option value="kritiek">Kritieke voorraad</option>
+                  </select>
+                  <label class="form-label small">Sorteren</label>
+                  <select
+                    id="melding-sort-filter"
+                    class="form-select form-select-sm"
+                  >
+                    <option value="nieuwste">Nieuwste eerst</option>
+                    <option value="oudste">Oudste eerst</option>
+                  </select>
+                </div>
+                <hr />
+                <div id="notifications-list">
+                  <p class="text-muted small text-center">Laden...</p>
                 </div>
               </div>
             </section>
@@ -203,6 +216,6 @@
     </footer>
     <script src="../css/bootstrap-5.3.8-dist/js/bootstrap.bundle.min.js"></script>
     <script src="../javascript/dashboard.js"></script>
-    <script src="../javascript/logOut.js"></script> 
+    <script src="../javascript/logOut.js"></script>
   </body>
 </html>

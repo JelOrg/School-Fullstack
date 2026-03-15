@@ -15,9 +15,6 @@ export const fetchStatistiekenDisplayData = async (req, res) => {
   //Create a SSE connection, meaning you have an open connection to sever
   const intervalId = setInterval(async () => {
     try {
-      //TODO Make this actually have a limit
-      //TODO Check if you really need a departmentName for now
-      //Checks if the session is still valid or active
       const isValid = await SSESessionCheck(req, res, intervalId, lastVerified);
 
       if (!isValid.success) {

@@ -1,54 +1,54 @@
 //sends spoedaanvraag
-function postSpoedAanvraag() {
-  document
-    .getElementById("btn-spoed-versturen")
-    .addEventListener("click", async () => {
-      const zoek = document.getElementById("spoed-zoek").value.trim();
-      const afdeling = document.getElementById("spoed-afdeling").value.trim();
-      const situatie = document.getElementById("spoed-situatie").value.trim();
+async function postSpoedAanvraag() {
+  const zoek = document.getElementById("spoed-zoek").value.trim();
+  const afdeling = document.getElementById("spoed-afdeling").value.trim();
+  const situatie = document.getElementById("spoed-situatie").value.trim();
+  const amount = document
+    .getElementById("aantal-supplies-selecter")
+    .value.trim();
 
-      // Basic validation
-      if (!zoek || !afdeling || !situatie) {
-        alert("Vul alle velden in.");
-        return;
-      }
+  // Basic validation
+  if (!zoek || !afdeling || !situatie) {
+    alert("Vul alle velden in.");
+    return;
+  }
 
-      const btn = document.getElementById("btn-spoed-versturen");
-      btn.disabled = true;
-      btn.textContent = "Bezig met versturen...";
+  const btn = document.getElementById("btn-spoed-versturen");
+  btn.disabled = true;
+  btn.textContent = "Bezig met versturen...";
 
-      try {
-        const response = await fetch("/api/dashboard/send-spoed-aanvraag", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-          body: JSON.stringify({
-            itemInfo: [
-              {
-                itemId: parseInt(zoek),
-                departmentName: afdeling,
-                textField: situatie,
-              },
-            ],
-          }),
-        });
-
-        const data = await response.json();
-
-        if (!response.ok || !data.success) {
-          alert(data.message || "Er is iets misgegaan.");
-          return;
-        }
-
-        alert("Spoedaanvraag verstuurd!");
-      } catch (err) {
-        alert("Kan geen verbinding maken met de server.");
-        console.error("Spoed fout:", err);
-      } finally {
-        btn.disabled = false;
-        btn.textContent = "Spoedaanvraag versturen";
-      }
+  try {
+    const response = await fetch("/api/dashboard/send-spoed-aanvraag", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({
+        itemInfo: [
+          {
+            itemId: parseInt(zoek),
+            requestedAmount: parseInt(amount),
+            departmentName: afdeling,
+            textField: situatie,
+          },
+        ],
+      }),
     });
+
+    const data = await response.json();
+
+    if (!response.ok || !data.success) {
+      alert(data.message || "Er is iets misgegaan.");
+      return;
+    }
+
+    alert("Spoedaanvraag verstuurd!");
+  } catch (err) {
+    alert("Kan geen verbinding maken met de server.");
+    console.error("Spoed fout:", err);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "Spoedaanvraag versturen";
+  }
 }
 
 // ─── RENDER MELDINGEN ─────────────────────────────────────────────
@@ -64,19 +64,32 @@ function renderMeldingen(meldingen) {
 
   badge.textContent = meldingen.length;
 
-  const items = meldingen
+  container.innerHTML = meldingen
     .map(
       (melding) => `
-    <div class="alert alert-warning py-2 px-3 mb-2">
-      <strong>${melding.departmentName ?? "Onbekend"}</strong>
-      <p class="mb-0 small">${melding.textField ?? "-"}</p>
-      <span class="text-muted" style="font-size:0.75rem">${melding.createdAt ?? ""}</span>
-    </div>
-  `,
+      <div class="alert alert-warning py-2 px-3 mb-2">
+        <div class="d-flex justify-content-between align-items-center">
+          <strong>${melding.item ?? "Onbekend"}</strong>
+          <span class="text-muted" style="font-size:0.75rem">${formatDate(melding.requestedDate)}</span>
+        </div>
+        <p class="mb-0 small">
+          <span class="fw-semibold">${melding.userFirstName ?? ""} ${melding.userLastName ?? ""}</span>
+          — ${melding.departmentName ?? "-"}
+        </p>
+        <p class="mb-0 small text-muted">Aangevraagd: ${melding.requestedAmount ?? "-"} stuks</p>
+      </div>
+    `,
     )
     .join("");
+}
 
-  container.innerHTML = items;
+function formatDate(dateStr) {
+  if (!dateStr) return "-";
+  return new Date(dateStr).toLocaleDateString("nl-NL", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  });
 }
 
 // ─── RENDER KRITIEKE VOORRAAD ─────────────────────────────────────
