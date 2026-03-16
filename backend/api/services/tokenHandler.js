@@ -57,7 +57,7 @@ export const validateToken = async (processedToken) => {
   const user = await prisma.users
     .findUnique({
       where: {
-        userId: processedToken.tokenInfo.userId,
+        userId: processedToken.userId,
       },
       select: {
         isActive: true,
@@ -73,11 +73,9 @@ export const validateToken = async (processedToken) => {
 
   // 2. Run the checks
   const isDeactivated = !user || !user.isActive;
-  const roleMismatch =
-    processedToken.tokenInfo.userRoleName !== user.role.roleName;
+  const roleMismatch = processedToken.userRoleName !== user.role.roleName;
   const deptMismatch =
-    processedToken.tokenInfo.userDepartmentName !==
-    user.department.departmentName;
+    processedToken.userDepartmentName !== user.department.departmentName;
 
   if (isDeactivated || roleMismatch || deptMismatch)
     return { success: false, message: "token not valid" };

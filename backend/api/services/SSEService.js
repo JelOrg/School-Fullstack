@@ -57,7 +57,8 @@ export const SSESessionCheck = async (req, res, intervalId, lastVerified) => {
     const isValid = await validateToken(isActive.tokenInfo);
 
     if (!isValid.success) return closeSSESession(res, intervalId);
-    return Date.now();
+
+    return { success: true, lastVerified: Date.now() };
   }
-  return lastVerified;
+  return { success: true, lastVerified };
 };

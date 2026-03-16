@@ -19,11 +19,20 @@ export const fetchTotalVoorraadData = async (req, res) => {
   const intervalId = setInterval(async () => {
     try {
       //Checks if the session is still valid or active
-      lastVerified = await SSESessionCheck(req, res, intervalId, lastVerified);
+      const isValid = await SSESessionCheck(req, res, intervalId, lastVerified);
 
-      //! This could be the cause for data nor being feteched
+      if (!isValid.success) {
+        return res.write(
+          `data: ${JSON.stringify({ success: false, message: "Session error?" })}\n\n`,
+        );
+      }
+
+      lastVerified = isValid.lastVerified;
+
       // 2. Fetch data
-      const voorraadData = await fetchAllItems();
+      const voorraadObject = await fetchAllItems();
+
+      const voorraadData = voorraadObject.data;
 
       // 3. Send to client
       if (!res.writableEnded) {

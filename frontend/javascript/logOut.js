@@ -1,1 +1,3 @@
-//TODO make a func that just clears token and routes back to login page
+document.getElementById("logout").addEventListener("click", () => {
+  document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+});

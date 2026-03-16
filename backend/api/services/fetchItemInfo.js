@@ -33,19 +33,18 @@ export const fetchAllItems = async () => {
   }
 
   //needs to user .map, because we are gettin multiple items
-  const allItemsFlattend = allItems.map((item) => {
+  const allItemsData = allItems.map((item) => {
     return {
       itemId: item.itemId,
       itemName: item.itemName,
       description: item.description,
       remainingAmount: item.remainingAmount,
-      // Accessing the nested category name
       // (Assuming one item has one category or we take the first one)
       categoryName: item.categories?.categoryName || "Uncategorized",
     };
   });
 
-  return { success: true, message: "Items found", data: allItemsFlattend };
+  return { success: true, message: "Items found", data: allItemsData };
 };
 
 //Get item info of one specific item

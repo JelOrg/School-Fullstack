@@ -50,7 +50,7 @@ mainServerRouter.get(
 
 //aanvragen
 mainServerRouter.get(
-  "/aanvragen",
+  "/aanvraag",
   protect(ROLE_AUTH_LEVEL.employee),
   view("aanvraag"),
 );
@@ -119,6 +119,9 @@ mainServerRouter.use(
   totaleVoorraadPage,
 );
 
+//!=====================================
+//TODO this should run like every few hours to gather the data, store it in a db and then from there get the data
+// TODO , since using sse is much more resource intensive
 //statistieken
 mainServerRouter.use(
   "/api/statistieken",
@@ -132,6 +135,7 @@ mainServerRouter.use(
   protect(ROLE_AUTH_LEVEL.admin),
   geschiedenisPage,
 );
+//!=====================================
 
 //profile
 mainServerRouter.use(

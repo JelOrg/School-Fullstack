@@ -45,19 +45,19 @@
           <!-- Left side links -->
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item">
-              <a class="nav-link" href="dashboard.html">Dashboard</a>
+              <a class="nav-link" href="dashboard">Dashboard</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link active" href="aanvraag.html">Aanvraag</a>
+              <a class="nav-link active" href="aanvraag">Aanvraag</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="totale-voorraad.html">Totale Voorraad</a>
+              <a class="nav-link" href="totale-voorraad">Totale Voorraad</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="statistieken.html">Statistieken</a>
+              <a class="nav-link" href="statistieken">Statistieken</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="geschiedenis.html">Geschiedenis</a>
+              <a class="nav-link" href="geschiedenis">Geschiedenis</a>
             </li>
           </ul>
 
@@ -65,13 +65,15 @@
           <!-- Right side utilities -->
           <ul class="navbar-nav ms-auto">
             <li class="nav-item">
-              <a class="nav-link" href="profile.html">Profiel</a>
+              <a class="nav-link" href="profile">Profiel</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="settings.html">Instellingen</a>
+              <a class="nav-link" href="settings">Instellingen</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link text-danger" href="inlog.html">Log Out</a>
+              <a class="nav-link text-danger" href="login" id="logout"
+                >Log Out</a
+              >
             </li>
           </ul>
           <!-- NOT FUNCTIONAL -->
@@ -218,8 +220,8 @@
           <!-- Buttons to send data to the DB -->
           <!-- Make funtional -->
           <div class="d-flex gap-2">
-            <button class="btn btn-primary">Aanvraag versturen</button>
-            <button class="btn btn-danger">Wissen</button>
+            <button class="btn btn-primary" id="versturen">Aanvraag versturen</button>
+            <button class="btn btn-danger" id="wissen">Wissen</button>
           </div>
         </div>
       </section>
@@ -229,6 +231,7 @@
       <p>&copy; 2024 RKZ Voorraadbeheer. Alle rechten voorbehouden.</p>
     </footer>
     <script src="../css/bootstrap-5.3.8-dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../javascript/dataConnection.js"></script> 
+    <script src="../javascript/aanvraag.js"></script> 
+    <script src="../javascript/logOut.js"></script> 
   </body>
 </html>

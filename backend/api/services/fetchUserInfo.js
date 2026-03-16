@@ -72,7 +72,6 @@ export const fetchUserInfo = async (userId) => {
       err.message = `[Failed fetching user data]: ${err.message}`;
       throw err;
     });
-
   //! checks if the userInfo isn't null
   if (!userInfo) return { success: false };
 

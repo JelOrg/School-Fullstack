@@ -33,7 +33,7 @@ export const sendSpoedAanvraag = async (req, res) => {
   //TODO The info from the spoedaanvraag form needs to be put into the database
   //* Item info is send as an object, needs to hold itemId, itemName, and amount requested
   const { itemInfo, textField } = req.body;
-  const { userId, departmentName } = req.tokenInformation;
+  const { userId, userDepartmentName } = req.tokenInformation;
 
   //! Might have weird js behaviour
 
@@ -45,7 +45,7 @@ export const sendSpoedAanvraag = async (req, res) => {
     });
 
   // Inside the Controller
-  if (!userId || !departmentName)
+  if (!userId || !userDepartmentName)
     return res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
       success: false,
       message: "Invalid session/Invalid JWT decoding",
@@ -57,13 +57,13 @@ export const sendSpoedAanvraag = async (req, res) => {
   //Get a request batch id, so +1 from the latest batchId
   const requestBatchId = await getCurrentOrNextReqBatchId(true);
 
-  if (!requestBatchId.succes)
+  if (!requestBatchId.success)
     return res
       .status(HTTP_STATUS.INTERNAL_SERVER_ERROR)
       .json({ success: false, message: "Failed to Contact DB" });
 
   //Gets you the departmentId
-  const departmentId = await fetchDepartmentId(departmentName);
+  const departmentId = await fetchDepartmentId(userDepartmentName);
 
   //quick check that we actually have departmentId
   //! can be bugged?
@@ -86,13 +86,14 @@ export const sendSpoedAanvraag = async (req, res) => {
     itemId: item.itemId,
     //?Possible to add itemName?
     // itemName: item.nameItem,
-    requestedAmount: item.amountRequested,
-    requestBatchId: requestBatchId,
+    requestedAmount: item.requestedAmount,
+    requestBatchId: requestBatchId.data,
     isUrgent: true,
 
     //Constants
     userId: userId,
     departmentId: departmentId.data.departmentId,
+    isCompleted: false,
   }));
 
   //* Sends the post request to the db
@@ -108,11 +109,9 @@ export const sendSpoedAanvraag = async (req, res) => {
   return res.status(HTTP_STATUS.CREATED).json({
     success: true,
     message: "Spoedaanvraag successfully created!",
-    count: postingToDb.count, // if your service returned the count
   });
 };
 
-//TODO TEST THIS, THIS MIGHT BE BUGGY
 // ==========================================
 // GET: Data for the dashboard. Creates a constant connection to db
 // ==========================================
@@ -130,7 +129,15 @@ export const fetchDashboardDisplayData = async (req, res) => {
   const intervalId = setInterval(async () => {
     try {
       //Checks if the session is still valid or active
-      lastVerified = await SSESessionCheck(req, res, intervalId, lastVerified);
+      const isValid = await SSESessionCheck(req, res, intervalId, lastVerified);
+
+      if (!isValid.success) {
+        return res.write(
+          `data: ${JSON.stringify({ success: false, message: "Session error?" })}\n\n`,
+        );
+      }
+
+      lastVerified = isValid.lastVerified;
 
       //TODO Need to check if you really need department name? or we could just not use it for now
       //! This could be the cause for data nor being feteched
@@ -151,7 +158,9 @@ export const fetchDashboardDisplayData = async (req, res) => {
 
       // 3. Send to client
       if (!res.writableEnded) {
-        res.write(`data: ${JSON.stringify({})}\n\n`);
+        res.write(
+          `data: ${JSON.stringify({ kritiekeVoorraadData, spoedAanvraagenData })}\n\n`,
+        );
       }
     } catch (err) {
       console.error("Dashboard Stream Error:", err);

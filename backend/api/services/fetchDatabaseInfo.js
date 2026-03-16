@@ -47,6 +47,7 @@ export const fetchKritiekeVoorraad = async (userAuthLevel, departmentName) => {
         itemName: true,
         remainingAmount: true,
         description: true,
+        categories: { select: { categoryName: true } },
       },
       take: TAKE_LIMIT,
       orderBy: { itemName: "asc" },
@@ -64,9 +65,17 @@ export const fetchKritiekeVoorraad = async (userAuthLevel, departmentName) => {
     };
   }
 
+  const kritikeVoorraadList = kritiekeVoorraad.map((item) => ({
+    itemId: item.itemId,
+    itemName: item.itemName,
+    remainingAmount: item.remainingAmount,
+    description: item.description,
+    categoryName: item.categories?.categoryName ?? null,
+  }));
+
   return {
     success: true,
     message: "Kritieke voorraad found",
-    data: kritiekeVoorraad,
+    data: kritikeVoorraadList,
   };
 };

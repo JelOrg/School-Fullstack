@@ -14,7 +14,10 @@ export const ROLE_AUTH_LEVEL = {
 //! For dashboardContoller
 export const REFRESH_RATES = {
   CRITICAL_VITALS: 2000, // 2 seconds for ICU
-  STANDARD_DASHBOARD: 5000, // 5 seconds for general ward
+
+  //TODO this should be at 10*60*1000
+  STANDARD_DASHBOARD: 5000,
+
   SYSTEM_STATUS: 60000, // 1 minute for battery/wifi status
 };
 
@@ -54,7 +57,7 @@ export const VERIFY_INTERVAL = 5 * 60 * 1000; // 5 Minutes
 export const TAKE_LIMIT = 10;
 
 //! A const that tells the amount of urgent req that yo can take from the backend
-export const TAKE_LIMIT_URGENT_REQUEST = 50;
+export const TAKE_LIMIT_URGENT_REQUEST = 20;
 
 //! A hardcoded amount for when voorraad is low in the fetchKritikeVoorraad
 export const REMAINING_AMOUNT = 25;
