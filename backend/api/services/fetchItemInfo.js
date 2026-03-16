@@ -39,7 +39,6 @@ export const fetchAllItems = async () => {
       itemName: item.itemName,
       description: item.description,
       remainingAmount: item.remainingAmount,
-      // Accessing the nested category name
       // (Assuming one item has one category or we take the first one)
       categoryName: item.categories?.categoryName || "Uncategorized",
     };

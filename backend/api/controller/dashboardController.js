@@ -112,7 +112,6 @@ export const sendSpoedAanvraag = async (req, res) => {
   });
 };
 
-//TODO TEST THIS, THIS MIGHT BE BUGGY
 // ==========================================
 // GET: Data for the dashboard. Creates a constant connection to db
 // ==========================================

@@ -30,8 +30,8 @@ function renderTable(items) {
 
 // ─── BADGE ────────────────────────────────────────────────────────
 function renderBadge(amount) {
-  if (amount <= 0) return `<span class="badge badge-kritiek">Kritiek</span>`;
-  if (amount <= 10) return `<span class="badge badge-laag">Laag</span>`;
+  if (amount <= 50) return `<span class="badge badge-kritiek">Kritiek</span>`;
+  if (amount <= 100) return `<span class="badge badge-laag">Laag</span>`;
   return `<span class="badge badge-goed">Goed</span>`;
 }
 

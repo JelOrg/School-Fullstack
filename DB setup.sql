@@ -17,11 +17,11 @@ DELIMITER ;
 DELIMITER //
 
 CREATE TRIGGER after_shipment_insert
-AFTER INSERT ON shipments -- Fixed table name from 'shipment' to 'shipments'
+AFTER INSERT ON shipments
 FOR EACH ROW
 BEGIN
     UPDATE items
-    SET remainingAmount = remainingAmount + 1
+    SET remainingAmount = remainingAmount + 1 --This is based on a shipment where you can scan items
     WHERE itemId = NEW.itemId; -- Added NEW. prefix
 END; //
 

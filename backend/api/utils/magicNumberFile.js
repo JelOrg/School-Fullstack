@@ -16,7 +16,7 @@ export const REFRESH_RATES = {
   CRITICAL_VITALS: 2000, // 2 seconds for ICU
 
   //TODO this should be at 10*60*1000
-  STANDARD_DASHBOARD: 60000,
+  STANDARD_DASHBOARD: 5000,
 
   SYSTEM_STATUS: 60000, // 1 minute for battery/wifi status
 };
