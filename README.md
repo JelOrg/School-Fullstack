@@ -36,31 +36,31 @@ A web-based management application with real-time updates, role-based access con
 1. Clone de repository
 
 ```bash
-git clone <repo-url>
-cd <project-map>
+git clone https://github.com/JelOrg/School-Fullstack.git
 ```
 
 2. Installeer dependencies
 
 ```bash
+cd backend
 npm install
 ```
 
-3. Maak een `.env` bestand aan in de hoofdmap (zie [Environment Variables](#environment-variables))
+3. Maak een `.env` bestand aan in de `backend` map
 
-4. Voer Prisma migraties uit om de tabellen aan te maken
+4. Voer Prisma migraties of database push uit om de tabellen aan te maken
 
 ```bash
 npx prisma migrate deploy
 ```
 
-or
+of
 
 ```bash
 npx prisma db push
 ```
 
-5. Start de applicatie
+5. Start de applicatie (vanuit de `/backend` map)
 
 ```bash
 npm start
@@ -70,12 +70,19 @@ npm start
 
 ## Environment Variables
 
-Maak een `.env` bestand aan in de hoofdmap met de volgende variabelen:
+Maak een `.env` bestand aan in de `backend` map met de volgende variabelen:
 
 ```env
 DATABASE_URL="mysql://gebruiker:wachtwoord@localhost:3306/management_system"
-JWT_SECRET=jouw_jwt_secret
-PORT=3000
+
+DATABASE_USER="Your username"
+DATABASE_PASSWORD="Your db password"
+DATABASE_NAME="management_system"
+DATABASE_HOST="localhost"
+
+SERVER_PORT=5500
+BACK_END_PORT=3000
+DATABASE_PORT=3306
 ```
 
 ---
@@ -87,10 +94,12 @@ De applicatie verwacht een MySQL-database met de naam `management_system`. Deze 
 Het SQL-bestand `DB setup.sql` in de hoofdmap bevat:
 
 - Het aanmaken van de database
+- De tabellen zelf worden aangemaakt via Prisma aan de hand van het schema dat in de applicatie is gedefinieerd.
+
+&
+
 - Een trigger `after_request_insert` die de voorraad automatisch verlaagt wanneer een aanvraag wordt ingediend
 - Een trigger `after_shipment_insert` die de voorraad automatisch verhoogt wanneer een levering wordt geregistreerd
-
-De tabellen zelf worden aangemaakt via Prisma aan de hand van het schema dat in de applicatie is gedefinieerd.
 
 ---
 
@@ -110,10 +119,55 @@ De tabellen zelf worden aangemaakt via Prisma aan de hand van het schema dat in 
 
 ---
 
-## Autorisatie
+## Projectstructuur
 
-De applicatie maakt gebruik van drie toegangsniveaus:
+```
+├── frontend/
+│   ├── css/
+│   ├── html/
+│   └── javascript/
+└── backend/
+    ├── api/
+    │   ├── controllers/
+    │   ├── middleware/
+    │   ├── routes/
+    │   ├── services/
+    │   └── utils/
+    ├── generated/          # Prisma gegenereerde bestanden
+    ├── prisma/             # Prisma schema en migraties
+    ├── node_modules/
+```
 
-- **Employee** — Beperkte toegang tot eigen aanvragen en voorraad
-- **Manager** — Toegang tot afdelingsbeheer en rapportages
-- **Admin** — Volledige toegang tot alle functionaliteit
+---
+
+## Endpoints
+
+### Pagina's
+
+| Method | Route              | Toegang   | Omschrijving        |
+| ------ | ------------------ | --------- | ------------------- |
+| GET    | `/`                | Publiek   | Inlogpagina         |
+| GET    | `/login`           | Publiek   | Inlogpagina         |
+| GET    | `/dashboard`       | Employee+ | Dashboard           |
+| GET    | `/aanvraag`        | Employee+ | Aanvragen overzicht |
+| GET    | `/totale-voorraad` | Employee+ | Voorraad overzicht  |
+| GET    | `/statistieken`    | Manager+  | Statistieken        |
+| GET    | `/geschiedenis`    | Admin     | Geschiedenis        |
+| GET    | `/profile`         | Employee+ | Profiel             |
+| GET    | `/settings`        | Employee+ | Instellingen        |
+
+### API
+
+| Method | Route                  | Toegang   | Omschrijving        |
+| ------ | ---------------------- | --------- | ------------------- |
+| \*     | `/api/`                | Publiek   | Root API            |
+| \*     | `/api/login`           | Publiek   | Authenticatie       |
+| \*     | `/api/dashboard`       | Employee+ | Dashboard data      |
+| \*     | `/api/aanvragen`       | Employee+ | Aanvragen beheer    |
+| \*     | `/api/totale-voorraad` | Employee+ | Voorraad data       |
+| \*     | `/api/statistieken`    | Manager+  | Statistieken data   |
+| \*     | `/api/geschiedenis`    | Admin     | Geschiedenis data   |
+| \*     | `/api/profile`         | Employee+ | Profiel beheer      |
+| \*     | `/api/settings`        | Employee+ | Instellingen beheer |
+
+---

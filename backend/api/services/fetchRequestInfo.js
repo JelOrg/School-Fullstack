@@ -2,7 +2,7 @@ import { TAKE_LIMIT, TAKE_LIMIT_URGENT_REQUEST } from "#utils/magicNumberFile";
 import { prisma } from "#utils/prismaClient";
 
 //fetches latest request history data (default top 10)
-export const fetchRecentRequestsHistory = async ({
+export const fetchRequestHistory = async ({
   //TODO Can add a per dep or user auth filter, maybe later
   userAuthLevel,
   userDepartmentName,
@@ -18,6 +18,8 @@ export const fetchRecentRequestsHistory = async ({
         requestBatchId: true,
         requestedAmount: true,
         requestedDate: true,
+        isCompleted: true,
+        isUrgent: true,
         items: {
           select: {
             itemName: true,
@@ -51,6 +53,8 @@ export const fetchRecentRequestsHistory = async ({
     requestBatchId: request.requestBatchId,
     requestedAmount: request.requestedAmount,
     requestedDate: request.requestedDate,
+    isUrgent: request.isUrgent,
+    isCompleted: request.isCompleted,
     firstName: request.users.firstName,
     lastName: request.users.lastName,
     roleName: request.users?.role?.roleName,

@@ -62,5 +62,8 @@ export const TAKE_LIMIT = 10;
 //! A const that tells the amount of urgent req that yo can take from the backend
 export const TAKE_LIMIT_URGENT_REQUEST = 20;
 
+//! A const that tells the amount of geschiedenis req that yo can take from the backend
+export const TAKE_LIMIT_GESCHIEDENIS_REQUEST = 100;
+
 //! A hardcoded amount for when voorraad is low in the fetchKritikeVoorraad
 export const REMAINING_AMOUNT = 25;

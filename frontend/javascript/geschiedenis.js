@@ -8,11 +8,21 @@ function renderGeschiedenis(items) {
   }
   items.forEach((item) => {
     const row = document.createElement("tr");
+
+    let badge;
+    if (item.isCompleted) {
+      badge = `<span class="badge bg-success">Voltooid</span>`;
+    } else if (item.isUrgent) {
+      badge = `<span class="badge bg-danger">Spoed</span>`;
+    } else {
+      badge = `<span class="badge bg-warning text-dark">Aanvraag</span>`;
+    }
+
     row.innerHTML = `
       <td>${formatDate(item.requestedDate)}</td>
       <td>${item.itemName ?? "-"} <small class="text-muted">(${item.requestedAmount} stuks)</small></td>
       <td>${item.firstName ?? "-"}</td>
-      <td><span class="badge bg-primary">Aanvraag</span></td>
+      <td>${badge}</td>
     `;
     tbody.appendChild(row);
   });
