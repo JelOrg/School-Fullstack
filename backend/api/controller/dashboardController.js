@@ -127,8 +127,6 @@ export const fetchDashboardDisplayData = async (req, res) => {
       //forces the session to close
       const isValid = await SSESessionCheck(lastVerified);
 
-      console.log(isValid.success, lastVerified);
-
       if (!isValid.success) {
         closeSSESession(res, intervalId);
         return { message: "Session Is expired" };

@@ -8,9 +8,6 @@ export const closeSSESession = (res, intervalId) => {
   // 1. Check if we can still talk to the client
   if (!res.writableEnded) {
     res.write("event: auth_error\n");
-    res.write(
-      `data: ${JSON.stringify({ url: "/api/login/logout?session=expired" })}\n\n`,
-    );
     res.end();
   }
 
