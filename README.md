@@ -36,19 +36,19 @@ A web-based management application with real-time updates, role-based access con
 1. Clone de repository
 
 ```bash
-git clone <repo-url>
-cd <project-map>
+git clone <https://github.com/JelOrg/School-Fullstack.git>
 ```
 
 2. Installeer dependencies
 
 ```bash
+cd backend
 npm install
 ```
 
-3. Maak een `.env` bestand aan in de hoofdmap (zie [Environment Variables](#environment-variables))
+3. Maak een `.env` bestand aan in de backend-hoofdmap
 
-4. Voer Prisma migraties uit om de tabellen aan te maken
+4. Voer Prisma migraties of db-push uit om de tabellen aan te maken
 
 ```bash
 npx prisma migrate deploy
@@ -60,10 +60,10 @@ or
 npx prisma db push
 ```
 
-5. Start de applicatie
+5. Start de applicatie(You have to be in the /backend directory)
 
 ```bash
-npm start
+npm
 ```
 
 ---
@@ -74,8 +74,16 @@ Maak een `.env` bestand aan in de hoofdmap met de volgende variabelen:
 
 ```env
 DATABASE_URL="mysql://gebruiker:wachtwoord@localhost:3306/management_system"
-JWT_SECRET=jouw_jwt_secret
-PORT=3000
+
+DATABASE_USER="Your username" #
+DATABASE_PASSWORD="Your db password" #
+DATABASE_NAME="management_system" #
+DATABASE_HOST="localhost" #
+
+
+SERVER_PORT=5500 #
+BACK_END_PORT =3000
+DATABASE_PORT=3306 #
 ```
 
 ---
@@ -87,10 +95,12 @@ De applicatie verwacht een MySQL-database met de naam `management_system`. Deze 
 Het SQL-bestand `DB setup.sql` in de hoofdmap bevat:
 
 - Het aanmaken van de database
+- De tabellen zelf worden aangemaakt via Prisma aan de hand van het schema dat in de applicatie is gedefinieerd.
+
+&
+
 - Een trigger `after_request_insert` die de voorraad automatisch verlaagt wanneer een aanvraag wordt ingediend
 - Een trigger `after_shipment_insert` die de voorraad automatisch verhoogt wanneer een levering wordt geregistreerd
-
-De tabellen zelf worden aangemaakt via Prisma aan de hand van het schema dat in de applicatie is gedefinieerd.
 
 ---
 
