@@ -51,7 +51,6 @@ function initVoorraadSSE() {
 
   eventSource.onerror = (err) => {
     console.error("SSE fout:", err);
-    eventSource.close();
   };
 }
 

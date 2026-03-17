@@ -19,15 +19,12 @@ export const fetchTotalVoorraadData = async (req, res) => {
   const intervalId = setInterval(async () => {
     try {
       //Checks if the session is still valid or active
-      const isValid = await SSESessionCheck(req, res, intervalId, lastVerified);
+      const isValid = await SSESessionCheck(lastVerified);
 
       if (!isValid.success) {
-        return res.write(
-          `data: ${JSON.stringify({ success: false, message: "Session error?" })}\n\n`,
-        );
+        closeSSESession(res, intervalId);
+        return { message: "Session Is expired" };
       }
-
-      lastVerified = isValid.lastVerified;
 
       // 2. Fetch data
       const voorraadObject = await fetchAllItems();

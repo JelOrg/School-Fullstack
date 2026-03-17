@@ -10,21 +10,10 @@ import { HTTP_STATUS, REFRESH_RATES } from "#utils/magicNumberFile";
 export const fetchStatistiekenDisplayData = async (req, res) => {
   //Header for what is needed in the header of a SSE
   SSEHeader(res);
-  let lastVerified = Date.now();
 
   //Create a SSE connection, meaning you have an open connection to sever
   const intervalId = setInterval(async () => {
     try {
-      const isValid = await SSESessionCheck(req, res, intervalId, lastVerified);
-
-      if (!isValid.success) {
-        return res.write(
-          `data: ${JSON.stringify({ success: false, message: "Session error?" })}\n\n`,
-        );
-      }
-
-      lastVerified = isValid.lastVerified;
-
       const userDepartmentName = req.tokenInformation?.userDepartmentName;
       const userAuthLevel = req.userAuthLevel || 1;
 

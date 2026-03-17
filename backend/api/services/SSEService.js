@@ -8,9 +8,6 @@ export const closeSSESession = (res, intervalId) => {
   // 1. Check if we can still talk to the client
   if (!res.writableEnded) {
     res.write("event: auth_error\n");
-    res.write(
-      `data: ${JSON.stringify({ url: "/api/login/logout?session=expired" })}\n\n`,
-    );
     res.end();
   }
 
@@ -47,18 +44,9 @@ export const SSEHeader = (res) => {
  * @param {*} lastVerified
  * @returns
  */
-export const SSESessionCheck = async (req, res, intervalId, lastVerified) => {
+export const SSESessionCheck = async (lastVerified) => {
   if (Date.now() - lastVerified > VERIFY_INTERVAL) {
-    //checks if the cookie isn't expired
-    const isActive = processToken(req.cookies?.token);
-
-    if (!isActive.success) return closeSSESession(res, intervalId);
-
-    const isValid = await validateToken(isActive.tokenInfo);
-
-    if (!isValid.success) return closeSSESession(res, intervalId);
-
-    return { success: true, lastVerified: Date.now() };
+    return { success: false, message: "Time is expired" };
   }
-  return { success: true, lastVerified };
+  return { success: true, lastVerified, message: "Time is not expired" };
 };

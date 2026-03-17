@@ -158,8 +158,7 @@ function initDashboardSSE() {
   };
 
   eventSource.onerror = (err) => {
-    console.error("SSE fout:", err);
-    eventSource.close();
+    console.error("SSE fout:", err, eventSource.readyState);
   };
 }
 

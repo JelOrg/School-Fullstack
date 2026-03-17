@@ -29,7 +29,6 @@ import {
  * @param {*} res
  */
 export const sendSpoedAanvraag = async (req, res) => {
-  //TODO ADD A THING TO THE DB THAT IS LIKE idURGENT to signify that the req is urgent
   //TODO The info from the spoedaanvraag form needs to be put into the database
   //* Item info is send as an object, needs to hold itemId, itemName, and amount requested
   const { itemInfo, textField } = req.body;
@@ -52,7 +51,6 @@ export const sendSpoedAanvraag = async (req, res) => {
     });
 
   // !Might count incorrectly depending on some weird race condition
-  // * but prob not a problem, since we are searching for the highest int of batchId
 
   //Get a request batch id, so +1 from the latest batchId
   const requestBatchId = await getCurrentOrNextReqBatchId(true);
@@ -76,7 +74,6 @@ export const sendSpoedAanvraag = async (req, res) => {
   // TODO: Add a real-time stock check against the DB before saving.
   // TODO: Filter out items that are no longer available.
 
-  //TODO This doesn't get the itemId from body, or we can have those linked to what is shown on the frontend
   // TODO need to change the db so it can store store Text that is send in the Spoedaanvraag
   /** * Formats raw input into a clean list for processing:
    * Example: [ { itemId: 101, itemName: "Hammer", requestedAmount: 2 },
@@ -121,23 +118,19 @@ export const sendSpoedAanvraag = async (req, res) => {
 export const fetchDashboardDisplayData = async (req, res) => {
   //Header for what is needed in the header of a SSE
   SSEHeader(res);
-  let lastVerified = Date.now();
 
-  req.on("close", () => closeSSESession(res, intervalId));
+  let lastVerified = Date.now();
 
   //Create a SSE connection, meaning you have an open connection to sever
   const intervalId = setInterval(async () => {
     try {
-      //Checks if the session is still valid or active
-      const isValid = await SSESessionCheck(req, res, intervalId, lastVerified);
+      //forces the session to close
+      const isValid = await SSESessionCheck(lastVerified);
 
       if (!isValid.success) {
-        return res.write(
-          `data: ${JSON.stringify({ success: false, message: "Session error?" })}\n\n`,
-        );
+        closeSSESession(res, intervalId);
+        return { message: "Session Is expired" };
       }
-
-      lastVerified = isValid.lastVerified;
 
       //TODO Need to check if you really need department name? or we could just not use it for now
       //! This could be the cause for data nor being feteched

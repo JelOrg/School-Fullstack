@@ -72,8 +72,9 @@ export const fetchUserInfo = async (userId) => {
       err.message = `[Failed fetching user data]: ${err.message}`;
       throw err;
     });
-  //! checks if the userInfo isn't null
-  if (!userInfo) return { success: false };
+
+  if (!userInfo || !userInfo.isActive)
+    return { success: false, message: "User not found or is inactive" };
 
   //? flattens the giving data so we can access it easier
   const flattenedUserInfo = {

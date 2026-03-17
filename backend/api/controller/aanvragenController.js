@@ -14,8 +14,7 @@ import { HTTP_STATUS } from "#utils/magicNumberFile";
  * @param {*} res
  */
 export const sendNormaleAanvraag = async (req, res) => {
-  //TODO ADD A THING TO THE DB THAT IS LIKE idURGENT to signify that the req is urgent
-  //TODO The info from the spoedaanvraag form needs to be put into the database
+  //TODO The info from the aanvraag form needs to be put into the database
   //* Item info is send as an object, needs to hold itemId, itemName, and amount requested
   const { itemInfo, textField } = req.body;
   const { userId, userDepartmentName } = req.tokenInformation;
@@ -37,8 +36,6 @@ export const sendNormaleAanvraag = async (req, res) => {
     });
 
   // !Might count incorrectly depending on some weird race condition
-  // * but prob not a problem, since we are searching for the highest int of batchId
-
   //Get a request batch id, so +1 from the latest batchId
   const requestBatchId = await getCurrentOrNextReqBatchId(true);
 

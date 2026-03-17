@@ -11,6 +11,9 @@ export const ROLE_AUTH_LEVEL = {
   admin: 3,
 };
 
+//! The default authorization level
+export const DEFAULT_AUTH_LEVEL = 1;
+
 //! For dashboardContoller
 export const REFRESH_RATES = {
   CRITICAL_VITALS: 2000, // 2 seconds for ICU
