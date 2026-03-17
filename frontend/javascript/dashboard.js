@@ -157,10 +157,12 @@ function initDashboardSSE() {
     renderMeldingen(spoedAanvraagenData);
   };
 
-  eventSource.onerror = (err) => {
+  eventSource.onerror = (err) => {};
+
+  eventSource.addEventListener("auth_error", () => {
     console.error("SSE fout:", err);
-    eventSource.close();
-  };
+    eventSource.close(); // only close on a real auth error
+  });
 }
 
 // ─── INIT ─────────────────────────────────────────────────────────

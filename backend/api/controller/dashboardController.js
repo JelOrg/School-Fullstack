@@ -118,23 +118,21 @@ export const sendSpoedAanvraag = async (req, res) => {
 export const fetchDashboardDisplayData = async (req, res) => {
   //Header for what is needed in the header of a SSE
   SSEHeader(res);
-  let lastVerified = Date.now();
 
-  req.on("close", () => closeSSESession(res, intervalId));
+  let lastVerified = Date.now();
 
   //Create a SSE connection, meaning you have an open connection to sever
   const intervalId = setInterval(async () => {
     try {
-      //Checks if the session is still valid or active
-      const isValid = await SSESessionCheck(req, res, intervalId, lastVerified);
+      //forces the session to close
+      const isValid = await SSESessionCheck(lastVerified);
+
+      console.log(isValid.success, lastVerified);
 
       if (!isValid.success) {
-        return res.write(
-          `data: ${JSON.stringify({ success: false, message: "Session error?" })}\n\n`,
-        );
+        closeSSESession(res, intervalId);
+        return { message: "Session Is expired" };
       }
-
-      lastVerified = isValid.lastVerified;
 
       //TODO Need to check if you really need department name? or we could just not use it for now
       //! This could be the cause for data nor being feteched

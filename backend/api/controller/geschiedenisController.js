@@ -10,20 +10,19 @@ import {
 export const fetchGeschiedenisDisplayData = async (req, res) => {
   //Header for what is needed in the header of a SSE
   SSEHeader(res);
+
   let lastVerified = Date.now();
 
   //Create a SSE connection, meaning you have an open connection to sever
   const intervalId = setInterval(async () => {
     try {
-      const isValid = await SSESessionCheck(req, res, intervalId, lastVerified);
+      //Checks if the session is still valid or active
+      const isValid = await SSESessionCheck(lastVerified);
 
       if (!isValid.success) {
-        return res.write(
-          `data: ${JSON.stringify({ success: false, message: "Session error?" })}\n\n`,
-        );
+        closeSSESession(res, intervalId);
+        return { message: "Session Is expired" };
       }
-
-      lastVerified = isValid.lastVerified;
 
       const requestedLimit = Number(req.query.limit || 10);
       const safeLimit = Number.isNaN(requestedLimit)

@@ -51,7 +51,7 @@ export const HTTP_STATUS = {
 };
 
 //! USED FOR SSE SERVICE
-export const VERIFY_INTERVAL = 5 * 60 * 1000; // 5 Minutes
+export const VERIFY_INTERVAL = 5000; // 5 Minutes
 
 //! A const that tells the amount of kritieke vooraad is shown
 export const TAKE_LIMIT = 10;
