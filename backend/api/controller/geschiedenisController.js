@@ -1,6 +1,10 @@
 import { fetchRecentRequestsHistory } from "#services/fetchRequestInfo";
 import { SSEHeader, SSESessionCheck } from "#services/SSEService";
-import { HTTP_STATUS, REFRESH_RATES } from "#utils/magicNumberFile";
+import {
+  DEFAULT_AUTH_LEVEL,
+  HTTP_STATUS,
+  REFRESH_RATES,
+} from "#utils/magicNumberFile";
 
 //GET: returns latest request history rows for geschiedenis page
 export const fetchGeschiedenisDisplayData = async (req, res) => {
@@ -27,7 +31,7 @@ export const fetchGeschiedenisDisplayData = async (req, res) => {
         : Math.min(Math.max(requestedLimit, 1), 100);
 
       const userDepartmentName = req.tokenInformation?.userDepartmentName;
-      const userAuthLevel = req.userAuthLevel || 1;
+      const userAuthLevel = req.userAuthLevel || DEFAULT_AUTH_LEVEL;
 
       //Fetch the request history from the database, scoped by auth level and department
       const historyResult = await fetchRecentRequestsHistory({
@@ -47,8 +51,9 @@ export const fetchGeschiedenisDisplayData = async (req, res) => {
       }
 
       const historyData = historyResult.data;
-
       res.write(`data: ${JSON.stringify({ historyData })}\n\n`);
+
+      //===
     } catch (error) {
       res.write(
         `data: ${JSON.stringify({

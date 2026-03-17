@@ -12,7 +12,7 @@ export const validateLogin = async (req, res) => {
   const { userRoleName, userEmail, providedPassword } = req.body;
 
   //checks if there is actually a password or email send
-  // TODO this actually is easy to get past with by inputting false or true
+  //! this actually is easy to get past with by inputting false or true
   if (!userEmail || !providedPassword) {
     return res
       .status(HTTP_STATUS.BAD_REQUEST)
@@ -34,10 +34,10 @@ export const validateLogin = async (req, res) => {
   //fetches user info
   const userInfo = await fetchUserInfo(userLogin.userId);
 
-  if (!userInfo.data.isActive)
+  if (!userInfo.success)
     return res
       .status(HTTP_STATUS.FORBIDDEN)
-      .json({ message: "User account is not active anymore" });
+      .json({ message: "User account is not found or is not active anymore" });
 
   //uses user info to create a JWT
   const token = generateToken(
@@ -47,10 +47,6 @@ export const validateLogin = async (req, res) => {
   );
 
   const jwtToken = token.token;
-
-  //! prob security issues
-  //TODO CHeck if this actually works
-  //Some extras so the client know what with the cookie
 
   // The "Ending": Send the cookie and a success message
   return res
