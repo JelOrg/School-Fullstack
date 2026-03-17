@@ -36,7 +36,7 @@ A web-based management application with real-time updates, role-based access con
 1. Clone de repository
 
 ```bash
-git clone <https://github.com/JelOrg/School-Fullstack.git>
+git clone https://github.com/JelOrg/School-Fullstack.git
 ```
 
 2. Installeer dependencies
@@ -46,44 +46,43 @@ cd backend
 npm install
 ```
 
-3. Maak een `.env` bestand aan in de backend-hoofdmap
+3. Maak een `.env` bestand aan in de `backend` map
 
-4. Voer Prisma migraties of db-push uit om de tabellen aan te maken
+4. Voer Prisma migraties of database push uit om de tabellen aan te maken
 
 ```bash
 npx prisma migrate deploy
 ```
 
-or
+of
 
 ```bash
 npx prisma db push
 ```
 
-5. Start de applicatie(You have to be in the /backend directory)
+5. Start de applicatie (vanuit de `/backend` map)
 
 ```bash
-npm
+npm start
 ```
 
 ---
 
 ## Environment Variables
 
-Maak een `.env` bestand aan in de hoofdmap met de volgende variabelen:
+Maak een `.env` bestand aan in de `backend` map met de volgende variabelen:
 
 ```env
 DATABASE_URL="mysql://gebruiker:wachtwoord@localhost:3306/management_system"
 
-DATABASE_USER="Your username" #
-DATABASE_PASSWORD="Your db password" #
-DATABASE_NAME="management_system" #
-DATABASE_HOST="localhost" #
+DATABASE_USER="Your username"
+DATABASE_PASSWORD="Your db password"
+DATABASE_NAME="management_system"
+DATABASE_HOST="localhost"
 
-
-SERVER_PORT=5500 #
-BACK_END_PORT =3000
-DATABASE_PORT=3306 #
+SERVER_PORT=5500
+BACK_END_PORT=3000
+DATABASE_PORT=3306
 ```
 
 ---
@@ -120,10 +119,55 @@ Het SQL-bestand `DB setup.sql` in de hoofdmap bevat:
 
 ---
 
-## Autorisatie
+## Projectstructuur
 
-De applicatie maakt gebruik van drie toegangsniveaus:
+```
+├── frontend/
+│   ├── css/
+│   ├── html/
+│   └── javascript/
+└── backend/
+    ├── api/
+    │   ├── controllers/
+    │   ├── middleware/
+    │   ├── routes/
+    │   ├── services/
+    │   └── utils/
+    ├── generated/          # Prisma gegenereerde bestanden
+    ├── prisma/             # Prisma schema en migraties
+    ├── node_modules/
+```
 
-- **Employee** — Beperkte toegang tot eigen aanvragen en voorraad
-- **Manager** — Toegang tot afdelingsbeheer en rapportages
-- **Admin** — Volledige toegang tot alle functionaliteit
+---
+
+## Endpoints
+
+### Pagina's
+
+| Method | Route              | Toegang   | Omschrijving        |
+| ------ | ------------------ | --------- | ------------------- |
+| GET    | `/`                | Publiek   | Inlogpagina         |
+| GET    | `/login`           | Publiek   | Inlogpagina         |
+| GET    | `/dashboard`       | Employee+ | Dashboard           |
+| GET    | `/aanvraag`        | Employee+ | Aanvragen overzicht |
+| GET    | `/totale-voorraad` | Employee+ | Voorraad overzicht  |
+| GET    | `/statistieken`    | Manager+  | Statistieken        |
+| GET    | `/geschiedenis`    | Admin     | Geschiedenis        |
+| GET    | `/profile`         | Employee+ | Profiel             |
+| GET    | `/settings`        | Employee+ | Instellingen        |
+
+### API
+
+| Method | Route                  | Toegang   | Omschrijving        |
+| ------ | ---------------------- | --------- | ------------------- |
+| \*     | `/api/`                | Publiek   | Root API            |
+| \*     | `/api/login`           | Publiek   | Authenticatie       |
+| \*     | `/api/dashboard`       | Employee+ | Dashboard data      |
+| \*     | `/api/aanvragen`       | Employee+ | Aanvragen beheer    |
+| \*     | `/api/totale-voorraad` | Employee+ | Voorraad data       |
+| \*     | `/api/statistieken`    | Manager+  | Statistieken data   |
+| \*     | `/api/geschiedenis`    | Admin     | Geschiedenis data   |
+| \*     | `/api/profile`         | Employee+ | Profiel beheer      |
+| \*     | `/api/settings`        | Employee+ | Instellingen beheer |
+
+---

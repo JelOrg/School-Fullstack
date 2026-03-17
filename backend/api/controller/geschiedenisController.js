@@ -1,9 +1,10 @@
-import { fetchRecentRequestsHistory } from "#services/fetchRequestInfo";
+import { fetchRequestHistory } from "#services/fetchRequestInfo";
 import { SSEHeader, SSESessionCheck } from "#services/SSEService";
 import {
   DEFAULT_AUTH_LEVEL,
   HTTP_STATUS,
   REFRESH_RATES,
+  TAKE_LIMIT_GESCHIEDENIS_REQUEST,
 } from "#utils/magicNumberFile";
 
 //GET: returns latest request history rows for geschiedenis page
@@ -24,19 +25,14 @@ export const fetchGeschiedenisDisplayData = async (req, res) => {
         return { message: "Session Is expired" };
       }
 
-      const requestedLimit = Number(req.query.limit || 10);
-      const safeLimit = Number.isNaN(requestedLimit)
-        ? 10
-        : Math.min(Math.max(requestedLimit, 1), 100);
-
       const userDepartmentName = req.tokenInformation?.userDepartmentName;
       const userAuthLevel = req.userAuthLevel || DEFAULT_AUTH_LEVEL;
 
       //Fetch the request history from the database, scoped by auth level and department
-      const historyResult = await fetchRecentRequestsHistory({
+      const historyResult = await fetchRequestHistory({
         userAuthLevel: userAuthLevel,
         userDepartmentName: userDepartmentName,
-        limit: safeLimit,
+        limit: TAKE_LIMIT_GESCHIEDENIS_REQUEST,
       });
 
       if (!historyResult.success) {
