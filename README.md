@@ -119,6 +119,7 @@ Het SQL-bestand `DB setup.sql` in de hoofdmap bevat:
 ├── frontend/
 │   ├── css/
 │   ├── html/
+|   ├── img/
 │   └── javascript/
 └── backend/
     ├── api/
@@ -130,6 +131,7 @@ Het SQL-bestand `DB setup.sql` in de hoofdmap bevat:
     ├── generated/          # Prisma gegenereerde bestanden
     ├── prisma/             # Prisma schema en migraties
     ├── node_modules/
+    └── server.js (The entry point)
 ```
 
 ---
