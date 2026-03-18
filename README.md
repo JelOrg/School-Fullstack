@@ -36,7 +36,7 @@ A web-based management application with real-time updates, role-based access con
 1. Clone de repository
 
 ```bash
-git clone https://github.com/JelOrg/School-Fullstack.git
+git clone https://github.com/JelOrg/MedSupply-ManagementSystem
 ```
 
 2. Installeer dependencies
