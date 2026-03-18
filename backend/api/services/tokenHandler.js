@@ -61,8 +61,6 @@ export const validateToken = async (processedToken) => {
       },
       select: {
         isActive: true,
-        role: { select: { roleName: true } },
-        department: { select: { departmentName: true } },
       },
     })
     .catch((err) => {
@@ -73,12 +71,8 @@ export const validateToken = async (processedToken) => {
 
   // 2. Run the checks
   const isDeactivated = !user || !user.isActive;
-  const roleMismatch = processedToken.userRoleName !== user.role.roleName;
-  const deptMismatch =
-    processedToken.userDepartmentName !== user.department.departmentName;
 
-  if (isDeactivated || roleMismatch || deptMismatch)
-    return { success: false, message: "token not valid" };
+  if (isDeactivated) return { success: false, message: "token not valid" };
 
   return { success: true, message: "token is valid" };
 };
