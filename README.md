@@ -46,7 +46,20 @@ cd backend
 npm install
 ```
 
-3. Maak een `.env` bestand aan in de `backend` map
+3. Maak een `.env` bestand aan in de `backend` map met de volgende variabelen:
+
+```env
+DATABASE_URL="mysql://gebruiker:wachtwoord@localhost:3306/management_system"
+
+DATABASE_USER="Your username"
+DATABASE_PASSWORD="Your db password"
+DATABASE_NAME="management_system"
+DATABASE_HOST="localhost"
+
+SERVER_PORT=5500
+BACK_END_PORT=3000
+DATABASE_PORT=3306
+```
 
 4. Voer Prisma migraties of database push uit om de tabellen aan te maken
 
@@ -64,25 +77,6 @@ npx prisma db push
 
 ```bash
 npm start
-```
-
----
-
-## Environment Variables
-
-Maak een `.env` bestand aan in de `backend` map met de volgende variabelen:
-
-```env
-DATABASE_URL="mysql://gebruiker:wachtwoord@localhost:3306/management_system"
-
-DATABASE_USER="Your username"
-DATABASE_PASSWORD="Your db password"
-DATABASE_NAME="management_system"
-DATABASE_HOST="localhost"
-
-SERVER_PORT=5500
-BACK_END_PORT=3000
-DATABASE_PORT=3306
 ```
 
 ---
